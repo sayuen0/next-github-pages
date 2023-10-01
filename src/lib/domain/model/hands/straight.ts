@@ -11,7 +11,7 @@ export class Straight extends PokerHand {
    */
   static isHand(cards: PokerCard[]): boolean {
     // 4枚以下の場合はストレートではない
-    if (cards.length <= 4) {
+    if (cards.length < 5) {
       return false;
     }
 
@@ -23,22 +23,14 @@ export class Straight extends PokerHand {
       return true;
     }
 
-    let consecutiveCount = 1;
-
-    for (let i = 0; i < sortedCards.length - 1; i++) {
-      const currentCard = sortedCards[i];
-      const nextCard = sortedCards[i + 1];
-
-      // カードが連続しているかどうかを確認
-      if (nextCard.cardNumber === currentCard.cardNumber + 1) {
-        consecutiveCount++;
-      } else if (consecutiveCount < 5 && nextCard.cardNumber !== currentCard.cardNumber) {
-        // 連続していない場合、カウントをリセット（ただし、重複しているカードは無視）
-        consecutiveCount = 1;
+    // Check all possible 5 consecutive cards
+    for (let i = 0; i <= sortedCards.length - 5; i++) {
+      if (this.isConsecutive(sortedCards, i, 5)) {
+        return true;
       }
     }
 
-    return consecutiveCount >= 5;
+    return false;
   }
 
   /**
