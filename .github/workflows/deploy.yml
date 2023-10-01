@@ -37,6 +37,8 @@ jobs:
 
       - name: Build and Export site
         run: npm run build:production
+        env:
+          PUBLIC_PATH: '/${{ github.event.repository.name }}'
 
       - name: Deploy to GitHub Pages
         run: ./node_modules/.bin/gh-pages -d out
