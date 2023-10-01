@@ -27,12 +27,12 @@ describe('Flush class', () => {
       },
       {
         name: 'Not a Flush with 6 cards',
-        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0S', '9S'),
+        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0S', '9D'),
         expected: false,
       },
       {
         name: 'Not a Flush with 7 cards',
-        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0S', '9S', '8S'),
+        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0C', '9C', '8S'),
         expected: false,
       },
       {
@@ -56,7 +56,7 @@ describe('Flush class', () => {
       {
         name: 'Flush draw with 5 cards',
         input: PokerCard.NewPokerCards('AS', 'KS', 'QS', 'JS', '0D'),
-        expected: false,
+        expected: true,
       },
       {
         name: 'Flush draw with 6 cards',
@@ -70,12 +70,12 @@ describe('Flush class', () => {
       },
       {
         name: 'Not a flush draw with 5 cards',
-        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0S'),
+        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0H'),
         expected: false,
       },
       {
         name: 'Not a flush draw with 6 cards',
-        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0S', '9D'),
+        input: PokerCard.NewPokerCards('AS', 'KS', 'QD', 'JS', '0D', '9D'),
         expected: false,
       },
       {
