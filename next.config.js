@@ -33,7 +33,7 @@ const nextConfig = {
     const paths = files.reduce((acc, filePath) => {
       if (filePath === '/index') {
         console.log('Root path mapped to: ', filePath); // Add debug log
-        acc['/'] = { page: filePath };
+        acc['/'] = { page: '/' };
       } else if (
         !filePath.includes('/[') &&
         !filePath.includes('_') &&
