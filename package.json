@@ -11,9 +11,13 @@
     "deploy": "npm run export && gh-pages -d out"
   },
   "dependencies": {
+    "@nestjs/swagger": "^7.1.12",
+    "axios": "^1.5.1",
+    "dompurify": "^3.0.6",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "latest",
