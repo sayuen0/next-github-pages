@@ -77,7 +77,7 @@ export class PokerCard {
     throw new Error('Invalid suit character');
   }
 
-  static NewPocketCards(...values: CardValue[]): PokerCard[] {
+  static NewPokerCards(...values: CardValue[]): PokerCard[] {
     return values.map((v) => new PokerCard(v));
   }
 }
