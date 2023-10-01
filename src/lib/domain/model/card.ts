@@ -76,6 +76,10 @@ export class PokerCard {
     // 実質デッドルート
     throw new Error('Invalid suit character');
   }
+
+  static NewPocketCards(...values: CardValue[]): PokerCard[] {
+    return values.map((v) => new PokerCard(v));
+  }
 }
 
 export function sanitizeCardValue(input: string): string {

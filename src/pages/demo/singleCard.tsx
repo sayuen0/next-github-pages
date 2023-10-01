@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import ApiClientFactory from '@/lib/apiClient/apiClient';
 import { useRouter } from 'next/router';
-import { assertValidCard, Card } from '@/lib/domain/model/card';
+import { assertValidCard, CardValue } from '@/lib/domain/model/card';
 
 export default function SingleCard() {
   const [cardImageUrl, setCardImageUrl] = useState<string | null>(null);
 
   const router = useRouter();
 
-  let card: Card | null = null;
+  let card: CardValue | null = null;
   const paramCard = router.query.card as string;
   try {
     if (paramCard) {
@@ -18,7 +18,7 @@ export default function SingleCard() {
     console.error((error as any).message); // あるいはエラーメッセージをユーザーに表示させるなどの処理
   }
 
-  const validCard: Card = card as Card;
+  const validCard: CardValue = card as CardValue;
 
   useEffect(() => {
     if (!card) return;
