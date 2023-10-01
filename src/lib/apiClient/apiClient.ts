@@ -9,6 +9,14 @@ class ApiClient {
       throw new Error(`baseUrlが定義されていません`);
     }
     this.axios = axios.create({ baseURL: baseUrl });
+    this.axios.interceptors.request.use((req) => {
+      console.log('Starting Request', JSON.stringify(req, null, 2));
+      return req;
+    });
+    this.axios.interceptors.response.use((res) => {
+      console.log('Response', JSON.stringify(res), null, 2);
+      return res;
+    });
   }
 
   async getCardImage(card: string): Promise<ImageBlobResponseType> {
