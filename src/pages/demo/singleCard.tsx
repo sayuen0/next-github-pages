@@ -24,6 +24,7 @@ export default function SingleCard() {
     if (!card) return;
 
     (async () => {
+      console.log('API CALL');
       const client = ApiClientFactory.create();
       try {
         const resp = await client.getCardImage(validCard);
@@ -32,6 +33,7 @@ export default function SingleCard() {
       } catch (e) {
         console.error('カード画像取得に失敗しました。', e);
       }
+      console.log('API CALL HAS DONE');
     })(); // ここで即時実行
   }, [validCard]); // 依存配列を忘れないように
 
