@@ -1,4 +1,56 @@
-import { assertValidCard, sanitizeCardValue } from '@/lib/domain/model/card';
+import {
+  assertValidCard,
+  CardValue,
+  PokerCard,
+  sanitizeCardValue,
+  Suit,
+} from '@/lib/domain/model/card';
+
+describe('PokerCard', () => {
+  describe('cardNumber', () => {
+    type CardNumberTestCase = {
+      input: CardValue; // テストのためのカード
+      expected: number; // 期待するカードの数値
+    };
+
+    const cardNumberTestCases: CardNumberTestCase[] = [
+      { input: 'AH', expected: 14 },
+      { input: 'JH', expected: 11 },
+      { input: 'QD', expected: 12 },
+      { input: 'KS', expected: 13 },
+      { input: '0C', expected: 10 },
+      { input: '9H', expected: 9 },
+    ];
+
+    cardNumberTestCases.forEach(({ input, expected }) => {
+      test(`returns ${expected} when card is ${input}`, () => {
+        const card = new PokerCard(input);
+        expect(card.cardNumber).toBe(expected);
+      });
+    });
+  });
+
+  describe('suit', () => {
+    type SuitTestCase = {
+      input: CardValue; // テストのためのカード
+      expected: Suit; // 期待するスート
+    };
+
+    const suitTestCases: SuitTestCase[] = [
+      { input: 'AH', expected: Suit.Heart },
+      { input: 'JD', expected: Suit.Diamond },
+      { input: 'QS', expected: Suit.Spade },
+      { input: 'KC', expected: Suit.Club },
+    ];
+
+    suitTestCases.forEach(({ input, expected }) => {
+      test(`returns ${expected} when card is ${input}`, () => {
+        const card = new PokerCard(input);
+        expect(card.suit).toBe(expected);
+      });
+    });
+  });
+});
 
 describe('sanitizeCardValue', () => {
   type TestCase = {

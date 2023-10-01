@@ -1,59 +1,82 @@
-export const CardValues = [
-  'AS',
-  '2S',
-  '3S',
-  '4S',
-  '5S',
-  '6S',
-  '7S',
-  '8S',
-  '9S',
-  '0S',
-  'JS',
-  'QS',
-  'KS',
-  'AD',
-  '2D',
-  '3D',
-  '4D',
-  '5D',
-  '6D',
-  '7D',
-  '8D',
-  '9D',
-  '0D',
-  'JD',
-  'QD',
-  'KD',
-  'AC',
-  '2C',
-  '3C',
-  '4C',
-  '5C',
-  '6C',
-  '7C',
-  '8C',
-  '9C',
-  '0C',
-  'JC',
-  'QC',
-  'KC',
-  'AH',
-  '2H',
-  '3H',
-  '4H',
-  '5H',
-  '6H',
-  '7H',
-  '8H',
-  '9H',
-  '0H',
-  'JH',
-  'QH',
-  'KH',
-] as const;
+export enum Suit {
+  Spade = 'S',
+  Diamond = 'D',
+  Heart = 'H',
+  Club = 'C',
+}
 
-export type Card = (typeof CardValues)[number];
+export enum CardNumber {
+  Ace = 'A',
+  Two = '2',
+  Three = '3',
+  Four = '4',
+  Five = '5',
+  Six = '6',
+  Seven = '7',
+  Eight = '8',
+  Nine = '9',
+  Ten = '0',
+  Jack = 'J',
+  Queen = 'Q',
+  King = 'K',
+}
+
+export type CardValue = `${CardNumber}${Suit}`;
+
+const suits: readonly Suit[] = Object.values(Suit);
+const numbers: readonly CardNumber[] = Object.values(CardNumber);
+
+let combinations: CardValue[] = [];
+for (const suit of suits) {
+  for (const number of numbers) {
+    combinations.push(`${number}${suit}` as CardValue);
+  }
+}
+
+export const CardValues = combinations;
+
+export class PokerCard {
+  private readonly _cardValue: CardValue;
+
+  constructor(cardValue: CardValue) {
+    this._cardValue = assertValidCard(cardValue);
+  }
+
+  public get cardValue(): CardValue {
+    return this._cardValue;
+  }
+
+  public get cardNumber(): number {
+    const cardCharacter = this._cardValue.slice(0, -1);
+    if (cardCharacter === 'A') {
+      return 14; // Modify 'A' to have a score of 14
+    } else if (cardCharacter === 'J') {
+      return 11;
+    } else if (cardCharacter === 'Q') {
+      return 12;
+    } else if (cardCharacter === 'K') {
+      return 13;
+    } else if (cardCharacter === '0') {
+      return 10;
+    } else {
+      return Number(cardCharacter);
+    }
+  }
+
+  public get suit(): Suit {
+    const suitCharacter = this._cardValue.slice(-1);
+
+    const matchedSuitEntry = Object.entries(Suit).find(
+      ([, value]) => value === suitCharacter,
+    );
+
+    if (matchedSuitEntry) {
+      return matchedSuitEntry[1] as Suit;
+    }
+    // 実質デッドルート
+    throw new Error('Invalid suit character');
+  }
+}
 
 export function sanitizeCardValue(input: string): string {
   if (!input) return input;
@@ -73,12 +96,12 @@ export function sanitizeCardValue(input: string): string {
   return value + suit;
 }
 
-export function assertValidCard(input: string): Card {
+export function assertValidCard(input: string): CardValue {
   const sanitizedValue = sanitizeCardValue(input);
 
-  if (!CardValues.includes(sanitizedValue as Card)) {
+  if (!CardValues.includes(sanitizedValue as CardValue)) {
     throw new Error(`Invalid card value: ${input}`);
   }
 
-  return sanitizedValue as Card;
+  return sanitizedValue as CardValue;
 }
