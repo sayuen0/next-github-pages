@@ -33,7 +33,7 @@ jobs:
         run: git remote set-url origin https://${{ secrets.GH_TOKEN }}@github.com/sayuen0/next-github-pages.git
 
       - name: Create Production Environment File
-        run: echo 'BASE_PATH=${{ secrets.BASE_PATH }}\nASSET_PREFIX=${{ secrets.ASSET_PREFIX }}' > .env.production
+        run: echo -e 'BASE_PATH=${{ secrets.BASE_PATH }}\nASSET_PREFIX=${{ secrets.ASSET_PREFIX }}' > .env.production
 
       - name: Build and Export site
         run: npm run export:production
