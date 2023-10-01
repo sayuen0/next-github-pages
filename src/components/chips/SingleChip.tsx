@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import { getResourcePath } from '@/utils/publicResource';
-
-export enum ChipValue {
-  OneHundred = 100,
-  FiveHundred = 500,
-  OneThousand = 1000,
-  FiveThousand = 5000,
-}
+import { ChipValue } from '@/lib/domain/model/chips/chip';
 
 interface SingleChipProps {
   value: ChipValue;

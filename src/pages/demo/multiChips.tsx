@@ -1,20 +1,15 @@
 import React from 'react';
-import SingleChip, { ChipValue } from '@/components/chips/SingleChip'; // Import the SingleChip component
+import SingleChip from '@/components/chips/SingleChip';
+import { Chip } from '@/lib/domain/model/chips/chip';
 
 export default function MultiChipsPage() {
   // Define array of chip values
-  const chipValues: ChipValue[] = [
-    ChipValue.OneHundred,
-    ChipValue.FiveHundred,
-    ChipValue.OneThousand,
-    ChipValue.FiveThousand,
-    ChipValue.OneHundred,
-  ];
+  const chips = Chip.shuffle(30);
 
   return (
     <div>
-      {chipValues.map((value, index) => (
-        <SingleChip key={index} value={value} /> // Render the SingleChip component
+      {chips.map((c, index) => (
+        <SingleChip key={index} value={c.value} /> // Render the SingleChip component
       ))}
     </div>
   );
