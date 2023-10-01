@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export enum ChipValue {
   OneHundred = 100,
   FiveHundred = 500,
@@ -5,12 +7,28 @@ export enum ChipValue {
   FiveThousand = 5000,
 }
 
+type ChipGenerator = () => Chip;
+
 export class Chip {
-  private constructor(readonly value: ChipValue) {}
+  readonly id: string;
+  readonly value: number;
+
+  constructor(value: number) {
+    this.id = uuidv4(); // each Chip has a unique id
+    this.value = value;
+  }
 
   public get chipValue(): ChipValue {
     return this.value;
   }
+
+  public get number(): number {
+    return Number(this.value);
+  }
+
+  static getRandValue = (min: number, max: number): number => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
 
   public static OneHundred(): Chip {
     return new Chip(ChipValue.OneHundred);
@@ -28,26 +46,20 @@ export class Chip {
     return new Chip(ChipValue.FiveThousand);
   }
 
-  // 指定枚数だけ、ランダムな種類のチップ列をソートして返す
-  static shuffle(size: number): Chip[] {
-    const chips = [];
-    for (let i = 0; i < size; i++) {
-      const chip = Math.floor(Math.random() * 4);
-      switch (chip) {
-        case 0:
-          chips.push(Chip.OneHundred());
-          break;
-        case 1:
-          chips.push(Chip.FiveHundred());
-          break;
-        case 2:
-          chips.push(Chip.OneThousand());
-          break;
-        case 3:
-          chips.push(Chip.FiveThousand());
-          break;
-      }
-    }
-    return chips;
-  }
+  static getRandomizedArray = (length: number): Chip[] => {
+    // array of all possible static methods
+    const chipMethods: ChipGenerator[] = [
+      Chip.OneHundred,
+      Chip.FiveHundred,
+      Chip.OneThousand,
+      Chip.FiveThousand,
+    ];
+
+    return new Array(length)
+      .fill(0) // fill method used to allow map to work
+      .map(() => {
+        const randomIndex = Math.floor(Math.random() * chipMethods.length);
+        return chipMethods[randomIndex]();
+      });
+  };
 }
