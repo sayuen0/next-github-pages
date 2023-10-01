@@ -1,9 +1,11 @@
 import { ThreeOfAKind } from '@/lib/domain/model/hands/threeOfAKind';
 import { PokerCard } from '@/lib/domain/model/card';
-import { PokerHand } from '@/lib/domain/model/hands/hands';
+import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
 
 export class FullHouse extends PokerHand {
+  static readonly score = PokerHandRank.FULL_HOUSE;
+
   /**
    * フルハウスであるかどうかを判定する
    * @param cards
