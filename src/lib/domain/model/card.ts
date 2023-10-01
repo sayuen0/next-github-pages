@@ -7,7 +7,7 @@ export const CardValues = [
 
 export type Card = typeof CardValues[number];
 
-function sanitizeCardValue(input: string): string {
+export function sanitizeCardValue(input: string): string {
   if (!input) return input
   const valueMap: { [key: string]: string } = {
     '10': '0',
