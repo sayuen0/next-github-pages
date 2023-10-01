@@ -72,4 +72,49 @@ describe('CardsSorter', () => {
       });
     });
   });
+
+  describe('bySuits', () => {
+    const testCases = [
+      {
+        name: 'should sort 3 cards by suits',
+        input: PokerCard.NewPocketCards('2H', '3D', '4S'),
+        expected: PokerCard.NewPocketCards('4S', '2H', '3D'),
+      },
+      {
+        name: 'should sort 5 cards by suits',
+        input: PokerCard.NewPocketCards('2H', '3D', '4S', '5C', '6D'),
+        expected: PokerCard.NewPocketCards('3D', '6D', '4S', '2H', '5C'),
+      },
+      {
+        name: 'should sort 6 cards by suits',
+        input: PokerCard.NewPocketCards('2H', '3D', '4S', '5C', '6D', '7S'),
+        expected: PokerCard.NewPocketCards('4S', '7S', '3D', '6D', '2H', '5C'),
+      },
+      {
+        name: 'should prioritize diamond flush among 6 cards and the last one as spade',
+        input: [
+          ...PokerCard.NewPocketCards('2D', '7S', '4D', '3D', '6D', '5D', 'AS'),
+        ],
+        expected: [
+          ...PokerCard.NewPocketCards('2D', '3D', '4D', '5D', '6D', '7S', 'AS'),
+        ],
+      },
+      {
+        name: 'should sort 7 cards by suits',
+        input: [
+          ...PokerCard.NewPocketCards('2H', '3D', '4S', '5C', '6D', '7S', '8H'),
+        ],
+        expected: [
+          ...PokerCard.NewPocketCards('4S', '7S', '2H', '8H', '3D', '6D', '5C'),
+        ],
+      },
+    ];
+
+    testCases.forEach(({ name, input, expected }) => {
+      test(name, () => {
+        const result = CardsSorter.bySuits(input);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
 });
