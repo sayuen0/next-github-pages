@@ -36,4 +36,41 @@ describe('ThreeOfAKind class', () => {
       expect(result).toBe(expected);
     });
   });
+
+  describe('.findSet', () => {
+    const testCases = [
+      {
+        name: 'No set with 5 cards',
+        input: PokerCard.NewPokerCards('4H', '5D', '6S', '8H', 'QS'),
+        expected: new Set(),
+      },
+      {
+        name: 'One set with 5 cards',
+        input: PokerCard.NewPokerCards('4H', '4D', '4S', '8H', 'QS'),
+        expected: new Set([4]),
+      },
+      {
+        name: 'No set with 6 cards',
+        input: PokerCard.NewPokerCards('2H', '3D', '5S', '6H', '8S', 'JC'),
+        expected: new Set(),
+      },
+      {
+        name: 'One set with 6 cards',
+        input: PokerCard.NewPokerCards('4H', '4D', '4S', 'KH', 'QS', 'JD'),
+        expected: new Set([4]),
+      },
+      {
+        name: 'Two sets with 6 cards',
+        input: PokerCard.NewPokerCards('4H', '4D', '4S', 'KH', 'KS', 'KC'),
+        expected: new Set([4, 13]),
+      },
+    ];
+
+    testCases.forEach(({ name, input, expected }) => {
+      it(name, () => {
+        const result = ThreeOfAKind.findSet(input);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
 });
