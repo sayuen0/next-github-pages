@@ -7,6 +7,4 @@ export type AxiosCommonResponse<T> = {
   request?: any; // 必要に応じて詳細な型を定義することもできます
 }
 
-
-// SVGのレスポンスに特有の型を定義
 export type ImageBlobResponseType = AxiosCommonResponse<Blob>;

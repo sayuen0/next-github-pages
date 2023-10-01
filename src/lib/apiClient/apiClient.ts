@@ -15,6 +15,7 @@ class ApiClient {
   async getCardImage(card: string): Promise<ImageBlobResponseType> {
     return this.axios.get(`/static/img/${card}.png`, { responseType: "blob" })
   }
+
 }
 
 export default class ApiClientFactory {
