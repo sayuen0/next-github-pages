@@ -30,4 +30,10 @@ export abstract class PokerHand {
       return groups;
     }, {});
   }
+
+  // Checks if all the poker cards have the same suit
+  protected static areSameSuit(cards: PokerCard[]): boolean {
+    const cardSuits = new Set(cards.map((card) => card.suit));
+    return cardSuits.size === 1;
+  }
 }
