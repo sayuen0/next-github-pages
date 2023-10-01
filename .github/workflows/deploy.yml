@@ -32,7 +32,7 @@ jobs:
       - name: Set git remote URL with token
         run: git remote set-url origin https://${{ secrets.GH_TOKEN }}@github.com/sayuen0/next-github-pages.git
 
-      - name: Export site
+      - name: Build and Export site
         run: npm run export
 
       - name: Deploy to GitHub Pages
