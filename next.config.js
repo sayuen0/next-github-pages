@@ -25,29 +25,29 @@ const nextConfig = {
   basePath: isProduction ? process.env.BASE_PATH : '',
   assetPrefix: isProduction ? process.env.ASSET_PREFIX : '',
 
+  output: 'export',
+
   async exportPathMap() {
     const files = await getFilesInDirectory(pagesDirectory);
 
-    return files.reduce((acc, filePath) => {
-      const route = filePath.replace(/\/index$/, ''); // 把 /index 替换为 /
-
-      // Avoid special Next.js files and API routes
-      if (
-        !route.includes('/[') &&
-        !route.includes('_') &&
-        !route.includes('/api')
+    const paths = files.reduce((acc, filePath) => {
+      if (filePath === '/index') {
+        console.log('Root path mapped to: ', filePath); // Add debug log
+        acc['/'] = { page: filePath };
+      } else if (
+        !filePath.includes('/[') &&
+        !filePath.includes('_') &&
+        !filePath.includes('/api')
       ) {
-        if (!route.startsWith('/')) {
-          console.error(`Invalid page path: ${route}`);
-        } else {
-          acc[route] = {
-            page: filePath,
-          };
-        }
+        acc[filePath] = {
+          page: filePath,
+        };
       }
 
       return acc;
     }, {});
+
+    return paths;
   },
 };
 

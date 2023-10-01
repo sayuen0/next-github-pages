@@ -36,7 +36,7 @@ jobs:
         run: echo -e 'BASE_PATH=${{ secrets.BASE_PATH }}\nASSET_PREFIX=${{ secrets.ASSET_PREFIX }}' > .env.production
 
       - name: Build and Export site
-        run: npm run export:production
+        run: npm run build:production
 
       - name: Deploy to GitHub Pages
         run: ./node_modules/.bin/gh-pages -d out
