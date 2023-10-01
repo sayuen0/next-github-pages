@@ -19,4 +19,15 @@ export abstract class PokerHand {
   static isHand(card: PokerCard[]): boolean {
     throw new Error('Not implemented');
   }
+
+  // Helper method to group cards by their number
+  protected static groupByNumber(cards: PokerCard[]): { [key: number]: PokerCard[] } {
+    return cards.reduce((groups: { [key: number]: PokerCard[] }, card: PokerCard) => {
+      if (!groups[card.cardNumber]) {
+        groups[card.cardNumber] = [];
+      }
+      groups[card.cardNumber].push(card);
+      return groups;
+    }, {});
+  }
 }

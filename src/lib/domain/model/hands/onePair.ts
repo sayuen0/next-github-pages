@@ -15,15 +15,4 @@ export class OnePair extends PokerHand {
     // 同じ数値のカードが2枚存在する（＝ペアが存在する）場合のみtrueを返す
     return Object.values(groupedCards).some((group) => group.length >= 2);
   }
-
-  // Helper method to group cards by their number
-  private static groupByNumber(cards: PokerCard[]): { [key: number]: PokerCard[] } {
-    return cards.reduce((groups: { [key: number]: PokerCard[] }, card: PokerCard) => {
-      if (!groups[card.cardNumber]) {
-        groups[card.cardNumber] = [];
-      }
-      groups[card.cardNumber].push(card);
-      return groups;
-    }, {});
-  }
 }
