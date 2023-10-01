@@ -13,6 +13,24 @@ export class Flush extends PokerHand {
   }
 
   /**
+   * フラッシュが見つかった場合は、そのフラッシュのカードを返す
+   * @param cards
+   */
+  static find(cards: PokerCard[]): PokerCard[] {
+    if (!this.isHand(cards)) return [];
+    const suits = ['H', 'D', 'C', 'S'];
+
+    for (let suit of suits) {
+      const sameSuitCards = cards.filter((card) => card.suit === suit);
+      if (sameSuitCards.length >= 5) {
+        return sameSuitCards.sort((a, b) => a.cardNumber - b.cardNumber);
+      }
+    }
+
+    return [];
+  }
+
+  /**
    * 引数のカードの中に、指定した枚数以上の同じスートのカードが存在するかどうかを判定する
    * @param cards
    * @param target

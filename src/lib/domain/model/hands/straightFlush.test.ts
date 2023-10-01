@@ -76,4 +76,41 @@ describe('StraightFlush class', () => {
       });
     });
   });
+
+  describe('.find', () => {
+    const testCases = [
+      {
+        name: '5 cards, straight flush present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: '5 cards, no straight flush',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6D'),
+        expected: [],
+      },
+      {
+        name: '6 cards, straight flush present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8D'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: '7 cards, straight flush present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8D', '9D'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: '7 cards, only one suit present but not in sequence',
+        input: PokerCard.NewPokerCards('2H', '4H', '6H', '8H', '0H', 'QH', 'KH'),
+        expected: [],
+      },
+    ];
+
+    testCases.forEach(({ name, input, expected }) => {
+      it(name, () => {
+        const result = StraightFlush.find(input);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
 });

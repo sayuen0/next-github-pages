@@ -36,4 +36,16 @@ export class StraightFlush extends PokerHand {
 
     return false;
   }
+
+  static find(cards: PokerCard[]): PokerCard[] {
+    const straightCards = Straight.isHand(cards) ? Straight.find(cards) : [];
+    const flushCards = Flush.isHand(cards) ? Flush.find(cards) : [];
+
+    // Check if the found straight and flush cards are the same
+    if (CardsSorter.isSameSet(straightCards, flushCards)) {
+      return straightCards;
+    }
+
+    return [];
+  }
 }

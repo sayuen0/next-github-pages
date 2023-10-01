@@ -118,4 +118,20 @@ export class Straight extends PokerHand {
     }
     return true;
   }
+
+  /**
+   * ストレートが見つかった場合、そのストレートを構成するカードを返す
+   * @param cards
+   */
+  static find(cards: PokerCard[]): PokerCard[] {
+    const sortedCards = CardsSorter.byNumber(cards);
+
+    for (let i = 0; i <= sortedCards.length - 5; i++) {
+      if (this.isConsecutive(sortedCards, i, 5)) {
+        return sortedCards.slice(i, i + 5);
+      }
+    }
+
+    return [];
+  }
 }

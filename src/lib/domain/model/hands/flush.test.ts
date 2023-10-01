@@ -97,4 +97,41 @@ describe('Flush class', () => {
       });
     });
   });
+
+  describe('.find', () => {
+    const testCases = [
+      {
+        name: '5 cards, flush present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: '5 cards, no flush',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6D'),
+        expected: [],
+      },
+      {
+        name: '6 cards, flush present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8D'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: '7 cards, flush present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8H', '9H'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8H', '9H'),
+      },
+      {
+        name: '7 cards, only one suit present but not 5 cards',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5D', '6D', '8D', '9D'),
+        expected: [],
+      },
+    ];
+
+    testCases.forEach(({ name, input, expected }) => {
+      it(name, () => {
+        const result = Flush.find(input);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
 });

@@ -241,4 +241,36 @@ describe('Straight class', () => {
       });
     });
   });
+
+  describe('.find', () => {
+    const testCases = [
+      {
+        name: '5 cards, straight present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: '5 cards, no straight',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '6H', '7H'),
+        expected: [],
+      },
+      {
+        name: '6 cards, straight present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8H'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: '7 cards, straight present',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8H', '9H'),
+        expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+    ];
+
+    testCases.forEach(({ name, input, expected }) => {
+      it(name, () => {
+        const result = Straight.find(input);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
 });

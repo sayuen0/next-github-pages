@@ -52,4 +52,24 @@ export class CardsSorter {
 
     return sortedCards;
   }
+
+  static isSameSet(a: PokerCard[], b: PokerCard[]): boolean {
+    if (a.length !== b.length) {
+      return false;
+    }
+
+    const sortedSet1 = CardsSorter.byNumber(a);
+    const sortedSet2 = CardsSorter.byNumber(b);
+
+    for (let i = 0; i < sortedSet1.length; i++) {
+      if (
+        sortedSet1[i].cardNumber !== sortedSet2[i].cardNumber ||
+        sortedSet1[i].suit !== sortedSet2[i].suit
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
