@@ -1,5 +1,8 @@
 import { PokerCard } from '@/lib/domain/model/card';
 
+/**
+ * ホールカード(手札)を表すクラス
+ */
 export class HoleCards {
   private card1: PokerCard;
   private card2: PokerCard;
