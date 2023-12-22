@@ -47,10 +47,21 @@ for (const suit of suits) {
 export const CardValues = combinations;
 
 export class PokerCard {
+  A;
   private readonly _cardValue: CardValue;
 
   constructor(cardValue: CardValue) {
     this._cardValue = assertValidCard(cardValue);
+  }
+
+  private _visible: boolean = false;
+
+  public get visible(): boolean {
+    return this._visible;
+  }
+
+  public set visible(value: boolean) {
+    this._visible = value;
   }
 
   public get cardValue(): CardValue {
@@ -92,6 +103,9 @@ export class PokerCard {
     return this._cardValue.slice(0, 1) as NumberSymbol;
   }
 
+  /**
+   * テスト用
+   */
   static NewPokerCards(...values: CardValue[]): PokerCard[] {
     return values.map((v) => new PokerCard(v));
   }
@@ -124,7 +138,3 @@ export function assertValidCard(input: string): CardValue {
 
   return sanitizedValue as CardValue;
 }
-
-/**
- * デバッグ用
- */

@@ -4,7 +4,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function HomePage() {
   /**
-   * "/ultimate"へのリンクを作成する
+   * "/texasHoldem"へのリンクを作成する
    */
   return (
     <div>

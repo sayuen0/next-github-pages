@@ -16,8 +16,6 @@ export default function Ultimate() {
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
       </div>
-      <p>↑ディーラー</p>
-      <p>↓ボード</p>
       <div style={cardsContainerStyle}>
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
@@ -25,7 +23,6 @@ export default function Ultimate() {
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
       </div>
-      <p>↓ハンド</p>
       <div style={cardsContainerStyle}>
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
         <Card card={RandomPokerCardGenerator.getRandomCard()} />
