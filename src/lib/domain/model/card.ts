@@ -5,7 +5,18 @@ export enum Suit {
   Club = 'C',
 }
 
-export enum CardNumber {
+export function convertSuitToDirectoryName(suit: Suit): string {
+  const suitMap: { [key in Suit]: string } = {
+    [Suit.Spade]: 'Spade',
+    [Suit.Diamond]: 'Diamond',
+    [Suit.Heart]: 'Heart',
+    [Suit.Club]: 'Club',
+  };
+
+  return suitMap[suit];
+}
+
+export enum NumberSymbol {
   Ace = 'A',
   Two = '2',
   Three = '3',
@@ -21,10 +32,10 @@ export enum CardNumber {
   King = 'K',
 }
 
-export type CardValue = `${CardNumber}${Suit}`;
+export type CardValue = `${NumberSymbol}${Suit}`;
 
 const suits: readonly Suit[] = Object.values(Suit);
-const numbers: readonly CardNumber[] = Object.values(CardNumber);
+const numbers: readonly NumberSymbol[] = Object.values(NumberSymbol);
 
 let combinations: CardValue[] = [];
 for (const suit of suits) {
@@ -77,6 +88,10 @@ export class PokerCard {
     throw new Error('Invalid suit character');
   }
 
+  public get numberSymbol(): NumberSymbol {
+    return this._cardValue.slice(0, 1) as NumberSymbol;
+  }
+
   static NewPokerCards(...values: CardValue[]): PokerCard[] {
     return values.map((v) => new PokerCard(v));
   }
@@ -109,3 +124,7 @@ export function assertValidCard(input: string): CardValue {
 
   return sanitizedValue as CardValue;
 }
+
+/**
+ * デバッグ用
+ */
