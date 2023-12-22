@@ -1,6 +1,6 @@
 // Ultimate コンポーネント
 import Card from '@/components/cards/card';
-import { PokerCard } from '@/lib/domain/model/card';
+import { RandomPokerCardGenerator } from '@/lib/domain/model/cards/randomCardGenerator';
 
 export default function Ultimate() {
   const cardsContainerStyle = {
@@ -12,13 +12,23 @@ export default function Ultimate() {
   return (
     <div>
       <h1>Ultimate</h1>
-      <p>Ultimate</p>
       <div style={cardsContainerStyle}>
-        <Card card={new PokerCard('AH')} />
-        <Card card={new PokerCard('KC')} />
-        <Card card={new PokerCard('JH')} />
-        <Card card={new PokerCard('0D')} />
-        <Card card={new PokerCard('8D')} />
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+      </div>
+      <p>↑ディーラー</p>
+      <p>↓ボード</p>
+      <div style={cardsContainerStyle}>
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+      </div>
+      <p>↓ハンド</p>
+      <div style={cardsContainerStyle}>
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
+        <Card card={RandomPokerCardGenerator.getRandomCard()} />
       </div>
     </div>
   );

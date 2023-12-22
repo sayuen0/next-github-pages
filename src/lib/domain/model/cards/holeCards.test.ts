@@ -1,5 +1,5 @@
-import { HoleCards } from '@/lib/domain/model/holeCards';
-import { CardValue, PokerCard } from '@/lib/domain/model/card';
+import { HoleCards } from '@/lib/domain/model/cards/holeCards';
+import { CardValue, PokerCard } from '@/lib/domain/model/cards/card';
 
 describe('HoleCards', () => {
   describe('isPocketPair', () => {

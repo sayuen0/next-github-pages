@@ -1,4 +1,4 @@
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 import { ThreeOfAKind } from '@/lib/domain/model/hands/threeOfAKind';
 
 describe('ThreeOfAKind class', () => {

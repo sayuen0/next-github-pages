@@ -1,6 +1,6 @@
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
-import { CardsSorter } from '@/lib/domain/model/cardsSorter';
+import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 
 export class ThreeOfAKind extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.THREE_OF_A_KIND;

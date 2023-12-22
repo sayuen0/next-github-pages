@@ -1,5 +1,5 @@
-import { PokerCard } from '@/lib/domain/model/card';
-import { CardsSorter } from '@/lib/domain/model/cardsSorter';
+import { PokerCard } from '@/lib/domain/model/cards/card';
+import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 export class Straight extends PokerHand {

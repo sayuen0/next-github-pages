@@ -1,4 +1,4 @@
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 
 export enum PokerHandRank {
   ROYAL_STRAIGHT_FLUSH = 10,

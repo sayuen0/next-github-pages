@@ -1,4 +1,4 @@
-import { PokerCard, Suit } from '@/lib/domain/model/card';
+import { PokerCard, Suit } from '@/lib/domain/model/cards/card';
 import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 export class Flush extends PokerHand {

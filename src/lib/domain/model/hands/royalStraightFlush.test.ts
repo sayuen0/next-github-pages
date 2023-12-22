@@ -1,4 +1,4 @@
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 import { RoyalStraightFlush } from '@/lib/domain/model/hands/royalStraightFlush';
 
 describe('RoyalStraightFlush class', () => {

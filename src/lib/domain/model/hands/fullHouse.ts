@@ -1,5 +1,5 @@
 import { ThreeOfAKind } from '@/lib/domain/model/hands/threeOfAKind';
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
 

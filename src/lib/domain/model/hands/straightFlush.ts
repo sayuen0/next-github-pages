@@ -1,8 +1,8 @@
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
 import { Straight } from '@/lib/domain/model/hands/straight';
 import { Flush } from '@/lib/domain/model/hands/flush';
-import { CardsSorter } from '@/lib/domain/model/cardsSorter';
+import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 
 export class StraightFlush extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.STRAIGHT_FLUSH;

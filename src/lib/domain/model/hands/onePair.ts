@@ -1,6 +1,6 @@
 import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
-import { PokerCard } from '@/lib/domain/model/card';
-import { CardsSorter } from '@/lib/domain/model/cardsSorter';
+import { PokerCard } from '@/lib/domain/model/cards/card';
+import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 
 export class OnePair extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.ONE_PAIR;

@@ -1,4 +1,4 @@
-import { convertSuitToDirectoryName, PokerCard } from '@/lib/domain/model/card';
+import { convertSuitToDirectoryName, PokerCard } from '@/lib/domain/model/cards/card';
 
 interface CardProps {
   card: PokerCard;
@@ -12,7 +12,7 @@ export default function Card({ card }: CardProps) {
     margin: '1%', // カード間のマージンを設定
   };
 
-  const imagePath = `/static/img/cards/${convertSuitToDirectoryName(card.suit)}/${
+  const imagePath = `static/img/cards/${convertSuitToDirectoryName(card.suit)}/${
     card.numberSymbol
   }.svg`;
 

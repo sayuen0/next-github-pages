@@ -4,7 +4,7 @@ import {
   PokerCard,
   sanitizeCardValue,
   Suit,
-} from '@/lib/domain/model/card';
+} from '@/lib/domain/model/cards/card';
 
 describe('PokerCard', () => {
   describe('cardNumber', () => {

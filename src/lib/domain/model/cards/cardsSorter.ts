@@ -1,4 +1,4 @@
-import { PokerCard, Suit } from '@/lib/domain/model/card';
+import { PokerCard, Suit } from '@/lib/domain/model/cards/card';
 
 enum SuitStrength {
   Spade = 4,

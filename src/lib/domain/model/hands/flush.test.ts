@@ -1,4 +1,4 @@
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 import { Flush } from '@/lib/domain/model/hands/flush';
 
 describe('Flush class', () => {

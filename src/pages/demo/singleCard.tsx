@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ApiClientFactory from '@/lib/apiClient/apiClient';
 import { useRouter } from 'next/router';
-import { assertValidCard, CardValue } from '@/lib/domain/model/card';
+import { assertValidCard, CardValue } from '@/lib/domain/model/cards/card';
 
 export default function SingleCard() {
   const [cardImageUrl, setCardImageUrl] = useState<string | null>(null);

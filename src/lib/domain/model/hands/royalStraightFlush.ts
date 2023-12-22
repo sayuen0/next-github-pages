@@ -1,7 +1,7 @@
 import { StraightFlush } from '@/lib/domain/model/hands/straightFlush';
-import { PokerCard } from '@/lib/domain/model/card';
+import { PokerCard } from '@/lib/domain/model/cards/card';
 import { PokerHand } from '@/lib/domain/model/hands/hands';
-import { CardsSorter } from '@/lib/domain/model/cardsSorter';
+import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 
 export class RoyalStraightFlush extends PokerHand {
   static isHand(cards: PokerCard[]): boolean {
