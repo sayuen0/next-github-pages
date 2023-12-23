@@ -12,9 +12,11 @@ export default function Card({ card }: CardProps) {
     margin: '1%', // カード間のマージンを設定
   };
 
-  const imagePath = `static/img/cards/${convertSuitToDirectoryName(card.suit)}/${
-    card.numberSymbol
-  }.svg`;
+  const imagePath = card.visible
+    ? `static/img/cards/${convertSuitToDirectoryName(card.suit)}/${card.numberSymbol}.svg`
+    : 'static/img/cards/back/10.svg';
 
-  return <img src={imagePath} style={cardStyle} alt="King of Spades" />;
+  return (
+    <img src={imagePath} style={cardStyle} alt={card.visible ? card.cardValue : ''} />
+  );
 }

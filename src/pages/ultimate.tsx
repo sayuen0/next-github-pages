@@ -28,7 +28,6 @@ export default function Ultimate() {
 
   return (
     <div>
-      <h1>Ultimate</h1>
       <Table>
         <div style={cardsContainerStyle}>
           {dealerCards.map((card, index) => (
