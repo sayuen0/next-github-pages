@@ -3,6 +3,7 @@ import Card from '@/components/cards/card';
 import { RandomPokerCardGenerator } from '@/lib/domain/model/cards/randomCardGenerator';
 import { useEffect, useState } from 'react';
 import { PokerCard } from '@/lib/domain/model/cards/card';
+import Table from '@/components/table/table';
 
 export default function Ultimate() {
   const [dealerCards, setDealerCards] = useState<PokerCard[]>([]);
@@ -28,21 +29,23 @@ export default function Ultimate() {
   return (
     <div>
       <h1>Ultimate</h1>
-      <div style={cardsContainerStyle}>
-        {dealerCards.map((card, index) => (
-          <Card key={index} card={card} />
-        ))}
-      </div>
-      <div style={cardsContainerStyle}>
-        {communityCards.map((card, index) => (
-          <Card key={index} card={card} />
-        ))}
-      </div>
-      <div style={cardsContainerStyle}>
-        {playerCards.map((card, index) => (
-          <Card key={index} card={card} />
-        ))}
-      </div>
+      <Table>
+        <div style={cardsContainerStyle}>
+          {dealerCards.map((card, index) => (
+            <Card key={index} card={card} />
+          ))}
+        </div>
+        <div style={cardsContainerStyle}>
+          {communityCards.map((card, index) => (
+            <Card key={index} card={card} />
+          ))}
+        </div>
+        <div style={cardsContainerStyle}>
+          {playerCards.map((card, index) => (
+            <Card key={index} card={card} />
+          ))}
+        </div>
+      </Table>
     </div>
   );
 }
