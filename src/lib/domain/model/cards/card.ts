@@ -47,7 +47,6 @@ for (const suit of suits) {
 export const CardValues = combinations;
 
 export class PokerCard {
-  A;
   private readonly _cardValue: CardValue;
 
   constructor(cardValue: CardValue) {
