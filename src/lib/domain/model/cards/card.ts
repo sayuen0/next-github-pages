@@ -106,6 +106,11 @@ export class PokerCard {
    * テスト用
    */
   static NewPokerCards(...values: CardValue[]): PokerCard[] {
+    // 重複したカードを渡してはいけない(トランプの中で同一の数・スーツが2枚以上存在することはない)
+    const uniqueValues = new Set(values);
+    if (uniqueValues.size !== values.length) {
+      throw new Error('Duplicate values are not allowed');
+    }
     return values.map((v) => new PokerCard(v));
   }
 }

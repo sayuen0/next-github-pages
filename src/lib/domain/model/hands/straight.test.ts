@@ -156,6 +156,11 @@ describe('Straight class', () => {
         expected: true,
       },
       {
+        name: '5 cards in (A,2,3,4,5), but not straight',
+        input: PokerCard.NewPokerCards('AS', '2D', '3H', '4C', 'AD'),
+        expected: false,
+      },
+      {
         name: '6 cards from Ace to 6',
         input: PokerCard.NewPokerCards('AS', '2D', '3H', '4C', '5S', '6H'),
         expected: true,
@@ -261,6 +266,11 @@ describe('Straight class', () => {
         expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
       },
       {
+        name: '6 cards, no straight',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '7H', '8H'),
+        expected: [],
+      },
+      {
         name: '7 cards, straight present',
         input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8H', '9H'),
         expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
@@ -274,6 +284,11 @@ describe('Straight class', () => {
         name: "6 cards 5 high straight present, Ace can't be used as 1",
         input: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', 'AD', '6H'),
         expected: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', '6H'),
+      },
+      {
+        name: '7 cards, no straight',
+        input: PokerCard.NewPokerCards('9H', '9D', 'AC', 'AD', '2S', '3D', '4D'),
+        expected: [],
       },
     ];
 

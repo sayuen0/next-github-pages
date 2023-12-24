@@ -95,13 +95,17 @@ export class Straight extends PokerHand {
   /*
    * エースを含むストレートかどうかを判定する
    */
+
   public static isAceToFiveStraight(cards: PokerCard[]): boolean {
-    if (cards.length < 5) {
-      return false;
-    }
     const aceToFives = [14, 2, 3, 4, 5];
-    const aceToFiveCount = cards.filter((card) => aceToFives.includes(card.cardNumber));
-    return aceToFiveCount.length >= 5;
+    const aceToFiveCards = cards.filter((card) => aceToFives.includes(card.cardNumber));
+
+    // エースハイストレートを成すカードが正確に5枚存在することを確認
+    // (A, A, 2, 3, 4)とかはダメ
+    return (
+      aceToFiveCards.length === 5 &&
+      new Set(aceToFiveCards.map((c) => c.cardNumber)).size === 5
+    );
   }
 
   /**
