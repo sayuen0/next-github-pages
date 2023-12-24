@@ -24,6 +24,14 @@ describe('single game with bet', () => {
 
     // TODO: ゲームに参加できるか(bb+ anti + bb * 3)を持っているかを判定する
     game.betTable.betBlindAndAnti(p1, 100);
+    game.betTable.betBlindAndAnti(p2, 100);
+    game.betTable.betBlindAndAnti(p3, 100);
+    game.betTable.betBlindAndAnti(p4, 100);
+
+    game.betTable.betTrips(p1, 100);
+    game.betTable.betTrips(p2, 100);
+    game.betTable.betTrips(p3, 100);
+    game.betTable.betTrips(p4, 100);
 
     /*
       no more bet (preflop)
@@ -49,8 +57,6 @@ describe('single game with bet', () => {
     game.openDealerCard();
 
     const result = game.defineWinner();
-
-    console.log(JSON.stringify(result, null, 2));
 
     assert(true, 'Single game test completed successfully');
   });

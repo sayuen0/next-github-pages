@@ -1,5 +1,12 @@
 import { BetTable } from '@/lib/domain/model/game/texasHoldem/ultimate/betTable';
 import { Player } from '@/lib/domain/model/players/player';
+import { TwoPair } from '@/lib/domain/model/hands/twoPair';
+import { OnePair } from '@/lib/domain/model/hands/onePair';
+import { HighCard } from '@/lib/domain/model/hands/highCard';
+import {
+  GameResult,
+  WinLoseTie,
+} from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 
 describe('BetTable', () => {
   describe('.betBlindAndAnti', () => {
@@ -147,17 +154,96 @@ describe('BetTable', () => {
     });
 
     const testCases = [
-      { anti: 100, isDealerQualified: false, win: false, expected: 100 },
-      { anti: 100, isDealerQualified: false, win: true, expected: 100 },
-      { anti: 100, isDealerQualified: true, win: false, expected: 0 },
-      { anti: 100, isDealerQualified: true, win: true, expected: 200 },
+      { anti: 100, isDealerQualified: false, win: 'win', expected: 100 },
+      { anti: 100, isDealerQualified: false, win: 'win', expected: 100 },
+      { anti: 100, isDealerQualified: true, win: 'lose', expected: 0 },
+      { anti: 100, isDealerQualified: true, win: 'lose', expected: 200 },
+      { anti: 100, isDealerQualified: true, win: 'tie', expected: 0 },
+      { anti: 100, isDealerQualified: true, win: 'tie', expected: 200 },
     ];
 
     testCases.forEach(({ anti, isDealerQualified, win, expected }) => {
       it(`should calculate correct distribution for anti=${anti}, dealerQualified=${isDealerQualified}, win=${win}`, () => {
-        const result = betTable.calculateAntiDistribution(anti, isDealerQualified, win);
+        const result = betTable.calculateAntiDistribution(
+          anti,
+          isDealerQualified,
+          win as WinLoseTie,
+        );
         expect(result).toBe(expected);
       });
+    });
+  });
+
+  describe('BetTable.distributeWinnings', () => {
+    let betTable: BetTable;
+    let player: Player;
+    let dealer: Player;
+    let gameResult: GameResult;
+
+    beforeEach(() => {
+      player = new Player('Test Player', 1000);
+      dealer = new Player('Dealer', 100000);
+      betTable = new BetTable([player]);
+    });
+
+    it('should handle high card loss without dealer qualifying', () => {
+      betTable.betBlindAndAnti(player, 50);
+      gameResult = {
+        communityCards: [],
+        playerResults: [
+          {
+            player: player,
+            hand: { hand: new HighCard(), cards: [] },
+            result: 'lose',
+          },
+        ],
+        dealerResult: { hand: new HighCard(), cards: [] },
+        dealerQualified: false,
+      };
+
+      betTable.distributeWinnings(gameResult);
+
+      expect(player.getStack()).toBe(950); // No winnings, only blind lost
+    });
+
+    it('should handle one pair win with dealer qualifying', () => {
+      betTable.betBlindAndAnti(player, 50);
+      gameResult = {
+        communityCards: [],
+        playerResults: [
+          {
+            player: player,
+            hand: { hand: new OnePair(), cards: [] },
+            result: 'win',
+          },
+        ],
+        dealerResult: { hand: new OnePair(), cards: [] },
+        dealerQualified: true,
+      };
+
+      betTable.distributeWinnings(gameResult);
+
+      expect(player.getStack()).toBeGreaterThan(900); // Winnings added
+    });
+
+    it('should handle two pair tie with dealer qualifying', () => {
+      betTable.betBlindAndAnti(player, 50);
+      gameResult = {
+        communityCards: [],
+        playerResults: [
+          {
+            player: player,
+            hand: { hand: new TwoPair(), cards: [] },
+            result: 'tie',
+          },
+        ],
+        dealerResult: { hand: new TwoPair(), cards: [] },
+        dealerQualified: true,
+      };
+
+      betTable.distributeWinnings(gameResult);
+
+      expect(player.getStack()).toBe(1000); // No winnings, but blind returned
     });
   });
 });

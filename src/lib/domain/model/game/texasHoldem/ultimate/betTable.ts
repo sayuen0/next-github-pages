@@ -2,7 +2,9 @@ import { Player } from '@/lib/domain/model/players/player';
 import {
   GameResult,
   PlayerResult,
+  WinLoseTie,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
+import { PokerHand } from '@/lib/domain/model/hands/pokerHand';
 
 interface BetBlock {
   playerID: string;
@@ -116,45 +118,84 @@ export class BetTable {
     });
   }
 
+  /**
+   * Blind, Anti, Trips, Playの配当を計算し、プレイヤーのスタックに加算する
+   * @param gameResult
+   */
   public distributeWinnings(gameResult: GameResult): void {
     gameResult.playerResults.forEach((playerResult: PlayerResult) => {
       const betRecord = this.getBetRecord(playerResult.player);
 
-      // 敗北
-      betRecord.blind = 0;
-      betRecord.anti = 0;
-      betRecord.play = 0;
-      betRecord.trips = 0;
+      const blindDistribution = this.calculateBlindDistribution(
+        playerResult,
+        betRecord.blind,
+      );
+      const antiDistribution = this.calculateAntiDistribution(
+        betRecord.anti,
+        gameResult.dealerQualified,
+        playerResult.result,
+      );
+      const playDistribution = this.calculatePlayDistribution(
+        playerResult,
+        betRecord.play,
+      );
+      const tripsDistribution = this.calculateTripsDistribution(
+        playerResult.hand.hand,
+        betRecord.trips,
+      );
+
+      // Update player stack
+      playerResult.player.addToStack(
+        blindDistribution + antiDistribution + playDistribution + tripsDistribution,
+      );
+
+      // Reset bets for next round
+      this.setBetRecord(playerResult.player.id, {
+        ...betRecord,
+        blind: 0,
+        anti: 0,
+        play: 0,
+        trips: 0,
+      });
     });
   }
 
   /**
    *  以下に従いプレイヤーのアンティ配当を決定する
-   * - ディーラーがクオリファイしていない: 等倍
+   * - ディーラーがクオリファイしていない: 勝敗に関わらず等倍
    * - ディーラーがクオリファイしている:
    *   - プレイヤーが勝利: 2倍
+   *   - チョップ: 等倍
    *   - プレイヤーが敗北: 0倍
    */
   public calculateAntiDistribution(
     anti: number,
     isDealerQualified: boolean,
-    win: boolean,
+    result: WinLoseTie,
   ): number {
     if (!isDealerQualified) {
       return anti;
     }
-    if (win) {
-      return anti * 2;
+    switch (result) {
+      case 'win': {
+        return anti * 2;
+      }
+      case 'tie': {
+        return anti;
+      }
+      default: {
+        return 0;
+      }
     }
-    return 0;
   }
 
   /**
    * 以下に従いプレイヤーのブラインド配当を決定する
    *  - プレイヤーが勝利: ブラインドレートの倍数分
+   *  - チョップ: 等倍
    *  - プレイヤーが敗北: 0
    */
-  private calculateBlindDistribution(playerResult: PlayerResult, blind: number): number {
+  public calculateBlindDistribution(playerResult: PlayerResult, blind: number): number {
     if (playerResult.result == 'lose') {
       return 0;
     }
@@ -165,6 +206,36 @@ export class BetTable {
     return Math.floor(
       BlindRate[playerResult.hand.hand.name as keyof typeof BlindRate] * blind,
     );
+  }
+
+  /**
+   * 以下に従いプレイヤーのトリップス配当を決定する
+   * - トリップスレートの倍数分(プレイヤーの勝敗に関わらない)
+   * ※レート判定に用いている役はプレイヤーの完成役である
+   * 実際のゲームではプレイヤーの勝敗に関わらないので、ボードのみで完成した最高役に関しても配当をもらえる場合があるが、
+   * ボードの5枚よりプレイヤーのホールカード2枚を加えた役の強さは常にボード5枚からなる役の強さ以上なので、プレイヤーのハンドを用いて判定する
+   */
+  public calculateTripsDistribution(hand: PokerHand, trips: number): number {
+    return Math.floor(TripsRate[hand.name as keyof typeof TripsRate] * trips);
+  }
+
+  /**
+   * 以下に従いプレイヤーのプレイ配当を決定する
+   * - プレイヤーが勝利: プレイベットの2倍
+   * - チョップ: プレイベットの1倍
+   * - プレイヤーが敗北: 0
+   * @param playerResult
+   * @param play
+   */
+  public calculatePlayDistribution(playerResult: PlayerResult, play: number): number {
+    if (playerResult.result == 'lose') {
+      return 0;
+    }
+    if (playerResult.result == 'tie') {
+      return play;
+    }
+
+    return play * 2;
   }
 
   private getBlindBet(player: Player): number {
