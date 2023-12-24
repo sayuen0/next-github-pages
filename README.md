@@ -49,6 +49,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## TODO
 
-- [ ] 役判定できるようにする
-- [ ] 卓の色を調整する
 - [ ] ボタンとスライダーを用意する
+- [ ] ディーラーはスタックが減らないようにする

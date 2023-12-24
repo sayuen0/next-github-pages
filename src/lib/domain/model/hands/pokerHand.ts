@@ -31,11 +31,14 @@ export interface HandResult {
 export abstract class PokerHand {
   static readonly score: PokerHandRank;
 
+  public get name(): string {
+    return this.constructor.name;
+  }
+
   static isHand(card: PokerCard[]): boolean {
     throw new Error('Not implemented');
   }
 
-  // その役を成すカード群を返す
   /*
   FIXME: findメソッドをPokerHandを継承している全クラスに実装を強制したいが、
   - static abstractはできない(TS1243)
