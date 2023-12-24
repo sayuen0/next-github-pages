@@ -163,7 +163,8 @@ describe('Flush class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = Flush.calculateScore(cards);
+        const hand = new Flush();
+        const score = hand.calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

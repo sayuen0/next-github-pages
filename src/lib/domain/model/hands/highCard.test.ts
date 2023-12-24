@@ -57,7 +57,8 @@ describe('HighCard class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = HighCard.calculateScore(cards);
+        const hand = new HighCard();
+        const score = hand.calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

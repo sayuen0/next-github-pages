@@ -36,7 +36,7 @@ export class HandEvaluator {
 
     for (const hand of hands) {
       if (hand.isHand(cards)) {
-        return { hand: hand, cards: hand.find(cards) };
+        return { hand: new hand(), cards: hand.find(cards) };
       }
     }
 

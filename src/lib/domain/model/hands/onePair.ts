@@ -9,6 +9,13 @@ import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 export class OnePair extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.ONE_PAIR;
 
+  /**
+   * 役判定におけるスコア決定における基底スコア
+   */
+  static get baseScore(): number {
+    return OnePair.score * HAND_RANK_SCALE;
+  }
+
   static isHand(cards: PokerCard[]): boolean {
     if (cards.length < 2) {
       return false;
@@ -49,7 +56,7 @@ export class OnePair extends PokerHand {
     return [...pairCards, ...remainingCards];
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
     ワンペアのスコアは次のように決まる
     - (全役共通) 役のスコア * スケール値
@@ -58,7 +65,7 @@ export class OnePair extends PokerHand {
     - 次に高いカードの数値 * 100
     - 最も低いカードの数値
      */
-    const pairs = this.findPairs(cards);
+    const pairs = OnePair.findPairs(cards);
     // ペアを見つけた後、ペアでないカードをソート
     const sortedCards = CardsSorter.byNumber(
       cards.filter((card) => !pairs.has(card.cardNumber)),
@@ -68,7 +75,7 @@ export class OnePair extends PokerHand {
     const pairNumber = pairs.values().next().value;
     // 最後に計算
     return (
-      this.score * HAND_RANK_SCALE +
+      OnePair.score * HAND_RANK_SCALE +
       pairNumber * 1_000_000 +
       sortedCards[0].cardNumber * 10_000 +
       sortedCards[1].cardNumber * 100 +

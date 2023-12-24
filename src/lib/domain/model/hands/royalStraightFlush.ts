@@ -36,12 +36,12 @@ export class RoyalStraightFlush extends PokerHand {
     return sortedCards.filter((card) => [10, 11, 12, 13, 14].includes(card.cardNumber));
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       ロイヤルストレートフラッシュのスコアは次のように決まる
       - (全役共通) 役のスコア * スケール値
       - 14(エース)
      */
-    return this.score * HAND_RANK_SCALE + 14;
+    return RoyalStraightFlush.score * HAND_RANK_SCALE + 14;
   }
 }

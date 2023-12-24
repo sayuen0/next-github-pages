@@ -34,17 +34,6 @@ export class Flush extends PokerHand {
     return [];
   }
 
-  static calculateScore(cards: PokerCard[]): number {
-    /*
-      フラッシュのスコアは次のように決まる
-      - (全役共通) 役のスコア * スケール値
-      - フラッシュの最も高いカードの数値
-     */
-    const flushCards = this.find(cards);
-    const sortedCards = flushCards.sort((a, b) => b.cardNumber - a.cardNumber);
-    return this.score * HAND_RANK_SCALE + sortedCards[0].cardNumber;
-  }
-
   /**
    * 引数のカードの中に、指定した枚数以上の同じスートのカードが存在するかどうかを判定する
    * @param cards
@@ -64,5 +53,16 @@ export class Flush extends PokerHand {
     return Object.values(suitCounts)
       .filter((count): count is number => count !== undefined)
       .some((count) => count >= target);
+  }
+
+  calculateScore(cards: PokerCard[]): number {
+    /*
+      フラッシュのスコアは次のように決まる
+      - (全役共通) 役のスコア * スケール値
+      - フラッシュの最も高いカードの数値
+     */
+    const flushCards = Flush.find(cards);
+    const sortedCards = flushCards.sort((a, b) => b.cardNumber - a.cardNumber);
+    return Flush.score * HAND_RANK_SCALE + sortedCards[0].cardNumber;
   }
 }

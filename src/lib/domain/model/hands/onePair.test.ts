@@ -115,7 +115,8 @@ describe('OnePair class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = OnePair.calculateScore(cards);
+        const hand = new OnePair();
+        const score = hand.calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

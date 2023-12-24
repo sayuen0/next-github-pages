@@ -129,7 +129,7 @@ describe('FullHouse class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = FullHouse.calculateScore(cards);
+        const score = new FullHouse().calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

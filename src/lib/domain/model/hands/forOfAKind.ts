@@ -46,18 +46,18 @@ export class FourOfAKind extends PokerHand {
     return [...fourOfAKindCards, kickerCard];
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       フォーカードのスコアは次のように決まる
       - (全役共通) 役のスコア * スケール値
       - フォーカードの数値 * 100
       - キッカーの数値
      */
-    const sets = this.findSet(cards);
+    const sets = FourOfAKind.findSet(cards);
     const sortedCards = cards.sort((a, b) => b.cardNumber - a.cardNumber);
     const setNumber = sets.values().next().value;
     return (
-      this.score * HAND_RANK_SCALE +
+      FourOfAKind.score * HAND_RANK_SCALE +
       setNumber * 100 +
       sortedCards.find((card) => card.cardNumber !== setNumber)!.cardNumber
     );

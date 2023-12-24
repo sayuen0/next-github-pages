@@ -64,7 +64,7 @@ describe('RoyalStraightFlush class', () => {
     ];
     testCasesForCalculateScore.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = RoyalStraightFlush.calculateScore(cards);
+        const score = new RoyalStraightFlush().calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

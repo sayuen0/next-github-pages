@@ -122,7 +122,8 @@ describe('ThreeOfAKind class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = ThreeOfAKind.calculateScore(cards);
+        const hand = new ThreeOfAKind();
+        const score = hand.calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

@@ -40,7 +40,7 @@ export class TwoPair extends PokerHand {
     return [...pairCards, kickerCard];
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       ツーペアのスコアは次のように決まる
       - (全役共通) 役のスコア * スケール値
@@ -48,7 +48,7 @@ export class TwoPair extends PokerHand {
       - 低いペアの数値 * 100
       - ペアでないカードの数値
      */
-    const pairs = this.findPairs(cards);
+    const pairs = TwoPair.findPairs(cards);
     // ペアを見つけた後、ペアでないカードをソート
     const sortedCards = cards
       .filter((card) => !pairs.has(card.cardNumber))
@@ -58,7 +58,7 @@ export class TwoPair extends PokerHand {
 
     // 最後に計算
     return (
-      this.score * HAND_RANK_SCALE +
+      TwoPair.score * HAND_RANK_SCALE +
       pairNumbers[0] * 10_000 +
       pairNumbers[1] * 100 +
       sortedCards[0].cardNumber

@@ -20,7 +20,7 @@ export class HighCard extends PokerHand {
     return cards.sort((a, b) => b.cardNumber - a.cardNumber).slice(0, 5);
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       ハイカードのスコアは次のように決まる
       (全役共通) 役のスコア * スケール値
@@ -32,7 +32,7 @@ export class HighCard extends PokerHand {
      */
     const sortedCards = cards.sort((a, b) => b.cardNumber - a.cardNumber);
     return (
-      this.score * HAND_RANK_SCALE +
+      HighCard.score * HAND_RANK_SCALE +
       sortedCards[0].cardNumber * 100_000_000 +
       sortedCards[1].cardNumber * 1_000_000 +
       sortedCards[2].cardNumber * 10_000 +

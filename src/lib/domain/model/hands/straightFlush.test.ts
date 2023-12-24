@@ -147,7 +147,7 @@ describe('StraightFlush class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = StraightFlush.calculateScore(cards);
+        const score = new StraightFlush().calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

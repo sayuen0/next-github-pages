@@ -75,7 +75,7 @@ describe('TwoPair class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = TwoPair.calculateScore(cards);
+        const score = new TwoPair().calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

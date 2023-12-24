@@ -322,7 +322,7 @@ describe('Straight class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = Straight.calculateScore(cards);
+        const score = new Straight().calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

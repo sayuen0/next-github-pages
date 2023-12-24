@@ -67,7 +67,7 @@ export class StraightFlush extends PokerHand {
     return [];
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       ストレートフラッシュのスコアは次のように決まる
       - (全役共通) 役のスコア * スケール値
@@ -75,10 +75,10 @@ export class StraightFlush extends PokerHand {
 
       ただし、A-2-3-4-5 のストレートフラッシュの場合は、5を最も高いカードとして扱う
      */
-    const straightFlushCards = this.find(cards);
+    const straightFlushCards = StraightFlush.find(cards);
     const sortedCards = straightFlushCards.sort((a, b) => b.cardNumber - a.cardNumber);
     const isAceToFiveStraightFlush = Straight.isAceToFiveStraight(straightFlushCards);
     const highestCardNumber = isAceToFiveStraightFlush ? 5 : sortedCards[0].cardNumber;
-    return this.score * HAND_RANK_SCALE + highestCardNumber;
+    return StraightFlush.score * HAND_RANK_SCALE + highestCardNumber;
   }
 }

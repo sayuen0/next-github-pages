@@ -60,7 +60,7 @@ describe('HandEvaluator class', () => {
       testCases.forEach(({ name, input, expectedHand }) => {
         it(name, () => {
           const result = HandEvaluator.evaluateHand(input);
-          const className = (result.hand as any).name;
+          const className = result.hand.constructor.name;
           expect(className).toEqual(expectedHand);
           // オプション: さらに、result.cards が期待されるカードセットを含んでいることを検証
         });
@@ -133,7 +133,7 @@ describe('HandEvaluator class', () => {
       testCases.forEach(({ name, input, expectedHand }) => {
         it(name, () => {
           const result = HandEvaluator.evaluateHand(input);
-          const className = (result.hand as any).name;
+          const className = result.hand.constructor.name;
           expect(className).toEqual(expectedHand);
           // オプション: さらに、result.cards が期待されるカードセットを含んでいることを検証
         });
@@ -198,7 +198,7 @@ describe('HandEvaluator class', () => {
     testCases.forEach(({ name, input, expectedHand }) => {
       it(name, () => {
         const result = HandEvaluator.evaluateHand(input);
-        const className = (result.hand as any).name;
+        const className = result.hand.constructor.name;
         expect(className).toEqual(expectedHand);
       });
     });

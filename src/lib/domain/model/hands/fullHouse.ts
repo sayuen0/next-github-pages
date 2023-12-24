@@ -81,7 +81,7 @@ export class FullHouse extends PokerHand {
     return [...threeOfAKindCards, ...pairCards];
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       フルハウスのスコアは次のように決まる
       - (全役共通) 役のスコア * スケール値
@@ -96,6 +96,6 @@ export class FullHouse extends PokerHand {
     const threeOfAKindNumber = threeOfAKindValues.values().next().value;
     const pairNumber = pairValues.values().next().value;
     // 最後に計算
-    return this.score * HAND_RANK_SCALE + threeOfAKindNumber * 100 + pairNumber;
+    return FullHouse.score * HAND_RANK_SCALE + threeOfAKindNumber * 100 + pairNumber;
   }
 }

@@ -148,17 +148,17 @@ export class Straight extends PokerHand {
     return [];
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       ストレートのスコアは次のように決まる
       - (全役共通) 役のスコア * スケール値
       - ストレートの最も高いカードの数値
       ただし、A-2-3-4-5のストレートの場合は、最も高いカードは5として扱う
      */
-    const straightCards = this.find(cards);
+    const straightCards = Straight.find(cards);
     const sortedCards = CardsSorter.byNumber(straightCards);
-    const isAceToFiveStraight = this.isAceToFiveStraight(sortedCards);
+    const isAceToFiveStraight = Straight.isAceToFiveStraight(sortedCards);
     const highestCardNumber = isAceToFiveStraight ? 5 : sortedCards[4].cardNumber;
-    return this.score * HAND_RANK_SCALE + highestCardNumber;
+    return Straight.score * HAND_RANK_SCALE + highestCardNumber;
   }
 }

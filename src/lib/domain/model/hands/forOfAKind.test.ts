@@ -54,7 +54,8 @@ describe('FourOfAKind class', () => {
 
     testCases.forEach(({ name, cards, expectedScore }) => {
       it(name, () => {
-        const score = FourOfAKind.calculateScore(cards);
+        const hand = new FourOfAKind();
+        const score = hand.calculateScore(cards);
         expect(score).toBe(expectedScore);
       });
     });

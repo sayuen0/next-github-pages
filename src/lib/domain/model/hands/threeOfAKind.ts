@@ -62,7 +62,7 @@ export class ThreeOfAKind extends PokerHand {
     return sets;
   }
 
-  static calculateScore(cards: PokerCard[]): number {
+  calculateScore(cards: PokerCard[]): number {
     /*
       スリーカードのスコアは次のように決まる
       - (全役共通) 役のスコア * スケール値
@@ -70,7 +70,7 @@ export class ThreeOfAKind extends PokerHand {
       - スリーカード以外の最も高いカードの数値 * 100
       - 最も低いカードの数値
      */
-    const sets = this.findSet(cards);
+    const sets = ThreeOfAKind.findSet(cards);
     // スリーカードを見つけた後、スリーカードでないカードをソート
     const sortedCards = CardsSorter.byNumber(
       cards.filter((card) => !sets.has(card.cardNumber)),
@@ -80,7 +80,7 @@ export class ThreeOfAKind extends PokerHand {
     const setNumber = sets.values().next().value;
     // 最後に計算
     return (
-      this.score * HAND_RANK_SCALE +
+      ThreeOfAKind.score * HAND_RANK_SCALE +
       setNumber * 10_000 +
       sortedCards[0].cardNumber * 100 +
       sortedCards[1].cardNumber
