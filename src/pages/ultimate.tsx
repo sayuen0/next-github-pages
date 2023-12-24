@@ -5,12 +5,22 @@ import { useUltimate } from '@/hooks/useUltimate';
 import Slider from '@/components/ui/slider';
 
 export default function Ultimate() {
-  const { game, player, dealerCards, playerCards, communityCards, blind, setBlind } =
-    useUltimate();
+  const {
+    game,
+    player,
+    dealerCards,
+    playerCards,
+    setPlayerCards,
+    communityCards,
+    blind,
+    setBlind,
+  } = useUltimate();
   const cardsContainerStyle = {
+    minHeight: '160px',
     display: 'flex', // フレックスボックスを適用
     justifyContent: 'center', // 中央揃え
     FlexWrap: 'wrap', // 必要に応じて折り返し
+    border: '1px solid white',
   };
 
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +50,7 @@ export default function Ultimate() {
       {player && (
         <div>
           <h2>{player.getName()}</h2>
-          <p>スタック: {player.getStack()}</p>
+          <p>スタック: {player.getStack() - blind * 3}</p>
         </div>
       )}
       {player && (
@@ -52,6 +62,20 @@ export default function Ultimate() {
         />
       )}
       <p>現在のベット額: {blind}</p>
+      <p>現在のアンティ額: {blind}</p>
+      {player && game && (
+        <button
+          onClick={() => {
+            game.betTable.betBlindAndAnti(player, blind);
+            game.betTable.betTrips(player, blind);
+            game.startNewRound();
+            game.dealPreFlop();
+            setPlayerCards(player.holeCard);
+          }}
+        >
+          スタート
+        </button>
+      )}
     </div>
   );
 }

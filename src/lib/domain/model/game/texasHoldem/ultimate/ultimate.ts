@@ -52,6 +52,7 @@ export class UltimateTexasHoldem {
       this.allPlayers().forEach((p) => {
         const card = this.deck.drawTop();
         if (card) {
+          card.visible = true;
           p.addHoleCard(card);
         }
       });

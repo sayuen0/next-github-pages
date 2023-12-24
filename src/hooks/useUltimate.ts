@@ -25,11 +25,17 @@ export const useUltimate = () => {
     setGame(newGame);
     setPlayer(newPlayer);
 
-    setDealerCards(generateRandomCards(2));
-    setPlayerCards(generateRandomCards(2));
-    setCommunityCards(generateRandomCards(5));
-    // その他のゲームセットアップ処理
+    newGame.startNewRound();
   }, []);
 
-  return { game, player, dealerCards, playerCards, communityCards, blind, setBlind };
+  return {
+    game,
+    player,
+    dealerCards,
+    playerCards,
+    setPlayerCards,
+    communityCards,
+    blind,
+    setBlind,
+  };
 };
