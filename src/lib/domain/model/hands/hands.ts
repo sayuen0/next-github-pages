@@ -17,7 +17,7 @@ export enum PokerHandRank {
   役のスケール値
   役のスコア計算の際、異なる役間のスコアを比較するために用いる
  */
-export const HAND_RANK_SCALE = 10000000000;
+export const HAND_RANK_SCALE = 100_000_000_000;
 
 export abstract class PokerHand {
   static readonly score: PokerHandRank;

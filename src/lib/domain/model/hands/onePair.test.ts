@@ -1,5 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 describe('OnePair class', () => {
   const testCases = [
@@ -95,6 +96,39 @@ describe('OnePair class', () => {
       it(name, () => {
         const result = OnePair.findSet(input);
         expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('.calculateScore', () => {
+    const testCases = [
+      {
+        name: 'One pair with high cards',
+        cards: PokerCard.NewPokerCards('2H', '2D', '5S', '9C', 'KD'),
+        expectedScore:
+          PokerHandRank.ONE_PAIR * HAND_RANK_SCALE +
+          2 * 1_000_000 +
+          13 * 10_000 +
+          9 * 100 +
+          5,
+      },
+      {
+        name: 'One pair with Ace as high card',
+        cards: PokerCard.NewPokerCards('AH', '2D', '2C', '9C', 'KD'),
+        expectedScore:
+          PokerHandRank.ONE_PAIR * HAND_RANK_SCALE +
+          2 * 1_000_000 +
+          14 * 10_000 +
+          13 * 100 +
+          9,
+      },
+      // 他のテストケースを追加
+    ];
+
+    testCases.forEach(({ name, cards, expectedScore }) => {
+      it(name, () => {
+        const score = OnePair.calculateScore(cards);
+        expect(score).toBe(expectedScore);
       });
     });
   });

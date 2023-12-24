@@ -9,10 +9,10 @@ describe('HighCard class', () => {
       cards: PokerCard.NewPokerCards('2H', '3D', '5S', '9C', 'KD'),
       expectedScore:
         PokerHandRank.HIGH_CARD * HAND_RANK_SCALE +
-        13 * 10000 +
-        9 * 1000 +
-        5 * 100 +
-        3 * 10 +
+        13 * 100_000_000 +
+        9 * 1_000_000 +
+        5 * 10_000 +
+        3 * 100 +
         2,
     },
     {
@@ -20,10 +20,10 @@ describe('HighCard class', () => {
       cards: PokerCard.NewPokerCards('AH', '3D', '5S', '9C', 'KD'),
       expectedScore:
         PokerHandRank.HIGH_CARD * HAND_RANK_SCALE +
-        14 * 10000 +
-        13 * 1000 +
-        9 * 100 +
-        5 * 10 +
+        14 * 100_000_000 +
+        13 * 1_000_000 +
+        9 * 10_000 +
+        5 * 100 +
         3,
     },
     // 他のテストケースを追加

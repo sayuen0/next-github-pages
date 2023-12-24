@@ -20,18 +20,20 @@ export class HighCard extends PokerHand {
     /*
       ハイカードのスコアは次のように決まる
       (全役共通) 役のスコア * スケール値
-      - 最も高いカードの数値 * 10000
-      - 次に高いカードの数値 * 1000
-      - 3番目に高いカードの数値 * 100
-      - 4番目に高いカードの数値 * 10
+      - 最も高いカードの数値 * 100,000,000
+      - 次に高いカードの数値 * 1,000,000
+      - 3番目に高いカードの数値 * 10,000
+      - 4番目に高いカードの数値 * 100
       - 最も低いカードの数値
      */
     const sortedCards = cards.sort((a, b) => b.cardNumber - a.cardNumber);
     return (
       this.score * HAND_RANK_SCALE +
-      sortedCards.reduce((score, card, index) => {
-        return score + card.cardNumber * Math.pow(10, 4 - index);
-      }, 0)
+      sortedCards[0].cardNumber * 100_000_000 +
+      sortedCards[1].cardNumber * 1_000_000 +
+      sortedCards[2].cardNumber * 10_000 +
+      sortedCards[3].cardNumber * 100 +
+      sortedCards[4].cardNumber
     );
   }
 }
