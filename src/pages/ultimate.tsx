@@ -44,7 +44,12 @@ export default function Ultimate() {
         </div>
       )}
       {player && (
-        <Slider min={10} max={player.getStack()} onChange={handleSliderChange} />
+        <Slider
+          min={10}
+          max={player.getStack() / 6}
+          step={10}
+          onChange={handleSliderChange}
+        />
       )}
       <p>現在のベット額: {blind}</p>
     </div>
