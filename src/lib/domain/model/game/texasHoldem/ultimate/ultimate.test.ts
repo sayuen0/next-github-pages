@@ -38,8 +38,8 @@ describe('UltimateTexasHoldem', () => {
       game.startNewRound();
       game.dealPreFlop();
       game.dealFlop();
-      game.dealTurn();
-      expect(game['communityCards'].length).toBe(4); // コミュニティカードが4枚であること
+      game.dealTurnRiver();
+      expect(game['communityCards'].length).toBe(5); // コミュニティカードが4枚であること
     });
   });
 });

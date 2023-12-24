@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import MaterialButton from '@/components/ui/incrementOrDecrementButton';
+import MaterialButton from '@/components/ui/materialButton';
 
 interface SliderProps {
   min: number;

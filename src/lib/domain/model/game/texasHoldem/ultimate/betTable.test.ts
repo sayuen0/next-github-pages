@@ -155,11 +155,11 @@ describe('BetTable', () => {
 
     const testCases = [
       { anti: 100, isDealerQualified: false, win: 'win', expected: 100 },
-      { anti: 100, isDealerQualified: false, win: 'win', expected: 100 },
+      { anti: 100, isDealerQualified: false, win: 'lose', expected: 100 },
+      { anti: 100, isDealerQualified: true, win: 'win', expected: 200 },
       { anti: 100, isDealerQualified: true, win: 'lose', expected: 0 },
-      { anti: 100, isDealerQualified: true, win: 'lose', expected: 200 },
-      { anti: 100, isDealerQualified: true, win: 'tie', expected: 0 },
-      { anti: 100, isDealerQualified: true, win: 'tie', expected: 200 },
+      { anti: 100, isDealerQualified: true, win: 'tie', expected: 100 },
+      { anti: 100, isDealerQualified: false, win: 'tie', expected: 100 },
     ];
 
     testCases.forEach(({ anti, isDealerQualified, win, expected }) => {
