@@ -10,6 +10,7 @@ export const useUltimate = () => {
   const [dealerCards, setDealerCards] = useState<PokerCard[]>([]);
   const [playerCards, setPlayerCards] = useState<PokerCard[]>([]);
   const [communityCards, setCommunityCards] = useState<PokerCard[]>([]);
+  const [blind, setBlind] = useState(0);
 
   function generateRandomCards(count: number): PokerCard[] {
     return Array.from({ length: count }, () =>
@@ -30,5 +31,5 @@ export const useUltimate = () => {
     // その他のゲームセットアップ処理
   }, []);
 
-  return { game, player, dealerCards, playerCards, communityCards };
+  return { game, player, dealerCards, playerCards, communityCards, blind, setBlind };
 };

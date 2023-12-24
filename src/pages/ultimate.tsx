@@ -2,13 +2,20 @@
 import Card from '@/components/cards/card';
 import Table from '@/components/table/table';
 import { useUltimate } from '@/hooks/useUltimate';
+import Slider from '@/components/ui/slider';
 
 export default function Ultimate() {
-  const { game, player, dealerCards, playerCards, communityCards } = useUltimate();
+  const { game, player, dealerCards, playerCards, communityCards, blind, setBlind } =
+    useUltimate();
   const cardsContainerStyle = {
     display: 'flex', // フレックスボックスを適用
     justifyContent: 'center', // 中央揃え
     FlexWrap: 'wrap', // 必要に応じて折り返し
+  };
+
+  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const v = Number(event.target.value); // Update the state with the new slider value
+    setBlind(v);
   };
 
   return (
@@ -36,6 +43,10 @@ export default function Ultimate() {
           <p>スタック: {player.getStack()}</p>
         </div>
       )}
+      {player && (
+        <Slider min={10} max={player.getStack()} onChange={handleSliderChange} />
+      )}
+      <p>現在のベット額: {blind}</p>
     </div>
   );
 }
