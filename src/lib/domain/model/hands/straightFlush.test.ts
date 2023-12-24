@@ -1,6 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { StraightFlush } from '@/lib/domain/model/hands/straightFlush';
-import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/pokerHand';
 
 describe('StraightFlush class', () => {
   describe('isHand', () => {

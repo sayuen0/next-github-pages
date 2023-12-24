@@ -1,6 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { FourOfAKind } from '@/lib/domain/model/hands/forOfAKind';
-import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/pokerHand';
 
 describe('FourOfAKind class', () => {
   const testCases = [

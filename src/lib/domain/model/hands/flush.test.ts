@@ -1,6 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { Flush } from '@/lib/domain/model/hands/flush';
-import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/pokerHand';
 
 describe('Flush class', () => {
   // isHandメソッドのテスト

@@ -3,7 +3,7 @@ import {
   HAND_RANK_SCALE,
   PokerHand,
   PokerHandRank,
-} from '@/lib/domain/model/hands/hands';
+} from '@/lib/domain/model/hands/pokerHand';
 
 export class Flush extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.FLUSH;

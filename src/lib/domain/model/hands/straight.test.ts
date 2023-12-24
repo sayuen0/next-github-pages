@@ -1,6 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { Straight } from '@/lib/domain/model/hands/straight';
-import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/pokerHand';
 
 describe('Straight class', () => {
   describe('Straight.isHand', () => {

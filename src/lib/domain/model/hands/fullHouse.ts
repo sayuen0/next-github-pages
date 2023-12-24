@@ -4,7 +4,7 @@ import {
   HAND_RANK_SCALE,
   PokerHand,
   PokerHandRank,
-} from '@/lib/domain/model/hands/hands';
+} from '@/lib/domain/model/hands/pokerHand';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
 
 export class FullHouse extends PokerHand {
@@ -52,7 +52,7 @@ export class FullHouse extends PokerHand {
     }
 
     // ツーペアはフルハウスドローである
-    const pairValues = OnePair.findSet(cards);
+    const pairValues = OnePair.findPairs(cards);
     if (pairValues.size >= 2) {
       return true;
     }
@@ -71,7 +71,7 @@ export class FullHouse extends PokerHand {
     const remainingCards = cards.filter(
       (card) => !threeOfAKindValues.has(card.cardNumber),
     );
-    const pairValues = OnePair.findSet(remainingCards);
+    const pairValues = OnePair.findPairs(remainingCards);
     const threeOfAKindNumber = threeOfAKindValues.values().next().value;
     const pairNumber = pairValues.values().next().value;
     // 最後に計算

@@ -1,6 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { FullHouse } from '@/lib/domain/model/hands/fullHouse';
-import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/pokerHand';
 
 describe('FullHouse class', () => {
   // isHandメソッドのテスト

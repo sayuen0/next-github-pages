@@ -30,6 +30,30 @@ export abstract class PokerHand {
     throw new Error('Not implemented');
   }
 
+  // その役を成すカード群を返す
+  /*
+  FIXME: findメソッドをPokerHandを継承している全クラスに実装を強制したいが、
+  static abstractはできない(TS1243)
+   */
+  static find(cards: PokerCard[]): PokerCard[] {
+    throw new Error('Not implemented');
+  }
+
+  // ペアをなしている2組を返す
+  static findPairs(cards: PokerCard[]): Set<number> {
+    const sortedCards = cards.sort((a, b) => b.cardNumber - a.cardNumber);
+    let pairs = new Set<number>();
+
+    for (let i = 0; i <= sortedCards.length - 2; i++) {
+      if (sortedCards[i].cardNumber === sortedCards[i + 1].cardNumber) {
+        pairs.add(sortedCards[i].cardNumber);
+        i += 1; // Skip the next card that is part of the current pair
+      }
+    }
+
+    return pairs; // Always return a Set (can be empty if no pairs are found)
+  }
+
   // Helper method to group cards by their number
   protected static groupByNumber(cards: PokerCard[]): { [key: number]: PokerCard[] } {
     return cards.reduce((groups: { [key: number]: PokerCard[] }, card: PokerCard) => {

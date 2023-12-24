@@ -3,7 +3,7 @@ import {
   HAND_RANK_SCALE,
   PokerHand,
   PokerHandRank,
-} from '@/lib/domain/model/hands/hands';
+} from '@/lib/domain/model/hands/pokerHand';
 
 export class HighCard extends PokerHand {
   static readonly score: number = PokerHandRank.HIGH_CARD;
@@ -14,6 +14,10 @@ export class HighCard extends PokerHand {
 
   static isDraw(cards: PokerCard[]): boolean {
     return true;
+  }
+
+  static find(cards: PokerCard[]): PokerCard[] {
+    return cards.sort((a, b) => b.cardNumber - a.cardNumber).slice(0, 5);
   }
 
   static calculateScore(cards: PokerCard[]): number {

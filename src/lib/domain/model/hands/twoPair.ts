@@ -3,7 +3,7 @@ import {
   HAND_RANK_SCALE,
   PokerHand,
   PokerHandRank,
-} from '@/lib/domain/model/hands/hands';
+} from '@/lib/domain/model/hands/pokerHand';
 
 export class TwoPair extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.TWO_PAIR;
@@ -21,18 +21,8 @@ export class TwoPair extends PokerHand {
   }
 
   // ペアをなしている2組を返す
-  static findSets(cards: PokerCard[]): Set<number> {
-    const sortedCards = cards.sort((a, b) => b.cardNumber - a.cardNumber);
-    let pairs = new Set<number>();
-
-    for (let i = 0; i <= sortedCards.length - 2; i++) {
-      if (sortedCards[i].cardNumber === sortedCards[i + 1].cardNumber) {
-        pairs.add(sortedCards[i].cardNumber);
-        i += 1; // Skip the next card that is part of the current pair
-      }
-    }
-
-    return pairs; // Always return a Set (can be empty if no pairs are found)
+  static findPairs(cards: PokerCard[]): Set<number> {
+    return super.findPairs(cards);
   }
 
   static calculateScore(cards: PokerCard[]): number {
@@ -43,7 +33,7 @@ export class TwoPair extends PokerHand {
       - 低いペアの数値 * 100
       - ペアでないカードの数値
      */
-    const pairs = this.findSets(cards);
+    const pairs = this.findPairs(cards);
     // ペアを見つけた後、ペアでないカードをソート
     const sortedCards = cards
       .filter((card) => !pairs.has(card.cardNumber))

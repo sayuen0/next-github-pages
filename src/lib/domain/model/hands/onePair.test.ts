@@ -1,6 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
-import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/pokerHand';
 
 describe('OnePair class', () => {
   const testCases = [
@@ -58,44 +58,32 @@ describe('OnePair class', () => {
     });
   });
 
-  describe('.findSet', () => {
-    const testCases = [
-      {
-        name: 'Pocket pair, is a pair',
-        input: PokerCard.NewPokerCards('2H', '2D'),
-        expected: new Set([2]),
-      },
-      {
-        name: '5 cards, is a pair',
-        input: PokerCard.NewPokerCards('2H', '5D', '8S', 'QS', 'QD'),
-        expected: new Set([12]),
-      },
-      {
-        name: '5 cards, no pair',
-        input: PokerCard.NewPokerCards('2H', '5D', '8S', 'QS', 'JD'),
-        expected: new Set([]),
-      },
-      {
-        name: '6 cards, multiple pairs',
-        input: PokerCard.NewPokerCards('2H', '2D', '5C', '5D', 'KS', 'KD'),
-        expected: new Set([2, 5, 13]),
-      },
-      {
-        name: '7 cards, one pair',
-        input: PokerCard.NewPokerCards('2H', '5D', '5S', '6D', '8S', '9C', 'JD'),
-        expected: new Set([5]),
-      },
-      {
-        name: '7 cards, no pair',
-        input: PokerCard.NewPokerCards('2H', '3D', '5S', '6C', '7H', '9D', 'JS'),
-        expected: new Set([]),
-      },
-    ];
+  describe('.find', () => {
+    describe('.find', () => {
+      const testCases = [
+        {
+          name: 'Simple one pair',
+          input: PokerCard.NewPokerCards('2H', '2D', '3S', '4C', '5H'),
+          expected: PokerCard.NewPokerCards('2H', '2D', '5H', '4C', '3S'),
+        },
+        {
+          name: 'One pair with higher cards',
+          input: PokerCard.NewPokerCards('9H', '9C', 'JH', 'QC', 'KH', '2S', '3D'),
+          expected: PokerCard.NewPokerCards('9H', '9C', 'KH', 'QC', 'JH'),
+        },
+        {
+          name: 'One pair with Ace',
+          input: PokerCard.NewPokerCards('AH', 'AC', '7D', '5S', '3H'),
+          expected: PokerCard.NewPokerCards('AH', 'AC', '7D', '5S', '3H'),
+        },
+        // 他のテストケースを追加
+      ];
 
-    testCases.forEach(({ name, input, expected }) => {
-      it(name, () => {
-        const result = OnePair.findSet(input);
-        expect(result).toEqual(expected);
+      testCases.forEach(({ name, input, expected }) => {
+        it(name, () => {
+          const result = OnePair.find(input);
+          expect(result).toEqual(expected);
+        });
       });
     });
   });

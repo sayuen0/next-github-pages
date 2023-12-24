@@ -2,7 +2,7 @@ import {
   HAND_RANK_SCALE,
   PokerHand,
   PokerHandRank,
-} from '@/lib/domain/model/hands/hands';
+} from '@/lib/domain/model/hands/pokerHand';
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 
@@ -21,18 +21,32 @@ export class OnePair extends PokerHand {
     return Object.values(groupedCards).some((group) => group.length >= 2);
   }
 
-  static findSet(cards: PokerCard[]): Set<number> {
-    const sortedCards = CardsSorter.byNumber(cards);
-    let pairs = new Set<number>();
+  static findPairs(cards: PokerCard[]): Set<number> {
+    return super.findPairs(cards);
+  }
 
-    for (let i = 0; i <= sortedCards.length - 2; i++) {
-      if (sortedCards[i].cardNumber === sortedCards[i + 1].cardNumber) {
-        pairs.add(sortedCards[i].cardNumber);
-        i += 1; // Skip the next card that is part of the current pair
-      }
+  static find(cards: PokerCard[]): PokerCard[] {
+    const pairs = this.findPairs(cards);
+
+    // ペアが存在しない場合は空の配列を返す
+    if (pairs.size === 0) {
+      return [];
     }
 
-    return pairs; // Always return a Set (can be empty if no pairs are found)
+    // ペアの数値を取得
+    const pairNumber = pairs.values().next().value;
+
+    // ペアを構成するカードを取得
+    const pairCards = cards.filter((card) => card.cardNumber === pairNumber);
+
+    // 残りのカードをソートして、ペア以外の最も高い3枚のカードを選択
+    const remainingCards = CardsSorter.byNumber(
+      cards.filter((card) => card.cardNumber !== pairNumber),
+      'desc',
+    ).slice(0, 3);
+
+    // ペアと残りのカードを結合して返す
+    return [...pairCards, ...remainingCards];
   }
 
   static calculateScore(cards: PokerCard[]): number {
@@ -44,7 +58,7 @@ export class OnePair extends PokerHand {
     - 次に高いカードの数値 * 100
     - 最も低いカードの数値
      */
-    const pairs = this.findSet(cards);
+    const pairs = this.findPairs(cards);
     // ペアを見つけた後、ペアでないカードをソート
     const sortedCards = CardsSorter.byNumber(
       cards.filter((card) => !pairs.has(card.cardNumber)),

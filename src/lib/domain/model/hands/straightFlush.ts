@@ -3,7 +3,7 @@ import {
   HAND_RANK_SCALE,
   PokerHand,
   PokerHandRank,
-} from '@/lib/domain/model/hands/hands';
+} from '@/lib/domain/model/hands/pokerHand';
 import { Straight } from '@/lib/domain/model/hands/straight';
 import { Flush } from '@/lib/domain/model/hands/flush';
 import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';

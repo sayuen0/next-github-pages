@@ -3,7 +3,7 @@ import {
   HAND_RANK_SCALE,
   PokerHand,
   PokerHandRank,
-} from '@/lib/domain/model/hands/hands';
+} from '@/lib/domain/model/hands/pokerHand';
 import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 
 export class ThreeOfAKind extends PokerHand {
