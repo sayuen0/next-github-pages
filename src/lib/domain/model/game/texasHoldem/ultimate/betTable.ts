@@ -1,4 +1,8 @@
 import { Player } from '@/lib/domain/model/players/player';
+import {
+  GameResult,
+  PlayerResult,
+} from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 
 interface BetBlock {
   playerID: string;
@@ -6,6 +10,32 @@ interface BetBlock {
   anti: number;
   trips: number;
   play: number;
+}
+
+enum BlindRate {
+  HighCard = 1,
+  OnePair = 1,
+  TwoPair = 1,
+  ThreeOfAKind = 1,
+  Straight = 2,
+  Flush = 2.5,
+  FullHouse = 4,
+  FourOfAKind = 11,
+  StraightFlush = 51,
+  RoyalStraightFlush = 501,
+}
+
+enum TripsRate {
+  HighCard = 1,
+  OnePair = 1,
+  TwoPair = 1,
+  ThreeOfAKind = 4,
+  Straight = 5,
+  Flush = 8,
+  FullHouse = 9,
+  FourOfAKind = 31,
+  StraightFlush = 41,
+  RoyalStraightFlush = 51,
 }
 
 /**
@@ -27,11 +57,25 @@ export class BetTable {
    * @param singleAmount Blindにこの額をかけ、アンティにこの額をかけるので、プレイヤーはこの額の2倍をベットする
    */
   public betBlindAndAnti(player: Player, singleAmount: number): void {
-    const betAmount = player.subtractFromStack(singleAmount * 2);
+    let betAmount = player.subtractFromStack(singleAmount * 2);
+    // スタックが奇数だった場合、1点をプレイヤーに返却
+    if (betAmount % 2 !== 0) {
+      player.addToStack(1);
+      betAmount -= 1;
+    }
+
     const betRecord = this.getBetRecord(player);
-    // 上で2倍しているので常に偶数になる
-    betRecord.blind = betAmount / 2;
-    betRecord.anti = betAmount / 2;
+    this.setBetRecord(player.id, {
+      ...betRecord,
+      blind: betAmount / 2,
+      anti: betAmount / 2,
+    });
+  }
+
+  public betTrips(player: Player, betAmount: number): void {
+    const trips = player.subtractFromStack(betAmount);
+    const betRecord = this.getBetRecord(player);
+    this.setBetRecord(player.id, { ...betRecord, trips });
   }
 
   public betPreFlop(player: Player, betMultiplier: 3 | 4): void {
@@ -60,6 +104,69 @@ export class BetTable {
     return betRecord;
   }
 
+  /**
+   * イミュータブルに、BetRecordをPlayerIDを用いて特定して更新する
+   */
+  public setBetRecord(playerID: string, betRecord: BetBlock): void {
+    this.betBlocks = this.betBlocks.map((b) => {
+      if (b.playerID === playerID) {
+        return betRecord;
+      }
+      return b;
+    });
+  }
+
+  public distributeWinnings(gameResult: GameResult): void {
+    gameResult.playerResults.forEach((playerResult: PlayerResult) => {
+      const betRecord = this.getBetRecord(playerResult.player);
+
+      // 敗北
+      betRecord.blind = 0;
+      betRecord.anti = 0;
+      betRecord.play = 0;
+      betRecord.trips = 0;
+    });
+  }
+
+  /**
+   *  以下に従いプレイヤーのアンティ配当を決定する
+   * - ディーラーがクオリファイしていない: 等倍
+   * - ディーラーがクオリファイしている:
+   *   - プレイヤーが勝利: 2倍
+   *   - プレイヤーが敗北: 0倍
+   */
+  public calculateAntiDistribution(
+    anti: number,
+    isDealerQualified: boolean,
+    win: boolean,
+  ): number {
+    if (!isDealerQualified) {
+      return anti;
+    }
+    if (win) {
+      return anti * 2;
+    }
+    return 0;
+  }
+
+  /**
+   * 以下に従いプレイヤーのブラインド配当を決定する
+   *  - プレイヤーが勝利: ブラインドレートの倍数分
+   *  - プレイヤーが敗北: 0
+   */
+  private calculateBlindDistribution(playerResult: PlayerResult, blind: number): number {
+    if (playerResult.result == 'lose') {
+      return 0;
+    }
+    if (playerResult.result == 'tie') {
+      return blind;
+    }
+
+    return Math.floor(
+      BlindRate[playerResult.hand.hand.name as keyof typeof BlindRate] * blind,
+    );
+  }
+
   private getBlindBet(player: Player): number {
     const blindBet = this.betBlocks.find((b) => b.playerID === player.id)?.blind;
     if (!blindBet) {
@@ -74,6 +181,6 @@ export class BetTable {
       // すでにベットしてたらベットできない。スルーする
       return;
     }
-    betRecord.play += betAmount;
+    this.setBetRecord(player.id, { ...betRecord, play: betAmount });
   }
 }

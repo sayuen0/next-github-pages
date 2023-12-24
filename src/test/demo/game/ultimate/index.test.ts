@@ -9,7 +9,13 @@ describe('single game with bet', () => {
     const [p1, p2, p3, p4] = ['A', 'B', 'C', 'D'].map(
       (name) => new Player(name, baseStack),
     );
-    const game = new UltimateTexasHoldem(new Player('dealer', 100000000), p1, p2, p3, p4);
+    const game = new UltimateTexasHoldem(
+      new Player('dealer', 1000000000000),
+      p1,
+      p2,
+      p3,
+      p4,
+    );
 
     /*
       before deal
@@ -17,7 +23,6 @@ describe('single game with bet', () => {
     game.startNewRound();
 
     // TODO: ゲームに参加できるか(bb+ anti + bb * 3)を持っているかを判定する
-
     game.betTable.betBlindAndAnti(p1, 100);
 
     /*
@@ -39,6 +44,7 @@ describe('single game with bet', () => {
      */
     game.dealTurnRiver();
     // 4がフォールド
+    game.fold(p4);
 
     game.openDealerCard();
 

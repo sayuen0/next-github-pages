@@ -5,19 +5,10 @@ import { Player } from '@/lib/domain/model/players/player';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
 import { HandEvaluator } from '@/lib/domain/model/hands/handEvaluator';
 import { BetTable } from '@/lib/domain/model/game/texasHoldem/ultimate/betTable';
-
-export interface GameResult {
-  communityCards: PokerCard[];
-  playerResults: PlayerResult[];
-  dealerResult: HandResult;
-  dealerQualified: boolean;
-}
-
-export interface PlayerResult {
-  player: Player;
-  hand: HandResult;
-  result: 'win' | 'lose' | 'tie';
-}
+import {
+  GameResult,
+  WinLoseTie,
+} from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 
 /**
  * 多人数のアルティメットポーカーを想定
@@ -46,7 +37,10 @@ export class UltimateTexasHoldem {
   }
 
   public startNewRound(): void {
-    this.allPlayers().forEach((p) => p.resetHoleCard());
+    this.allPlayers().forEach((p) => {
+      p.resetHoleCard();
+      p.fold = false;
+    });
     this.communityCards = [];
     this.deck = new Deck();
     this.deck.shuffle();
@@ -72,6 +66,10 @@ export class UltimateTexasHoldem {
         this.communityCards.push(card);
       }
     }
+  }
+
+  public fold(player: Player): void {
+    player.fold = true;
   }
 
   public dealTurnRiver(): void {
@@ -110,7 +108,16 @@ export class UltimateTexasHoldem {
       const playerHandResult = this.evaluatePlayerHand(player);
       const playerScore = playerHandResult.hand.calculateScore(playerHandResult.cards);
 
-      let result: 'win' | 'lose' | 'tie';
+      // フォールドしたプレイヤーは敗北
+      if (player.fold) {
+        return {
+          player: player,
+          hand: playerHandResult,
+          result: 'lose' as WinLoseTie,
+        };
+      }
+
+      let result: WinLoseTie;
       if (playerScore > dealerScore) {
         result = 'win';
       } else if (playerScore < dealerScore) {

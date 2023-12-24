@@ -2,25 +2,65 @@ import { BetTable } from '@/lib/domain/model/game/texasHoldem/ultimate/betTable'
 import { Player } from '@/lib/domain/model/players/player';
 
 describe('BetTable', () => {
-  let betTable: BetTable;
-  let player: Player;
-
-  beforeEach(() => {
-    player = new Player('Test Player', 1000);
-    betTable = new BetTable([player]);
-  });
-
   describe('.betBlindAndAnti', () => {
+    let betTable: BetTable;
+    let player: Player;
+
+    beforeEach(() => {
+      player = new Player('Test Player', 1000);
+      betTable = new BetTable([player]);
+    });
+
     it('should correctly bet blind and anti', () => {
       const singleAmount = 50;
       betTable.betBlindAndAnti(player, singleAmount);
       expect(player.getStack()).toBe(900);
       // betTableからbetRecordを取得して確認する
     });
+
+    it('should handle odd stack correctly', () => {
+      const player = new Player('Test Player', 1001); // 奇数スタック
+      const betTable = new BetTable([player]);
+      const singleAmount = 50; // ブラインドとアンティにそれぞれ50ずつベットする予定
+
+      betTable.betBlindAndAnti(player, singleAmount);
+
+      // 1001 - 100 = 901 (1点が返却される)
+      expect(player.getStack()).toBe(901);
+      const betRecord = betTable.getBetRecord(player);
+      expect(betRecord).toBeDefined();
+      expect(betRecord.blind).toBe(50); // ブラインド
+      expect(betRecord.anti).toBe(50); // アンティ
+    });
+  });
+
+  describe('.betTrips', () => {
+    let player: Player;
+    let betTable: BetTable;
+    const initialStack = 1000;
+    const betAmount = 50;
+
+    beforeEach(() => {
+      player = new Player('Test Player', initialStack);
+      betTable = new BetTable([player]);
+    });
+
+    it('should correctly bet trips', () => {
+      betTable.betTrips(player, betAmount);
+
+      const betRecord = betTable.getBetRecord(player);
+      expect(player.getStack()).toBe(initialStack - betAmount); // スタックからベット額が引かれる
+      expect(betRecord.trips).toBe(betAmount); // トリップスベットが正しく記録される
+    });
   });
 
   describe('.betPreFlop', () => {
+    let betTable: BetTable;
+    let player: Player;
+
     beforeEach(() => {
+      player = new Player('Test Player', 1000);
+      betTable = new BetTable([player]);
       betTable.betBlindAndAnti(player, 50); // ブラインドとアンティのベット
     });
 
@@ -42,11 +82,15 @@ describe('BetTable', () => {
   });
 
   describe('.betFlop', () => {
-    it('should correctly bet at flop', () => {
-      const player = new Player('Test Player', 1000);
-      const betTable = new BetTable([player]);
+    let betTable: BetTable;
+    let player: Player;
+    beforeEach(() => {
+      player = new Player('Test Player', 1000);
+      betTable = new BetTable([player]);
       betTable.betBlindAndAnti(player, 50);
+    });
 
+    it('should correctly bet at flop', () => {
       betTable.betFlop(player);
 
       expect(player.getStack()).toBe(800); // 50 * 2 (blind and anti) + 100 (flop bet) = 200 deducted
@@ -67,11 +111,15 @@ describe('BetTable', () => {
   });
 
   describe('.betTurnRiver', () => {
-    it('should correctly bet at turn or river', () => {
-      const player = new Player('Test Player', 1000);
-      const betTable = new BetTable([player]);
+    let betTable: BetTable;
+    let player: Player;
+    beforeEach(() => {
+      player = new Player('Test Player', 1000);
+      betTable = new BetTable([player]);
       betTable.betBlindAndAnti(player, 50);
+    });
 
+    it('should correctly bet at turn or river', () => {
       betTable.betTurnRiver(player);
 
       expect(player.getStack()).toBe(850); // 50 * 2 (blind and anti) + 50 (turn/river bet) = 150 deducted
@@ -88,6 +136,28 @@ describe('BetTable', () => {
 
       const betRecord = betTable.getBetRecord(player);
       expect(betRecord.play).toBe(200); // プリフロップでのベットのみが反映される
+    });
+  });
+
+  describe('.calculateAntiDistribution', () => {
+    let betTable: BetTable;
+
+    beforeEach(() => {
+      betTable = new BetTable([new Player('Test Player', 1000)]);
+    });
+
+    const testCases = [
+      { anti: 100, isDealerQualified: false, win: false, expected: 100 },
+      { anti: 100, isDealerQualified: false, win: true, expected: 100 },
+      { anti: 100, isDealerQualified: true, win: false, expected: 0 },
+      { anti: 100, isDealerQualified: true, win: true, expected: 200 },
+    ];
+
+    testCases.forEach(({ anti, isDealerQualified, win, expected }) => {
+      it(`should calculate correct distribution for anti=${anti}, dealerQualified=${isDealerQualified}, win=${win}`, () => {
+        const result = betTable.calculateAntiDistribution(anti, isDealerQualified, win);
+        expect(result).toBe(expected);
+      });
     });
   });
 });
