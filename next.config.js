@@ -5,8 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
-  basePath: isProduction ? process.env.BASE_PATH : '',
-  assetPrefix: isProduction ? process.env.ASSET_PREFIX : '',
+  basePath: isProduction ? '/next-github-pages' : '',
+  assetPrefix: isProduction ? '/next-github-pages/' : '',
 
   output: 'export',
 
