@@ -4,6 +4,15 @@ import Table from '@/components/table/table';
 import { useUltimate } from '@/hooks/useUltimate';
 import Slider from '@/components/ui/slider';
 
+export const GameState = {
+  BEFORE_ROUND: 'before-round',
+  PRE_FLOP: 'pre-flop',
+  FLOP: 'flop',
+  TURN: 'turn',
+  RIVER: 'river',
+  SHOWDOWN: 'showdown',
+};
+
 export default function Ultimate() {
   const {
     game,
@@ -66,6 +75,7 @@ export default function Ultimate() {
       {player && game && (
         <button
           onClick={() => {
+            console.log('no more bet');
             game.betTable.betBlindAndAnti(player, blind);
             game.betTable.betTrips(player, blind);
             game.startNewRound();
