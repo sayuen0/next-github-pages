@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 /** @type {import("next").NextConfig} */
@@ -26,6 +27,9 @@ const nextConfig = {
         }),
       );
     }
+    // パスエイリアスの設定
+    config.resolve.alias['@'] = path.join(__dirname, 'src');
+
     return config;
   },
 };
