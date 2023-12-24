@@ -4,6 +4,7 @@ import { HandResult, PokerHand } from '@/lib/domain/model/hands/pokerHand';
 import { Player } from '@/lib/domain/model/players/player';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
 import { HandEvaluator } from '@/lib/domain/model/hands/handEvaluator';
+import { BetTable } from '@/lib/domain/model/game/texasHoldem/ultimate/betTable';
 
 export interface GameResult {
   communityCards: PokerCard[];
@@ -27,10 +28,13 @@ export class UltimateTexasHoldem {
   private communityCards: PokerCard[];
   private deck: Deck;
 
+  private betTable: BetTable;
+
   constructor(dealer: Player, ...players: Player[]) {
     if (players.length == 0) {
       throw new Error('プレイヤーがいません');
     }
+    this.betTable = new BetTable(players);
     this.dealer = dealer;
     this.players = players;
     this.communityCards = [];
@@ -38,15 +42,16 @@ export class UltimateTexasHoldem {
   }
 
   public startNewRound(): void {
-    const allPlayers = [...this.players, this.dealer];
-    allPlayers.forEach((p) => p.resetHoleCard());
+    this.allPlayers().forEach((p) => p.resetHoleCard());
     this.communityCards = [];
     this.deck = new Deck();
     this.deck.shuffle();
+  }
 
-    // プレイヤーに"順に"2枚のカードを配る
+  // プレイヤーに"順に"2枚のカードを配る
+  public dealPreFlop(): void {
     for (let i = 0; i < 2; i++) {
-      allPlayers.forEach((p) => {
+      this.allPlayers().forEach((p) => {
         const card = this.deck.drawTop();
         if (card) {
           p.addHoleCard(card);
@@ -92,8 +97,7 @@ export class UltimateTexasHoldem {
   // 勝者を決定する
   public defineWinner(): GameResult {
     // ショーダウン
-    const allPlayers = [this.dealer, ...this.players];
-    allPlayers.forEach((p) => p.showDown());
+    this.allPlayers().forEach((p) => p.showDown());
 
     // ディーラースコアの決定
     const dealerHandResult = this.evaluateDealerHand();
@@ -127,6 +131,10 @@ export class UltimateTexasHoldem {
       dealerResult: dealerHandResult,
       dealerQualified: dealerQualified,
     };
+  }
+
+  private allPlayers(): Player[] {
+    return [...this.players, this.dealer];
   }
 
   // ディーラーの手のスコアがワンペア以上の場合にクオリファイとみなす

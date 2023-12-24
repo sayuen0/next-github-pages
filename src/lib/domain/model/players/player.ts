@@ -16,6 +16,7 @@ export class Player {
 
   private _holeCard: PokerCard[];
 
+  // FIXME: ゲッターで直接見えなくするのではなく、これとは別にgetVisibleHoleCardsを作成する
   public get holeCard(): PokerCard[] {
     return this._holeCard.filter((c) => c.visible);
   }
@@ -26,6 +27,10 @@ export class Player {
 
   public set fold(b: boolean) {
     this.folded = b;
+  }
+
+  public get holeCardCount(): number {
+    return this._holeCard.length;
   }
 
   public addHoleCard(c: PokerCard): void {
@@ -48,16 +53,22 @@ export class Player {
     this.stack += amount;
   }
 
-  // TODO: add test
-  public subtractFromStack(amount: number): boolean {
+  public subtractFromStack(amount: number): number {
+    if (amount <= 0 || this.stack <= 0) {
+      return 0;
+    }
     if (amount > this.stack) {
-      return false; // Not enough stack to subtract
+      amount = this.stack;
     }
     this.stack -= amount;
-    return true;
+    return amount;
   }
 
   public showDown(): void {
     this._holeCard.forEach((c) => (c.visible = true));
+  }
+
+  public hasStackMoreThanEqual(amount: number): boolean {
+    return this.stack >= amount;
   }
 }
