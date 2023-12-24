@@ -7,6 +7,7 @@ import { RandomPokerCardGenerator } from '@/lib/domain/model/cards/randomCardGen
 export const useUltimate = () => {
   const [game, setGame] = useState<UltimateTexasHoldem | null>(null);
   const [player, setPlayer] = useState<Player | null>(null);
+  const [dealer, setDealer] = useState<Player | null>(null);
   const [dealerCards, setDealerCards] = useState<PokerCard[]>([]);
   const [playerCards, setPlayerCards] = useState<PokerCard[]>([]);
   const [communityCards, setCommunityCards] = useState<PokerCard[]>([]);
@@ -21,20 +22,26 @@ export const useUltimate = () => {
   useEffect(() => {
     // ゲームとプレイヤーの初期化
     const newPlayer = new Player('Player1', 30000);
-    const newGame = new UltimateTexasHoldem(new Player('Dealer', 1000000), newPlayer);
-    setGame(newGame);
+    const dealer = new Player('Dealer', 1000000);
+    const newGame = new UltimateTexasHoldem(dealer, newPlayer);
     setPlayer(newPlayer);
+    setDealer(dealer);
+    setGame(newGame);
 
     newGame.startNewRound();
   }, []);
 
   return {
     game,
+    setGame,
     player,
+    dealer,
     dealerCards,
+    setDealerCards,
     playerCards,
     setPlayerCards,
     communityCards,
+    setCommunityCards,
     blind,
     setBlind,
   };

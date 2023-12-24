@@ -16,7 +16,6 @@ import {
 export class UltimateTexasHoldem {
   private players: Player[];
   private dealer: Player;
-  private communityCards: PokerCard[];
   private deck: Deck;
 
   constructor(dealer: Player, ...players: Player[]) {
@@ -26,8 +25,14 @@ export class UltimateTexasHoldem {
     this._betTable = new BetTable(players);
     this.dealer = dealer;
     this.players = players;
-    this.communityCards = [];
+    this._communityCards = [];
     this.deck = new Deck();
+  }
+
+  private _communityCards: PokerCard[];
+
+  public get communityCards(): PokerCard[] {
+    return this._communityCards;
   }
 
   private _betTable: BetTable;
@@ -41,7 +46,7 @@ export class UltimateTexasHoldem {
       p.resetHoleCard();
       p.fold = false;
     });
-    this.communityCards = [];
+    this._communityCards = [];
     this.deck = new Deck();
     this.deck.shuffle();
   }
@@ -64,7 +69,7 @@ export class UltimateTexasHoldem {
       const card = this.deck.drawTop();
       if (card) {
         card.visible = true; // コミュニティカードを可視に設定
-        this.communityCards.push(card);
+        this._communityCards.push(card);
       }
     }
   }
@@ -87,7 +92,7 @@ export class UltimateTexasHoldem {
    * @param p
    */
   public evaluatePlayerHand(p: Player): HandResult {
-    return HandEvaluator.evaluateHand([...p.holeCard, ...this.communityCards]);
+    return HandEvaluator.evaluateHand([...p.holeCard, ...this._communityCards]);
   }
 
   public evaluateDealerHand(): HandResult {
@@ -135,7 +140,7 @@ export class UltimateTexasHoldem {
     });
 
     return {
-      communityCards: this.communityCards,
+      communityCards: this._communityCards,
       playerResults: playerResults,
       dealerResult: dealerHandResult,
       dealerQualified: dealerQualified,
@@ -160,7 +165,7 @@ export class UltimateTexasHoldem {
     const card = this.deck.drawTop();
     if (card) {
       card.visible = true; // コミュニティカードを可視に設定
-      this.communityCards.push(card);
+      this._communityCards.push(card);
     }
   }
 }

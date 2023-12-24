@@ -4,23 +4,18 @@ import Table from '@/components/table/table';
 import { useUltimate } from '@/hooks/useUltimate';
 import Slider from '@/components/ui/slider';
 
-export const GameState = {
-  BEFORE_ROUND: 'before-round',
-  PRE_FLOP: 'pre-flop',
-  FLOP: 'flop',
-  TURN: 'turn',
-  RIVER: 'river',
-  SHOWDOWN: 'showdown',
-};
-
 export default function Ultimate() {
   const {
     game,
+    setGame,
     player,
+    dealer,
     dealerCards,
+    setDealerCards,
     playerCards,
     setPlayerCards,
     communityCards,
+    setCommunityCards,
     blind,
     setBlind,
   } = useUltimate();
@@ -42,17 +37,17 @@ export default function Ultimate() {
       <Table>
         <div style={cardsContainerStyle}>
           {dealerCards.map((card, index) => (
-            <Card key={index} card={card} />
+            <Card key={card.cardValue} card={card} />
           ))}
         </div>
-        <div style={cardsContainerStyle}>
+        <div style={{ ...cardsContainerStyle, justifyContent: 'flex-end' }}>
           {communityCards.map((card, index) => (
-            <Card key={index} card={card} />
+            <Card key={card.cardValue} card={card} />
           ))}
         </div>
         <div style={cardsContainerStyle}>
           {playerCards.map((card, index) => (
-            <Card key={index} card={card} />
+            <Card key={card.cardValue} card={card} />
           ))}
         </div>
       </Table>
@@ -72,19 +67,88 @@ export default function Ultimate() {
       )}
       <p>現在のベット額: {blind}</p>
       <p>現在のアンティ額: {blind}</p>
-      {player && game && (
-        <button
-          onClick={() => {
-            console.log('no more bet');
-            game.betTable.betBlindAndAnti(player, blind);
-            game.betTable.betTrips(player, blind);
-            game.startNewRound();
-            game.dealPreFlop();
-            setPlayerCards(player.holeCard);
-          }}
-        >
-          スタート
-        </button>
+      {player && game && dealer && (
+        <div>
+          <button
+            onClick={() => {
+              console.log('no more bet');
+              game.betTable.betBlindAndAnti(player, blind);
+              game.betTable.betTrips(player, blind);
+              game.startNewRound();
+              game.dealPreFlop();
+              setPlayerCards(player.holeCard);
+            }}
+          >
+            スタート
+          </button>
+          <br />
+          <button
+            onClick={() => {
+              game.betTable.betPreFlop(player, 3);
+              game.dealFlop();
+              setGame(game);
+              setPlayerCards(game.communityCards);
+            }}
+          >
+            ベット*3
+          </button>
+          <button
+            onClick={() => {
+              game.betTable.betPreFlop(player, 4);
+              game.dealFlop();
+              setGame(game);
+              setPlayerCards(game.communityCards);
+            }}
+          >
+            ベット*4
+          </button>
+          <button
+            onClick={() => {
+              game.dealFlop();
+              setGame(game);
+              setCommunityCards(game.communityCards);
+            }}
+          >
+            チェック
+          </button>
+          <br />
+          <button
+            onClick={() => {
+              game.betTable.betFlop(player);
+              game.dealTurnRiver();
+              setCommunityCards(game.communityCards);
+            }}
+          >
+            ベット*2
+          </button>
+          <button
+            onClick={() => {
+              game.dealTurnRiver();
+              setCommunityCards(game.communityCards);
+            }}
+          >
+            チェック
+          </button>
+          <br />
+          <button
+            onClick={() => {
+              game.betTable.betTurnRiver(player);
+              game.openDealerCard();
+              setDealerCards(dealer.holeCard);
+            }}
+          >
+            ベット
+          </button>
+          <button
+            onClick={() => {
+              game.fold(player);
+              game.openDealerCard();
+              setDealerCards(dealer.holeCard);
+            }}
+          >
+            フォールド
+          </button>
+        </div>
       )}
     </div>
   );
