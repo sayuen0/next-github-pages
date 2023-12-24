@@ -65,6 +65,10 @@ export class UltimateTexasHoldem {
     this.deck.shuffle();
   }
 
+  public openDealerCard(): void {
+    this.dealerHand.forEach((c) => (c.visible = true));
+  }
+
   private dealCommunityCard(): void {
     const card = this.deck.drawTop();
     if (card) {
