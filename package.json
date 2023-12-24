@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "npm run export && gh-pages -d out",
-    "build:production": "env-cmd -f .env.production next build",
+    "deploy": "gh-pages -d out",
+    "build:production": "env-cmd -f .env.production next build && next export && cp -R public/static out/",
     "test": "jest"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "@types/react-dom": "latest",
     "@types/uuid": "^9.0.4",
     "autoprefixer": "latest",
+    "copy-webpack-plugin": "^11.0.0",
     "eslint": "latest",
     "eslint-config-next": "latest",
     "gh-pages": "^6.0.0",

@@ -1,25 +1,8 @@
-const path = require('path');
 const fs = require('fs').promises;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 /** @type {import("next").NextConfig} */
 const isProduction = process.env.NODE_ENV === 'production';
-const pagesDirectory = path.join(__dirname, 'src/pages');
-
-async function getFilesInDirectory(dir) {
-  const files = await fs.readdir(dir);
-  const fileAndDirectoryPaths = await Promise.all(
-    files.map(async (file) => {
-      const fullPath = path.join(dir, file);
-      const isDirectory = (await fs.stat(fullPath)).isDirectory();
-      if (isDirectory) {
-        return getFilesInDirectory(fullPath);
-      } else {
-        return [fullPath.replace(/\.tsx$/, '').replace(pagesDirectory, '')];
-      }
-    }),
-  );
-  return fileAndDirectoryPaths.flat();
-}
 
 const nextConfig = {
   basePath: isProduction ? process.env.BASE_PATH : '',
@@ -27,27 +10,23 @@ const nextConfig = {
 
   output: 'export',
 
-  async exportPathMap() {
-    const files = await getFilesInDirectory(pagesDirectory);
+  async exportPathMap(defaultPathMap, { dev, dir, outDir, distDir, buildId }) {
+    return {
+      '/': { page: '/' },
+      '/ultimate': { page: '/ultimate' },
+      // other custom paths
+    };
+  },
 
-    const paths = files.reduce((acc, filePath) => {
-      if (filePath === '/index') {
-        console.log('Root path mapped to: ', filePath); // Add debug log
-        acc['/'] = { page: '/' };
-      } else if (
-        !filePath.includes('/[') &&
-        !filePath.includes('_') &&
-        !filePath.includes('/api')
-      ) {
-        acc[filePath] = {
-          page: filePath,
-        };
-      }
-
-      return acc;
-    }, {});
-
-    return paths;
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.plugins.push(
+        new CopyWebpackPlugin({
+          patterns: [{ from: 'public/static', to: 'static' }],
+        }),
+      );
+    }
+    return config;
   },
 };
 
