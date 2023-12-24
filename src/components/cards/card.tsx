@@ -13,10 +13,13 @@ export default function Card({ card }: CardProps) {
   };
 
   const imagePath = card.visible
-    ? `static/img/cards/${convertSuitToDirectoryName(card.suit)}/${card.numberSymbol}.svg`
-    : 'static/img/cards/back/10.svg';
+    ? `/static/img/cards/${convertSuitToDirectoryName(card.suit)}/${
+        card.numberSymbol
+      }.svg`
+    : '/static/img/cards/back/10.svg';
 
   return (
+    // TODO: Imageに置き換えると良いらしい
     <img src={imagePath} style={cardStyle} alt={card.visible ? card.cardValue : ''} />
   );
 }
