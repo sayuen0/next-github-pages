@@ -13,6 +13,12 @@ export enum PokerHandRank {
   HIGH_CARD = 1,
 }
 
+/*
+  役のスケール値
+  役のスコア計算の際、異なる役間のスコアを比較するために用いる
+ */
+export const HAND_RANK_SCALE = 10000000000;
+
 export abstract class PokerHand {
   static readonly score: PokerHandRank;
 
@@ -35,5 +41,10 @@ export abstract class PokerHand {
   protected static areSameSuit(cards: PokerCard[]): boolean {
     const cardSuits = new Set(cards.map((card) => card.suit));
     return cardSuits.size === 1;
+  }
+
+  // 役の数値スコアを計算する
+  protected static calculateScore(cards: PokerCard[]): number {
+    throw new Error('Not implemented');
   }
 }
