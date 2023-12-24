@@ -6,21 +6,39 @@ import { Player } from '@/lib/domain/model/players/player';
 describe('single game with bet', () => {
   it('should run a single game without errors', () => {
     const baseStack = 30000;
-    const player = new Player('player A', 30000);
-    const game = new UltimateTexasHoldem(new Player('dealer', 100000000), player);
+    const [p1, p2, p3, p4] = ['A', 'B', 'C', 'D'].map(
+      (name) => new Player(name, baseStack),
+    );
+    const game = new UltimateTexasHoldem(new Player('dealer', 100000000), p1, p2, p3, p4);
+
+    /*
+      before deal
+     */
     game.startNewRound();
 
-    game.dealPreFlop();
-
     // TODO: ゲームに参加できるか(bb+ anti + bb * 3)を持っているかを判定する
-    // TODO: 最初のベット額を決める
-    // game.betBlindAndAnti(player, 100);
 
+    game.betTable.betBlindAndAnti(p1, 100);
+
+    /*
+      no more bet (preflop)
+     */
+    game.dealPreFlop();
+    game.betTable.betPreFlop(p1, 3);
+    game.betTable.betPreFlop(p2, 4);
+    // 3と4はチェック
+
+    /*
+     * flop
+     */
     game.dealFlop();
+    game.betTable.betFlop(p3);
 
-    game.dealTurn();
-
-    game.dealRiver();
+    /**
+     * turn And River
+     */
+    game.dealTurnRiver();
+    // 4がフォールド
 
     game.openDealerCard();
 

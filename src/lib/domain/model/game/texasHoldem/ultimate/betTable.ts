@@ -70,6 +70,10 @@ export class BetTable {
 
   private applyBet(player: Player, betAmount: number): void {
     const betRecord = this.getBetRecord(player);
+    if (betRecord.play > 0) {
+      // すでにベットしてたらベットできない。スルーする
+      return;
+    }
     betRecord.play += betAmount;
   }
 }

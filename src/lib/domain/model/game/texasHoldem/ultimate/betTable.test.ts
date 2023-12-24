@@ -53,6 +53,17 @@ describe('BetTable', () => {
       const betRecord = betTable.getBetRecord(player);
       expect(betRecord.play).toBe(100); // Flop bet should be double the blind
     });
+
+    it('should not allow betting if already bet at PreFlop', () => {
+      // PreFlopでベット
+      betTable.betPreFlop(player, 3);
+
+      // Flopで再度ベットしようとする
+      betTable.betFlop(player);
+
+      const betRecord = betTable.getBetRecord(player);
+      expect(betRecord.play).toBe(150); // プリフロップでのベットのみが反映される
+    });
   });
 
   describe('.betTurnRiver', () => {
@@ -66,6 +77,17 @@ describe('BetTable', () => {
       expect(player.getStack()).toBe(850); // 50 * 2 (blind and anti) + 50 (turn/river bet) = 150 deducted
       const betRecord = betTable.getBetRecord(player);
       expect(betRecord.play).toBe(50); // Turn/River bet should be equal to the blind
+    });
+
+    it('should not allow betting if already bet at PreFlop', () => {
+      // PreFlopでベット
+      betTable.betPreFlop(player, 4);
+
+      // Turn/Riverで再度ベットしようとする
+      betTable.betTurnRiver(player);
+
+      const betRecord = betTable.getBetRecord(player);
+      expect(betRecord.play).toBe(200); // プリフロップでのベットのみが反映される
     });
   });
 });

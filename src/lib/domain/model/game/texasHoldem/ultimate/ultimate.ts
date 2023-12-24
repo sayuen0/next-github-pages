@@ -28,17 +28,21 @@ export class UltimateTexasHoldem {
   private communityCards: PokerCard[];
   private deck: Deck;
 
-  private betTable: BetTable;
-
   constructor(dealer: Player, ...players: Player[]) {
     if (players.length == 0) {
       throw new Error('プレイヤーがいません');
     }
-    this.betTable = new BetTable(players);
+    this._betTable = new BetTable(players);
     this.dealer = dealer;
     this.players = players;
     this.communityCards = [];
     this.deck = new Deck();
+  }
+
+  private _betTable: BetTable;
+
+  public get betTable(): BetTable {
+    return this._betTable;
   }
 
   public startNewRound(): void {
@@ -70,11 +74,8 @@ export class UltimateTexasHoldem {
     }
   }
 
-  public dealTurn(): void {
+  public dealTurnRiver(): void {
     this.dealCommunityCard();
-  }
-
-  public dealRiver(): void {
     this.dealCommunityCard();
   }
 
