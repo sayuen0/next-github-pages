@@ -33,6 +33,29 @@ describe('TwoPair class', () => {
     });
   });
 
+  describe('.find', () => {
+    const testCases = [
+      {
+        name: 'Should find two eights, two sevens and ace as a kicker',
+        cards: PokerCard.NewPokerCards('8H', '8D', '7S', '7C', 'AH'),
+        expected: PokerCard.NewPokerCards('8H', '8D', '7S', '7C', 'AH'),
+      },
+      {
+        name: 'Should not find two pairs when not present',
+        cards: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', '6H'),
+        expected: [],
+      },
+      // 追加のテストケースをここに記述
+    ];
+
+    testCases.forEach(({ name, cards, expected }) => {
+      it(name, () => {
+        const result = TwoPair.find(cards);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
   describe('calculateScore', () => {
     const testCases = [
       {

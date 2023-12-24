@@ -33,6 +33,19 @@ export class FourOfAKind extends PokerHand {
     return sets;
   }
 
+  static find(cards: PokerCard[]): PokerCard[] {
+    const sets = this.findSet(cards);
+    if (sets.size === 0) {
+      return [];
+    }
+
+    const setNumber = sets.values().next().value;
+    const fourOfAKindCards = cards.filter((card) => card.cardNumber === setNumber)!;
+
+    const kickerCard = cards.find((card) => card.cardNumber !== setNumber)!;
+    return [...fourOfAKindCards, kickerCard];
+  }
+
   static calculateScore(cards: PokerCard[]): number {
     /*
       フォーカードのスコアは次のように決まる

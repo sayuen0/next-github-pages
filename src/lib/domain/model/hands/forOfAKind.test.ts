@@ -59,4 +59,27 @@ describe('FourOfAKind class', () => {
       });
     });
   });
+
+  describe('.find', () => {
+    const testCases = [
+      {
+        name: 'Should find four nines and ace as a kicker',
+        cards: PokerCard.NewPokerCards('9H', '9D', '9S', '9C', 'AH'),
+        expected: PokerCard.NewPokerCards('9H', '9D', '9S', '9C', 'AH'),
+      },
+      {
+        name: 'Should not find four of a kind when not present',
+        cards: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', '6H'),
+        expected: [],
+      },
+      // 追加のテストケースをここに記述
+    ];
+
+    testCases.forEach(({ name, cards, expected }) => {
+      it(name, () => {
+        const result = FourOfAKind.find(cards);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
 });

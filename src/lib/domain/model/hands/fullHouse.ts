@@ -52,12 +52,33 @@ export class FullHouse extends PokerHand {
     }
 
     // ツーペアはフルハウスドローである
-    const pairValues = OnePair.findPairs(cards);
+    const pairValues = super.findPairs(cards);
     if (pairValues.size >= 2) {
       return true;
     }
 
     return false;
+  }
+
+  static find(cards: PokerCard[]): PokerCard[] {
+    const threeOfAKindValues = ThreeOfAKind.findSet(cards);
+    if (threeOfAKindValues.size === 0) {
+      return [];
+    }
+
+    const threeOfAKindNumber = threeOfAKindValues.values().next().value;
+    const threeOfAKindCards = cards
+      .filter((card) => card.cardNumber === threeOfAKindNumber)
+      .slice(0, 3);
+
+    const remainingCards = cards.filter((card) => card.cardNumber !== threeOfAKindNumber);
+    const pairValues = OnePair.findPairs(remainingCards);
+    const pairNumber = pairValues.values().next().value;
+    const pairCards = remainingCards
+      .filter((card) => card.cardNumber === pairNumber)
+      .slice(0, 2);
+
+    return [...threeOfAKindCards, ...pairCards];
   }
 
   static calculateScore(cards: PokerCard[]): number {

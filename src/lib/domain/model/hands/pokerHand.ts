@@ -33,7 +33,8 @@ export abstract class PokerHand {
   // その役を成すカード群を返す
   /*
   FIXME: findメソッドをPokerHandを継承している全クラスに実装を強制したいが、
-  static abstractはできない(TS1243)
+  - static abstractはできない(TS1243)
+  - インタフェースのimplementsはstaticメソッドに対してはできない(TS2564)
    */
   static find(cards: PokerCard[]): PokerCard[] {
     throw new Error('Not implemented');

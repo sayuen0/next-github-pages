@@ -89,6 +89,29 @@ describe('FullHouse class', () => {
     });
   });
 
+  describe('.find', () => {
+    const testCases = [
+      {
+        name: 'Full house with threes over twos',
+        input: PokerCard.NewPokerCards('3H', '3D', '3S', '2D', '2C'),
+        expected: PokerCard.NewPokerCards('3H', '3D', '3S', '2D', '2C'),
+      },
+      {
+        name: 'Full house with aces over kings',
+        input: PokerCard.NewPokerCards('AH', 'AD', 'AS', 'KH', 'KD'),
+        expected: PokerCard.NewPokerCards('AH', 'AD', 'AS', 'KH', 'KD'),
+      },
+      // 他のテストケースを追加
+    ];
+
+    testCases.forEach(({ name, input, expected }) => {
+      it(name, () => {
+        const result = FullHouse.find(input);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
   describe('.calculateScore', () => {
     const testCases = [
       {

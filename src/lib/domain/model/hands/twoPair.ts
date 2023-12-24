@@ -25,6 +25,21 @@ export class TwoPair extends PokerHand {
     return super.findPairs(cards);
   }
 
+  static find(cards: PokerCard[]): PokerCard[] {
+    const pairs = this.findPairs(cards);
+    if (pairs.size < 2) {
+      return [];
+    }
+
+    const pairNumbers = Array.from(pairs.values()).sort((a, b) => b - a);
+    const pairCards = cards
+      .filter((card) => pairNumbers.includes(card.cardNumber))
+      .slice(0, 4);
+
+    const kickerCard = cards.find((card) => !pairNumbers.includes(card.cardNumber))!;
+    return [...pairCards, kickerCard];
+  }
+
   static calculateScore(cards: PokerCard[]): number {
     /*
       ツーペアのスコアは次のように決まる

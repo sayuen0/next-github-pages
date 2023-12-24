@@ -12,9 +12,10 @@ import { TwoPair } from '@/lib/domain/model/hands/twoPair';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
 
 /**
- *
+ * 役判定クラス
+ * 与えられたカードセットがどの役に該当するかを判定する
  */
-class HandEvaluator {
+export class HandEvaluator {
   static evaluateHand(cards: PokerCard[]): { hand: PokerHand; cards: PokerCard[] } {
     // 1. 各ポーカーハンドの 'isHand' メソッドを使用して、カードセットが特定のハンドに該当するかをチェック
     // 2. 該当するハンドが見つかった場合、そのハンドの 'find' メソッドを使用して構成カードを取得
@@ -33,14 +34,13 @@ class HandEvaluator {
       HighCard,
     ];
 
-    for (const Hand of hands) {
-      if (Hand.isHand(cards)) {
-        return { hand: Hand, cards: Hand.find(cards) };
+    for (const hand of hands) {
+      if (hand.isHand(cards)) {
+        return { hand: hand, cards: hand.find(cards) };
       }
     }
 
-    // ...他のハンドのチェック...
-    // ハイカードのチェック
-    return { hand: HighCard, cards: HighCard.find(cards) };
+    // 全てのカードセットは常にハイカード以上になるので、ここには到達しない
+    throw new Error('No hand found');
   }
 }
