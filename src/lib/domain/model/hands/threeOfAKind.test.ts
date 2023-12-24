@@ -75,6 +75,34 @@ describe('ThreeOfAKind class', () => {
     });
   });
 
+  describe('.find', () => {
+    const testCases = [
+      {
+        name: 'Simple three of a kind',
+        input: PokerCard.NewPokerCards('2H', '2D', '2S', '4C', '5H'),
+        expected: PokerCard.NewPokerCards('2H', '2D', '2S', '5H', '4C'),
+      },
+      {
+        name: 'Three of a kind with higher cards',
+        input: PokerCard.NewPokerCards('9H', '9C', '9S', 'JH', 'QC', 'KH', '2S'),
+        expected: PokerCard.NewPokerCards('9H', '9C', '9S', 'KH', 'QC'),
+      },
+      {
+        name: 'Three of a kind with Ace',
+        input: PokerCard.NewPokerCards('AH', 'AC', 'AD', '7D', '5S', '3H', '2C'),
+        expected: PokerCard.NewPokerCards('AH', 'AC', 'AD', '7D', '5S'),
+      },
+      // 他のテストケースを追加
+    ];
+
+    testCases.forEach(({ name, input, expected }) => {
+      it(name, () => {
+        const result = ThreeOfAKind.find(input);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
   describe('.calculateScore', () => {
     const testCases = [
       {

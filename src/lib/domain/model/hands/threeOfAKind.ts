@@ -21,6 +21,30 @@ export class ThreeOfAKind extends PokerHand {
     return Object.values(groupedCards).some((group) => group.length >= 3);
   }
 
+  static find(cards: PokerCard[]): PokerCard[] {
+    const sets = this.findSet(cards);
+
+    // スリーカードが存在しない場合は空の配列を返す
+    if (sets.size === 0) {
+      return [];
+    }
+
+    // スリーカードの数値を取得
+    const setNumber = sets.values().next().value;
+
+    // スリーカードを構成するカードを取得
+    const setCards = cards.filter((card) => card.cardNumber === setNumber);
+
+    // 残りのカードをソートして、スリーカード以外の最も高い2枚のカードを選択
+    const remainingCards = CardsSorter.byNumber(
+      cards.filter((card) => card.cardNumber !== setNumber),
+      'desc',
+    ).slice(0, 2);
+
+    // スリーカードと残りのカードを結合して返す
+    return [...setCards, ...remainingCards];
+  }
+
   static findSet(cards: PokerCard[]): Set<number> {
     const sortedCards = CardsSorter.byNumber(cards);
     let sets = new Set<number>();
