@@ -4,10 +4,12 @@
 import { CardValue, NumberSymbol, PokerCard, Suit } from '@/lib/domain/model/cards/card';
 
 export class RandomPokerCardGenerator {
-  public static getRandomCard(): PokerCard {
+  public static getRandomCard(visible = false): PokerCard {
     const allCards = this.allCardValues();
     const randomIndex = Math.floor(Math.random() * allCards.length);
-    return new PokerCard(allCards[randomIndex]);
+    const c = new PokerCard(allCards[randomIndex]);
+    c.visible = visible;
+    return c;
   }
 
   private static allCardValues(): CardValue[] {
