@@ -1,5 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { ThreeOfAKind } from '@/lib/domain/model/hands/threeOfAKind';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 describe('ThreeOfAKind class', () => {
   const testCases = [
@@ -70,6 +71,31 @@ describe('ThreeOfAKind class', () => {
       it(name, () => {
         const result = ThreeOfAKind.findSet(input);
         expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('.calculateScore', () => {
+    const testCases = [
+      {
+        name: 'Three of a Kind with high cards',
+        cards: PokerCard.NewPokerCards('2H', '2D', '2S', '9C', 'KD'),
+        expectedScore:
+          PokerHandRank.THREE_OF_A_KIND * HAND_RANK_SCALE + 2 * 10_000 + 13 * 100 + 9,
+      },
+      {
+        name: 'Three of a Kind with low cards',
+        cards: PokerCard.NewPokerCards('4H', '4D', '4S', '2D', '3C'),
+        expectedScore:
+          PokerHandRank.THREE_OF_A_KIND * HAND_RANK_SCALE + 4 * 10_000 + 3 * 100 + 2,
+      },
+      // 他のテストケースを追加
+    ];
+
+    testCases.forEach(({ name, cards, expectedScore }) => {
+      it(name, () => {
+        const score = ThreeOfAKind.calculateScore(cards);
+        expect(score).toBe(expectedScore);
       });
     });
   });

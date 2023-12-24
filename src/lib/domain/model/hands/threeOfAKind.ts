@@ -1,5 +1,9 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
-import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import {
+  HAND_RANK_SCALE,
+  PokerHand,
+  PokerHandRank,
+} from '@/lib/domain/model/hands/hands';
 import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
 
 export class ThreeOfAKind extends PokerHand {
@@ -32,5 +36,30 @@ export class ThreeOfAKind extends PokerHand {
     }
 
     return sets;
+  }
+
+  static calculateScore(cards: PokerCard[]): number {
+    /*
+      スリーカードのスコアは次のように決まる
+      - (全役共通) 役のスコア * スケール値
+      - スリーカードの数値 * 10,000
+      - スリーカード以外の最も高いカードの数値 * 100
+      - 最も低いカードの数値
+     */
+    const sets = this.findSet(cards);
+    // スリーカードを見つけた後、スリーカードでないカードをソート
+    const sortedCards = CardsSorter.byNumber(
+      cards.filter((card) => !sets.has(card.cardNumber)),
+      'desc',
+    );
+    // スリーカードの数値を取得
+    const setNumber = sets.values().next().value;
+    // 最後に計算
+    return (
+      this.score * HAND_RANK_SCALE +
+      setNumber * 10_000 +
+      sortedCards[0].cardNumber * 100 +
+      sortedCards[1].cardNumber
+    );
   }
 }

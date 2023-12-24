@@ -1,5 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { Straight } from '@/lib/domain/model/hands/straight';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 describe('Straight class', () => {
   describe('Straight.isHand', () => {
@@ -264,12 +265,50 @@ describe('Straight class', () => {
         input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8H', '9H'),
         expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
       },
+      {
+        name: '5 cards 5 high straight present',
+        input: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', 'AD'),
+        expected: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', 'AD'),
+      },
+      {
+        name: "6 cards 5 high straight present, Ace can't be used as 1",
+        input: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', 'AD', '6H'),
+        expected: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', '6H'),
+      },
     ];
 
     testCases.forEach(({ name, input, expected }) => {
       it(name, () => {
         const result = Straight.find(input);
         expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('.calculateScore', () => {
+    const testCases = [
+      {
+        name: 'Regular straight',
+        cards: PokerCard.NewPokerCards('6H', '7D', '8S', '9C', '0D'),
+        expectedScore: PokerHandRank.STRAIGHT * HAND_RANK_SCALE + 10,
+      },
+      {
+        name: 'Ace high straight',
+        cards: PokerCard.NewPokerCards('0H', 'JD', 'QS', 'KC', 'AD'),
+        expectedScore: PokerHandRank.STRAIGHT * HAND_RANK_SCALE + 14,
+      },
+      {
+        name: 'Ace to five straight',
+        cards: PokerCard.NewPokerCards('2H', '3D', '4S', '5C', 'AD'),
+        expectedScore: PokerHandRank.STRAIGHT * HAND_RANK_SCALE + 5,
+      },
+      // 他のテストケースを追加
+    ];
+
+    testCases.forEach(({ name, cards, expectedScore }) => {
+      it(name, () => {
+        const score = Straight.calculateScore(cards);
+        expect(score).toBe(expectedScore);
       });
     });
   });

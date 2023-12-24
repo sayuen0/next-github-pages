@@ -1,5 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { RoyalStraightFlush } from '@/lib/domain/model/hands/royalStraightFlush';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 describe('RoyalStraightFlush class', () => {
   describe('.isHand', () => {
@@ -30,6 +31,41 @@ describe('RoyalStraightFlush class', () => {
       it(name, () => {
         const result = RoyalStraightFlush.isHand(input);
         expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('find', () => {
+    const testCasesForFind = [
+      {
+        name: 'Royal Straight Flush',
+        cards: PokerCard.NewPokerCards('0H', 'JH', 'QH', 'KH', 'AH'),
+        expected: PokerCard.NewPokerCards('0H', 'JH', 'QH', 'KH', 'AH'),
+      },
+      // 他のスーツのテストケースも追加可能
+    ];
+
+    testCasesForFind.forEach(({ name, cards, expected }) => {
+      it(name, () => {
+        const result = RoyalStraightFlush.find(cards);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('calculateScore', () => {
+    const testCasesForCalculateScore = [
+      {
+        name: 'Royal Straight Flush',
+        cards: PokerCard.NewPokerCards('0H', 'JH', 'QH', 'KH', 'AH'),
+        expectedScore: PokerHandRank.ROYAL_STRAIGHT_FLUSH * HAND_RANK_SCALE + 14,
+      },
+      // 他のスーツのテストケースも追加可能
+    ];
+    testCasesForCalculateScore.forEach(({ name, cards, expectedScore }) => {
+      it(name, () => {
+        const score = RoyalStraightFlush.calculateScore(cards);
+        expect(score).toBe(expectedScore);
       });
     });
   });

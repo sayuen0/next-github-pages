@@ -1,5 +1,9 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
-import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import {
+  HAND_RANK_SCALE,
+  PokerHand,
+  PokerHandRank,
+} from '@/lib/domain/model/hands/hands';
 import { Straight } from '@/lib/domain/model/hands/straight';
 import { Flush } from '@/lib/domain/model/hands/flush';
 import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
@@ -38,14 +42,43 @@ export class StraightFlush extends PokerHand {
   }
 
   static find(cards: PokerCard[]): PokerCard[] {
-    const straightCards = Straight.isHand(cards) ? Straight.find(cards) : [];
-    const flushCards = Flush.isHand(cards) ? Flush.find(cards) : [];
+    if (!this.isHand(cards)) return [];
 
-    // Check if the found straight and flush cards are the same
-    if (CardsSorter.isSameSet(straightCards, flushCards)) {
-      return straightCards;
+    const sortedCards = CardsSorter.byNumber(cards);
+
+    // エースハイストレートフラッシュの検出（A-2-3-4-5）
+    if (
+      Straight.isAceToFiveStraight(sortedCards) &&
+      Flush.hasSuitOfAtLeast(sortedCards, 5, 5)
+    ) {
+      return sortedCards.filter((card) => [2, 3, 4, 5, 14].includes(card.cardNumber));
+    }
+
+    // 通常のストレートフラッシュの検出
+    for (let i = 0; i <= sortedCards.length - 5; i++) {
+      if (
+        Straight.isConsecutive(sortedCards, i, 5) &&
+        Flush.hasSuitOfAtLeast(sortedCards.slice(i, i + 5), 5, 5)
+      ) {
+        return sortedCards.slice(i, i + 5);
+      }
     }
 
     return [];
+  }
+
+  static calculateScore(cards: PokerCard[]): number {
+    /*
+      ストレートフラッシュのスコアは次のように決まる
+      - (全役共通) 役のスコア * スケール値
+      - ストレートフラッシュの最も高いカードの数値
+
+      ただし、A-2-3-4-5 のストレートフラッシュの場合は、5を最も高いカードとして扱う
+     */
+    const straightFlushCards = this.find(cards);
+    const sortedCards = straightFlushCards.sort((a, b) => b.cardNumber - a.cardNumber);
+    const isAceToFiveStraightFlush = Straight.isAceToFiveStraight(straightFlushCards);
+    const highestCardNumber = isAceToFiveStraightFlush ? 5 : sortedCards[0].cardNumber;
+    return this.score * HAND_RANK_SCALE + highestCardNumber;
   }
 }

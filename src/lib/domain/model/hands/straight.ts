@@ -1,6 +1,10 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { CardsSorter } from '@/lib/domain/model/cards/cardsSorter';
-import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import {
+  HAND_RANK_SCALE,
+  PokerHand,
+  PokerHandRank,
+} from '@/lib/domain/model/hands/hands';
 
 export class Straight extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.STRAIGHT;
@@ -132,6 +136,25 @@ export class Straight extends PokerHand {
       }
     }
 
+    // エースハイストレート（A-2-3-4-5）を検出
+    if (this.isAceToFiveStraight(sortedCards)) {
+      return sortedCards.filter((card) => [2, 3, 4, 5, 14].includes(card.cardNumber));
+    }
+
     return [];
+  }
+
+  static calculateScore(cards: PokerCard[]): number {
+    /*
+      ストレートのスコアは次のように決まる
+      - (全役共通) 役のスコア * スケール値
+      - ストレートの最も高いカードの数値
+      ただし、A-2-3-4-5のストレートの場合は、最も高いカードは5として扱う
+     */
+    const straightCards = this.find(cards);
+    const sortedCards = CardsSorter.byNumber(straightCards);
+    const isAceToFiveStraight = this.isAceToFiveStraight(sortedCards);
+    const highestCardNumber = isAceToFiveStraight ? 5 : sortedCards[4].cardNumber;
+    return this.score * HAND_RANK_SCALE + highestCardNumber;
   }
 }

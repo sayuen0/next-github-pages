@@ -1,6 +1,10 @@
 import { ThreeOfAKind } from '@/lib/domain/model/hands/threeOfAKind';
 import { PokerCard } from '@/lib/domain/model/cards/card';
-import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import {
+  HAND_RANK_SCALE,
+  PokerHand,
+  PokerHandRank,
+} from '@/lib/domain/model/hands/hands';
 import { OnePair } from '@/lib/domain/model/hands/onePair';
 
 export class FullHouse extends PokerHand {
@@ -54,5 +58,23 @@ export class FullHouse extends PokerHand {
     }
 
     return false;
+  }
+
+  static calculateScore(cards: PokerCard[]): number {
+    /*
+      フルハウスのスコアは次のように決まる
+      - (全役共通) 役のスコア * スケール値
+      - スリーカードの数値 * 100
+      - ツーペアの数値
+     */
+    const threeOfAKindValues = ThreeOfAKind.findSet(cards);
+    const remainingCards = cards.filter(
+      (card) => !threeOfAKindValues.has(card.cardNumber),
+    );
+    const pairValues = OnePair.findSet(remainingCards);
+    const threeOfAKindNumber = threeOfAKindValues.values().next().value;
+    const pairNumber = pairValues.values().next().value;
+    // 最後に計算
+    return this.score * HAND_RANK_SCALE + threeOfAKindNumber * 100 + pairNumber;
   }
 }

@@ -1,5 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { FullHouse } from '@/lib/domain/model/hands/fullHouse';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 describe('FullHouse class', () => {
   // isHandメソッドのテスト
@@ -84,6 +85,29 @@ describe('FullHouse class', () => {
       it(name, () => {
         const result = FullHouse.isDraw(input);
         expect(result).toBe(expected);
+      });
+    });
+  });
+
+  describe('.calculateScore', () => {
+    const testCases = [
+      {
+        name: 'Full House with high three of a kind',
+        cards: PokerCard.NewPokerCards('AH', 'AD', 'AS', '2C', '2D'),
+        expectedScore: PokerHandRank.FULL_HOUSE * HAND_RANK_SCALE + 14 * 100 + 2,
+      },
+      {
+        name: 'Full House with low three of a kind',
+        cards: PokerCard.NewPokerCards('2H', '2D', '2S', 'KC', 'KD'),
+        expectedScore: PokerHandRank.FULL_HOUSE * HAND_RANK_SCALE + 2 * 100 + 13,
+      },
+      // 他のテストケースを追加
+    ];
+
+    testCases.forEach(({ name, cards, expectedScore }) => {
+      it(name, () => {
+        const score = FullHouse.calculateScore(cards);
+        expect(score).toBe(expectedScore);
       });
     });
   });

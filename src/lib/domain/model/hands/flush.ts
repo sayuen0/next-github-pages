@@ -1,5 +1,9 @@
 import { PokerCard, Suit } from '@/lib/domain/model/cards/card';
-import { PokerHand, PokerHandRank } from '@/lib/domain/model/hands/hands';
+import {
+  HAND_RANK_SCALE,
+  PokerHand,
+  PokerHandRank,
+} from '@/lib/domain/model/hands/hands';
 
 export class Flush extends PokerHand {
   static readonly score: PokerHandRank = PokerHandRank.FLUSH;
@@ -30,6 +34,17 @@ export class Flush extends PokerHand {
     return [];
   }
 
+  static calculateScore(cards: PokerCard[]): number {
+    /*
+      フラッシュのスコアは次のように決まる
+      - (全役共通) 役のスコア * スケール値
+      - フラッシュの最も高いカードの数値
+     */
+    const flushCards = this.find(cards);
+    const sortedCards = flushCards.sort((a, b) => b.cardNumber - a.cardNumber);
+    return this.score * HAND_RANK_SCALE + sortedCards[0].cardNumber;
+  }
+
   /**
    * 引数のカードの中に、指定した枚数以上の同じスートのカードが存在するかどうかを判定する
    * @param cards
@@ -37,11 +52,7 @@ export class Flush extends PokerHand {
    * @param limit
    * @private
    */
-  private static hasSuitOfAtLeast(
-    cards: PokerCard[],
-    target: number,
-    limit: number,
-  ): boolean {
+  static hasSuitOfAtLeast(cards: PokerCard[], target: number, limit: number): boolean {
     if (cards.length < target || cards.length > limit) {
       return false;
     }

@@ -1,5 +1,6 @@
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import { Flush } from '@/lib/domain/model/hands/flush';
+import { HAND_RANK_SCALE, PokerHandRank } from '@/lib/domain/model/hands/hands';
 
 describe('Flush class', () => {
   // isHandメソッドのテスト
@@ -131,6 +132,39 @@ describe('Flush class', () => {
       it(name, () => {
         const result = Flush.find(input);
         expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('.calculateScore', () => {
+    const testCases = [
+      {
+        name: 'Regular flush',
+        cards: PokerCard.NewPokerCards('2H', '4H', '6H', '8H', '0H'),
+        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 10,
+      },
+      {
+        name: 'Ace high flush',
+        cards: PokerCard.NewPokerCards('3H', '5H', '7H', '9H', 'AH'),
+        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 14,
+      },
+      {
+        name: 'Flush with low cards',
+        cards: PokerCard.NewPokerCards('2D', '3D', '4D', '5D', '6D'),
+        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 6,
+      },
+      {
+        name: 'Flush with Ace can be used as 14',
+        cards: PokerCard.NewPokerCards('2D', '3D', '4D', '5D', 'AD'),
+        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 14,
+      },
+      // 他のテストケースを追加
+    ];
+
+    testCases.forEach(({ name, cards, expectedScore }) => {
+      it(name, () => {
+        const score = Flush.calculateScore(cards);
+        expect(score).toBe(expectedScore);
       });
     });
   });

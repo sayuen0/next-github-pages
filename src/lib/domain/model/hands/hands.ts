@@ -19,6 +19,10 @@ export enum PokerHandRank {
  */
 export const HAND_RANK_SCALE = 100_000_000_000;
 
+/**
+ * ポーカーの役を表す抽象クラス
+ * このクラスを継承して、各役のクラスを作成する
+ */
 export abstract class PokerHand {
   static readonly score: PokerHandRank;
 
@@ -43,7 +47,11 @@ export abstract class PokerHand {
     return cardSuits.size === 1;
   }
 
-  // 役の数値スコアを計算する
+  /*
+    役の数値スコアを計算する <br>
+    注意: ※その役が完成していると保証されていない状態で呼び出してはいけない。
+    例えばハイカードのカードセットに対してストレートのスコア計算をしてもストレート完成を前提とした計算になってしまう。
+   */
   protected static calculateScore(cards: PokerCard[]): number {
     throw new Error('Not implemented');
   }
