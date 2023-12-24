@@ -13,12 +13,6 @@ export enum PokerHandRank {
   HIGH_CARD = 1,
 }
 
-interface PokerHandI {
-  isHand(cards: PokerCard[]): boolean;
-
-  find(cards: PokerCard[]): PokerCard[];
-}
-
 /*
   役のスケール値
   役のスコア計算の際、異なる役間のスコアを比較するために用いる
