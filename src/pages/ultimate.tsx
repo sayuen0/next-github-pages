@@ -32,6 +32,55 @@ export default function Ultimate() {
     setBlind(v);
   };
 
+  const handleBet = (betType: string, multiplier?: 3 | 4) => {
+    if (!game || !player || !dealer) {
+      console.error('Game, player, or dealer is not initialized.');
+      return;
+    }
+
+    switch (betType) {
+      case 'start':
+        console.log('no more bet');
+        game.betTable.betBlindAndAnti(player, blind);
+        game.betTable.betTrips(player, blind);
+        game.startNewRound();
+        game.dealPreFlop();
+        setPlayerCards(player.holeCard);
+        break;
+      case 'preFlop':
+        game.betTable.betPreFlop(player, multiplier!);
+        game.dealFlop();
+        setCommunityCards(game.communityCards);
+        break;
+      case 'checkPreFlop':
+        game.dealFlop();
+        setCommunityCards(game.communityCards);
+        break;
+      case 'flop':
+        game.betTable.betFlop(player);
+        game.dealTurnRiver();
+        setCommunityCards(game.communityCards);
+        break;
+      case 'checkFlop':
+        game.dealTurnRiver();
+        setCommunityCards(game.communityCards);
+        break;
+      case 'turnRiver':
+        game.betTable.betTurnRiver(player);
+        game.openDealerCard();
+        setDealerCards(dealer.holeCard);
+        break;
+      case 'fold':
+        game.fold(player);
+        game.openDealerCard();
+        setDealerCards(dealer.holeCard);
+        break;
+      default:
+        console.error('Invalid bet type.');
+        break;
+    }
+  };
+
   return (
     <div>
       <Table>
@@ -69,85 +118,17 @@ export default function Ultimate() {
       <p>現在のアンティ額: {blind}</p>
       {player && game && dealer && (
         <div>
-          <button
-            onClick={() => {
-              console.log('no more bet');
-              game.betTable.betBlindAndAnti(player, blind);
-              game.betTable.betTrips(player, blind);
-              game.startNewRound();
-              game.dealPreFlop();
-              setPlayerCards(player.holeCard);
-            }}
-          >
-            スタート
-          </button>
+          <button onClick={() => handleBet('start')}>スタート</button>
           <br />
-          <button
-            onClick={() => {
-              game.betTable.betPreFlop(player, 3);
-              game.dealFlop();
-              setGame(game);
-              setPlayerCards(game.communityCards);
-            }}
-          >
-            ベット*3
-          </button>
-          <button
-            onClick={() => {
-              game.betTable.betPreFlop(player, 4);
-              game.dealFlop();
-              setGame(game);
-              setPlayerCards(game.communityCards);
-            }}
-          >
-            ベット*4
-          </button>
-          <button
-            onClick={() => {
-              game.dealFlop();
-              setGame(game);
-              setCommunityCards(game.communityCards);
-            }}
-          >
-            チェック
-          </button>
+          <button onClick={() => handleBet('preFlop', 3)}>ベット*3</button>
+          <button onClick={() => handleBet('preFlop', 4)}>ベット*4</button>
+          <button onClick={() => handleBet('checkPreFlop')}>チェック</button>
           <br />
-          <button
-            onClick={() => {
-              game.betTable.betFlop(player);
-              game.dealTurnRiver();
-              setCommunityCards(game.communityCards);
-            }}
-          >
-            ベット*2
-          </button>
-          <button
-            onClick={() => {
-              game.dealTurnRiver();
-              setCommunityCards(game.communityCards);
-            }}
-          >
-            チェック
-          </button>
+          <button onClick={() => handleBet('flop')}>ベット*2</button>
+          <button onClick={() => handleBet('checkFlop')}>チェック</button>
           <br />
-          <button
-            onClick={() => {
-              game.betTable.betTurnRiver(player);
-              game.openDealerCard();
-              setDealerCards(dealer.holeCard);
-            }}
-          >
-            ベット
-          </button>
-          <button
-            onClick={() => {
-              game.fold(player);
-              game.openDealerCard();
-              setDealerCards(dealer.holeCard);
-            }}
-          >
-            フォールド
-          </button>
+          <button onClick={() => handleBet('turnRiver')}>ベット</button>
+          <button onClick={() => handleBet('fold')}>フォールド</button>
         </div>
       )}
     </div>

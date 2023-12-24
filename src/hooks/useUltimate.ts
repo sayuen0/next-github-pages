@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { UltimateTexasHoldem } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 import { Player } from '@/lib/domain/model/players/player';
 import { PokerCard } from '@/lib/domain/model/cards/card';
-import { RandomPokerCardGenerator } from '@/lib/domain/model/cards/randomCardGenerator';
 
 export const useUltimate = () => {
   const [game, setGame] = useState<UltimateTexasHoldem | null>(null);
@@ -12,12 +11,6 @@ export const useUltimate = () => {
   const [playerCards, setPlayerCards] = useState<PokerCard[]>([]);
   const [communityCards, setCommunityCards] = useState<PokerCard[]>([]);
   const [blind, setBlind] = useState(0);
-
-  function generateRandomCards(count: number): PokerCard[] {
-    return Array.from({ length: count }, () =>
-      RandomPokerCardGenerator.getRandomCard(true),
-    );
-  }
 
   useEffect(() => {
     // ゲームとプレイヤーの初期化
