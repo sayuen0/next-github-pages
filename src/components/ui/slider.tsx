@@ -31,7 +31,11 @@ const Slider = ({ disabled, min, max, step, onChange }: SliderProps) => {
   };
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <MaterialButton text={'-'} onClick={handleDecrement}></MaterialButton>
+      <MaterialButton
+        disabled={disabled}
+        text={'-'}
+        onClick={handleDecrement}
+      ></MaterialButton>
       <input
         disabled={disabled}
         type="range"
@@ -42,7 +46,11 @@ const Slider = ({ disabled, min, max, step, onChange }: SliderProps) => {
         step={step}
         style={{ flex: 1 }}
       />
-      <MaterialButton text={'+'} onClick={handleIncrement}></MaterialButton>
+      <MaterialButton
+        disabled={disabled}
+        text={'+'}
+        onClick={handleIncrement}
+      ></MaterialButton>
     </div>
   );
 };

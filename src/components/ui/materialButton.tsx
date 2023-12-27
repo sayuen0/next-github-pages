@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 
 interface Props {
+  disabled?: boolean;
   text: string;
   onClick: () => void;
 }
 
-const MaterialButton = ({ text, onClick }: Props) => {
+const MaterialButton = ({ disabled, text, onClick }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
   const baseStyle = {
-    backgroundColor: 'gold',
+    backgroundColor: !disabled ? 'gold' : 'gray',
     color: 'white',
     border: 'none',
     padding: '10px 20px',
@@ -36,6 +37,7 @@ const MaterialButton = ({ text, onClick }: Props) => {
 
   return (
     <button
+      disabled={disabled}
       style={buttonStyle}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {

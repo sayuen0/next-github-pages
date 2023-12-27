@@ -1,9 +1,9 @@
 // Ultimate コンポーネント
-import Card from '@/components/cards/card';
 import Table from '@/components/table/table';
 import { useUltimate } from '@/hooks/useUltimate';
 import Slider from '@/components/ui/slider';
 import { useState } from 'react';
+import CardBlock from '@/components/cardBlock/cardBlock';
 
 export default function Ultimate() {
   const {
@@ -20,13 +20,6 @@ export default function Ultimate() {
     blind,
     setBlind,
   } = useUltimate();
-  const cardsContainerStyle = {
-    minHeight: '160px',
-    display: 'flex', // フレックスボックスを適用
-    justifyContent: 'center', // 中央揃え
-    FlexWrap: 'wrap', // 必要に応じて折り返し
-    border: '1px solid white',
-  };
 
   const [sliderDisabled, setSliderDisabled] = useState(false);
 
@@ -56,6 +49,7 @@ export default function Ultimate() {
 
         break;
       case 'preFlop':
+        console.log('bet on preflop');
         game.betPreFlop(player, multiplier!);
         game.dealFlop();
         setGame(game);
@@ -69,13 +63,14 @@ export default function Ultimate() {
       case 'flop':
         game.betFlop(player);
         game.dealTurnRiver();
+        setCommunityCards((communityCards) => game.communityCards);
         setGame(game);
-        setCommunityCards(game.communityCards);
         break;
       case 'checkFlop':
         game.dealTurnRiver();
         setGame(game);
-        setCommunityCards(game.communityCards);
+        setCommunityCards((communityCards) => game.communityCards);
+        setGame((game) => game);
         break;
       case 'turnRiver':
         game.betTurnRiver(player);
@@ -98,21 +93,9 @@ export default function Ultimate() {
   return (
     <div>
       <Table>
-        <div style={cardsContainerStyle}>
-          {dealerCards.map((card, index) => (
-            <Card key={card.cardValue} card={card} />
-          ))}
-        </div>
-        <div style={{ ...cardsContainerStyle, justifyContent: 'flex-end' }}>
-          {communityCards.map((card, index) => (
-            <Card key={card.cardValue} card={card} />
-          ))}
-        </div>
-        <div style={cardsContainerStyle}>
-          {playerCards.map((card, index) => (
-            <Card key={card.cardValue} card={card} />
-          ))}
-        </div>
+        <CardBlock cards={dealerCards} />
+        <CardBlock cards={communityCards} />
+        <CardBlock cards={playerCards} />
       </Table>
       {player && (
         <div>
