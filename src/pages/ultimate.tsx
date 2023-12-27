@@ -63,14 +63,13 @@ export default function Ultimate() {
       case 'flop':
         game.betFlop(player);
         game.dealTurnRiver();
-        setCommunityCards((communityCards) => game.communityCards);
         setGame(game);
+        setCommunityCards(game.communityCards);
         break;
       case 'checkFlop':
         game.dealTurnRiver();
         setGame(game);
-        setCommunityCards((communityCards) => game.communityCards);
-        setGame((game) => game);
+        setCommunityCards(game.communityCards);
         break;
       case 'turnRiver':
         game.betTurnRiver(player);
