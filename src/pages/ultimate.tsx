@@ -41,14 +41,14 @@ export default function Ultimate() {
     switch (betType) {
       case 'start':
         console.log('no more bet');
-        game.betTable.betBlindAndAnti(player, blind);
-        game.betTable.betTrips(player, blind);
+        game.betBlindAndAnti(player, blind);
+        game.betTrips(player, blind);
         game.startNewRound();
         game.dealPreFlop();
         setPlayerCards(player.holeCard);
         break;
       case 'preFlop':
-        game.betTable.betPreFlop(player, multiplier!);
+        game.betPreFlop(player, multiplier!);
         game.dealFlop();
         setCommunityCards(game.communityCards);
         break;
@@ -57,7 +57,7 @@ export default function Ultimate() {
         setCommunityCards(game.communityCards);
         break;
       case 'flop':
-        game.betTable.betFlop(player);
+        game.betFlop(player);
         game.dealTurnRiver();
         setCommunityCards(game.communityCards);
         break;
@@ -66,7 +66,7 @@ export default function Ultimate() {
         setCommunityCards(game.communityCards);
         break;
       case 'turnRiver':
-        game.betTable.betTurnRiver(player);
+        game.betTurnRiver(player);
         game.openDealerCard();
         setDealerCards(dealer.holeCard);
         break;

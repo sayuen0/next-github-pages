@@ -23,7 +23,7 @@ describe('UltimateTexasHoldem', () => {
     it('should deal 2 cards to each player on pre-flop', () => {
       game.startNewRound();
       game.dealPreFlop();
-      expect(player.holeCard.length).toBe(0); // この時点では見えない
+      expect(player.holeCard.length).toBe(2); // この時点では見えない
       expect(dealer.holeCard.length).toBe(0); // この時点では見えない
     });
 

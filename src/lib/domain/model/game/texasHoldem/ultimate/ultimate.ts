@@ -17,6 +17,7 @@ export class UltimateTexasHoldem {
   private players: Player[];
   private dealer: Player;
   private deck: Deck;
+  private _betTable: BetTable;
 
   constructor(dealer: Player, ...players: Player[]) {
     if (players.length == 0) {
@@ -33,12 +34,6 @@ export class UltimateTexasHoldem {
 
   public get communityCards(): PokerCard[] {
     return this._communityCards;
-  }
-
-  private _betTable: BetTable;
-
-  public get betTable(): BetTable {
-    return this._betTable;
   }
 
   public startNewRound(): void {
@@ -145,6 +140,26 @@ export class UltimateTexasHoldem {
       dealerResult: dealerHandResult,
       dealerQualified: dealerQualified,
     };
+  }
+
+  public betBlindAndAnti(player: Player, blind: number): void {
+    this._betTable.betBlindAndAnti(player, blind);
+  }
+
+  public betTrips(player: Player, trips: number): void {
+    this._betTable.betTrips(player, trips);
+  }
+
+  public betPreFlop(player: Player, multiplier: 3 | 4): void {
+    this._betTable.betPreFlop(player, multiplier);
+  }
+
+  public betFlop(player: Player): void {
+    this._betTable.betFlop(player);
+  }
+
+  public betTurnRiver(player: Player): void {
+    this._betTable.betTurnRiver(player);
   }
 
   private allPlayers(): Player[] {

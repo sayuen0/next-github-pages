@@ -23,29 +23,29 @@ describe('single game with bet', () => {
     game.startNewRound();
 
     // TODO: ゲームに参加できるか(bb+ anti + bb * 3)を持っているかを判定する
-    game.betTable.betBlindAndAnti(p1, 100);
-    game.betTable.betBlindAndAnti(p2, 100);
-    game.betTable.betBlindAndAnti(p3, 100);
-    game.betTable.betBlindAndAnti(p4, 100);
+    game.betBlindAndAnti(p1, 100);
+    game.betBlindAndAnti(p2, 100);
+    game.betBlindAndAnti(p3, 100);
+    game.betBlindAndAnti(p4, 100);
 
-    game.betTable.betTrips(p1, 100);
-    game.betTable.betTrips(p2, 100);
-    game.betTable.betTrips(p3, 100);
-    game.betTable.betTrips(p4, 100);
+    game.betTrips(p1, 100);
+    game.betTrips(p2, 100);
+    game.betTrips(p3, 100);
+    game.betTrips(p4, 100);
 
     /*
       no more bet (preflop)
      */
     game.dealPreFlop();
-    game.betTable.betPreFlop(p1, 3);
-    game.betTable.betPreFlop(p2, 4);
+    game.betPreFlop(p1, 3);
+    game.betPreFlop(p2, 4);
     // 3と4はチェック
 
     /*
      * flop
      */
     game.dealFlop();
-    game.betTable.betFlop(p3);
+    game.betFlop(p3);
 
     /**
      * turn And River
