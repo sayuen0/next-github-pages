@@ -8,7 +8,6 @@ import CardBlock from '@/components/cardBlock/cardBlock';
 export default function Ultimate() {
   const {
     game,
-    setGame,
     player,
     dealer,
     dealerCards,
@@ -38,10 +37,10 @@ export default function Ultimate() {
       case 'start':
         console.log('no more bet');
         game.betBlindAndAnti(player, blind);
+        setBlind(blind);
         game.betTrips(player, blind);
         game.startNewRound();
         game.dealPreFlop();
-        setGame(game);
         setPlayerCards(player.holeCard);
 
         // disable slider
@@ -52,37 +51,31 @@ export default function Ultimate() {
         console.log('bet on preflop');
         game.betPreFlop(player, multiplier!);
         game.dealFlop();
-        setGame(game);
         setCommunityCards(game.communityCards);
         break;
       case 'checkPreFlop':
         game.dealFlop();
-        setGame(game);
         setCommunityCards(game.communityCards);
         break;
       case 'flop':
         game.betFlop(player);
         game.dealTurnRiver();
-        setGame(game);
         setCommunityCards(game.communityCards);
         break;
       case 'checkFlop':
         console.log('check on flop');
         game.dealTurnRiver();
-        setGame(game);
         setCommunityCards([]);
         setCommunityCards(game.communityCards);
         break;
       case 'turnRiver':
         game.betTurnRiver(player);
         game.openDealerCard();
-        setGame(game);
         setDealerCards(dealer.holeCard);
         break;
       case 'fold':
         game.fold(player);
         game.openDealerCard();
-        setGame(game);
         setDealerCards(dealer.holeCard);
         break;
       default:

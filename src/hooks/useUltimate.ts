@@ -26,7 +26,6 @@ export const useUltimate = () => {
 
   return {
     game,
-    setGame,
     player,
     dealer,
     dealerCards,
