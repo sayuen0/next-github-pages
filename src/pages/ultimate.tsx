@@ -67,8 +67,10 @@ export default function Ultimate() {
         setCommunityCards(game.communityCards);
         break;
       case 'checkFlop':
+        console.log('check on flop');
         game.dealTurnRiver();
         setGame(game);
+        setCommunityCards([]);
         setCommunityCards(game.communityCards);
         break;
       case 'turnRiver':

@@ -178,9 +178,11 @@ export class UltimateTexasHoldem {
 
   private dealCommunityCard(): void {
     const card = this.deck.drawTop();
+    const newArr = [...this._communityCards];
     if (card) {
       card.visible = true; // コミュニティカードを可視に設定
-      this._communityCards.push(card);
+      newArr.push(card);
     }
+    this._communityCards = newArr;
   }
 }
