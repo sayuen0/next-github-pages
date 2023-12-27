@@ -2,13 +2,14 @@ import { ChangeEvent, useState } from 'react';
 import MaterialButton from '@/components/ui/materialButton';
 
 interface SliderProps {
+  disabled: boolean;
   min: number;
   max: number;
   step: number;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Slider = ({ min, max, step, onChange }: SliderProps) => {
+const Slider = ({ disabled, min, max, step, onChange }: SliderProps) => {
   const [value, setValue] = useState<number>(10);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,12 +33,13 @@ const Slider = ({ min, max, step, onChange }: SliderProps) => {
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <MaterialButton text={'-'} onClick={handleDecrement}></MaterialButton>
       <input
+        disabled={disabled}
         type="range"
         min={min}
         max={max}
         value={value}
         onChange={handleChange}
-        step="10"
+        step={step}
         style={{ flex: 1 }}
       />
       <MaterialButton text={'+'} onClick={handleIncrement}></MaterialButton>

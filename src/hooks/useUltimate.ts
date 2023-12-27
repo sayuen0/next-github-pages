@@ -10,7 +10,7 @@ export const useUltimate = () => {
   const [dealerCards, setDealerCards] = useState<PokerCard[]>([]);
   const [playerCards, setPlayerCards] = useState<PokerCard[]>([]);
   const [communityCards, setCommunityCards] = useState<PokerCard[]>([]);
-  const [blind, setBlind] = useState(0);
+  const [blind, setBlind] = useState(10);
 
   useEffect(() => {
     // ゲームとプレイヤーの初期化

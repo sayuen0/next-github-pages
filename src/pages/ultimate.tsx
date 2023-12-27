@@ -3,6 +3,7 @@ import Card from '@/components/cards/card';
 import Table from '@/components/table/table';
 import { useUltimate } from '@/hooks/useUltimate';
 import Slider from '@/components/ui/slider';
+import { useState } from 'react';
 
 export default function Ultimate() {
   const {
@@ -27,6 +28,8 @@ export default function Ultimate() {
     border: '1px solid white',
   };
 
+  const [sliderDisabled, setSliderDisabled] = useState(false);
+
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const v = Number(event.target.value); // Update the state with the new slider value
     setBlind(v);
@@ -45,34 +48,45 @@ export default function Ultimate() {
         game.betTrips(player, blind);
         game.startNewRound();
         game.dealPreFlop();
+        setGame(game);
         setPlayerCards(player.holeCard);
+
+        // disable slider
+        setSliderDisabled(true);
+
         break;
       case 'preFlop':
         game.betPreFlop(player, multiplier!);
         game.dealFlop();
+        setGame(game);
         setCommunityCards(game.communityCards);
         break;
       case 'checkPreFlop':
         game.dealFlop();
+        setGame(game);
         setCommunityCards(game.communityCards);
         break;
       case 'flop':
         game.betFlop(player);
         game.dealTurnRiver();
+        setGame(game);
         setCommunityCards(game.communityCards);
         break;
       case 'checkFlop':
         game.dealTurnRiver();
+        setGame(game);
         setCommunityCards(game.communityCards);
         break;
       case 'turnRiver':
         game.betTurnRiver(player);
         game.openDealerCard();
+        setGame(game);
         setDealerCards(dealer.holeCard);
         break;
       case 'fold':
         game.fold(player);
         game.openDealerCard();
+        setGame(game);
         setDealerCards(dealer.holeCard);
         break;
       default:
@@ -103,11 +117,12 @@ export default function Ultimate() {
       {player && (
         <div>
           <h2>{player.getName()}</h2>
-          <p>スタック: {player.getStack() - blind * 3}</p>
+          <p>スタック: {player.getStack()}</p>
         </div>
       )}
       {player && (
         <Slider
+          disabled={sliderDisabled}
           min={10}
           max={player.getStack() / 6}
           step={10}
