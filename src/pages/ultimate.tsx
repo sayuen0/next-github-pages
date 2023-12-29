@@ -5,11 +5,11 @@ import Slider from '@/components/ui/slider';
 import CardBlock from '@/components/cardBlock/cardBlock';
 import {
   GameState,
-  getGameStateString,
   UltimateTexasHoldem,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 import { prettyPrint } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 import { useState } from 'react';
+import ActionButton from '@/components/ui/actionButton';
 
 export default function Ultimate() {
   const {
@@ -161,8 +161,9 @@ export default function Ultimate() {
       </Table>
       {player && (
         <div>
-          <h2>{player.name}</h2>
-          <p>スタック: {playerStack}</p>
+          <p>
+            {player.name} <span> スタック: {playerStack}</span>
+          </p>
         </div>
       )}
       {player && (
@@ -176,49 +177,87 @@ export default function Ultimate() {
       )}
       <p>
         <span>現在のblind額: {blind}</span> | <span>現在のアンティ額: {blind}</span> |{' '}
-        <span>現在のTrips額: {trips}</span>
+        <span>現在のTrips額: {trips}</span> | <span>ベット額: {bet}</span> |{' '}
+        <span>テーブル合計: {blind * 2 + trips + bet}</span>
       </p>
-      <p>ベット額: {bet}</p>
-      <p>テーブル合計: {blind * 2 + trips + bet}</p>
-      <p>{getGameStateString(gameState)}</p>
       <p>{resultMessage}</p>
       {player && game && dealer && (
         <div>
           {gameState === GameState.Start && (
-            <button onClick={() => handleBet('start')}>スタート</button>
+            <ActionButton
+              style={{ width: '30%' }}
+              message="スタート"
+              onClick={() => handleBet('start')}
+            />
           )}
           {gameState === GameState.PreFlop && (
             <>
-              <button onClick={() => handleBet('betPreFlop', 4)}>ベット*4</button>
-              <button onClick={() => handleBet('betPreFlop', 3)}>ベット*3</button>
-              <button onClick={() => handleBet('checkPreFlop')}>チェック</button>
+              <ActionButton
+                style={{ width: '30%' }}
+                message="ベット*4"
+                onClick={() => handleBet('betPreFlop', 4)}
+              />
+              <ActionButton
+                style={{ width: '30%' }}
+                message="ベット*3"
+                onClick={() => handleBet('betPreFlop', 3)}
+              />
+              <ActionButton
+                style={{ width: '30%' }}
+                message="チェック"
+                onClick={() => handleBet('checkPreFlop')}
+              />
             </>
           )}
           {gameState === GameState.Flop && (
             <>
               {bet === 0 && (
-                <button onClick={() => handleBet('betFlop')}>ベット*2</button>
+                <ActionButton
+                  style={{ width: '30%' }}
+                  message="ベット*2"
+                  onClick={() => handleBet('betFlop')}
+                />
               )}
-              <button onClick={() => handleBet('checkFlop')}>チェック</button>
+              <ActionButton
+                style={{ width: '30%' }}
+                message="チェック"
+                onClick={() => handleBet('checkFlop')}
+              />
             </>
           )}
           {gameState === GameState.TurnRiver && (
             <>
               {bet === 0 ? (
                 <>
-                  <button onClick={() => handleBet('betTurnRiver')}>ベット</button>
-                  <button onClick={() => handleBet('fold')}>フォールド</button>
+                  <ActionButton
+                    style={{ width: '30%' }}
+                    message="ベット"
+                    onClick={() => handleBet('betTurnRiver')}
+                  />
+                  <ActionButton
+                    style={{ width: '30%' }}
+                    message="フォールド"
+                    onClick={() => handleBet('fold')}
+                  />
                 </>
               ) : (
                 <>
-                  <button onClick={() => handleBet('checkTurnRiver')}>チェック</button>
+                  <ActionButton
+                    style={{ width: '30%' }}
+                    message="チェック"
+                    onClick={() => handleBet('checkTurnRiver')}
+                  />
                 </>
               )}
             </>
           )}
           {gameState === GameState.ShowDown && (
             <>
-              <button onClick={() => handleBet('restart')}>リスタート</button>
+              <ActionButton
+                style={{ width: '30%' }}
+                message="リスタート"
+                onClick={() => handleBet('restart')}
+              />
             </>
           )}
         </div>
