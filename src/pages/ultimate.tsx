@@ -7,11 +7,12 @@ import {
   getGameStateString,
   UltimateTexasHoldem,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
-import { prettyPrint } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
+import { GameResult } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 import { useState } from 'react';
 import ActionButton from '@/components/ui/actionButton';
 import CardBlock from '@/components/cardBlock/cardBlock';
 import { saveScore } from '@/lib/storage/localStorage';
+import ResultBoard from '@/components/resultBoard';
 
 export default function Ultimate() {
   const {
@@ -42,7 +43,7 @@ export default function Ultimate() {
     setTrips(v);
   };
 
-  const [resultMessage, setResultMessage] = useState('');
+  const [result, setResult] = useState<GameResult | null>(null);
 
   const handleBet = (
     betType:
@@ -130,7 +131,7 @@ export default function Ultimate() {
         // プレイだけリセット(選択があった場合blindなどは前回の値に戻す)
         setBet(0);
 
-        setResultMessage('');
+        setResult(null);
         break;
       default:
         console.error('Invalid bet type.');
@@ -142,7 +143,7 @@ export default function Ultimate() {
 
   const finishRound = (game: UltimateTexasHoldem) => {
     const result = game.defineGameResult();
-    setResultMessage(prettyPrint(result));
+    setResult(result);
 
     // プレイヤーの配当を決める
     game.distributeWinnings(result);
@@ -284,7 +285,7 @@ export default function Ultimate() {
         </div>
       )}
       <p>{getGameStateString(game?.gameState ?? GameState.Start)}</p>
-      <p>{resultMessage}</p>
+      {result && <ResultBoard result={result} />}
       {player && (
         <ActionButton
           onClick={() => {

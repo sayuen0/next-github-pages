@@ -16,6 +16,25 @@ export function convertSuitToDirectoryName(suit: Suit): string {
   return suitMap[suit];
 }
 
+export enum UnicodeSuit {
+  Spade = '♠️',
+  Diamond = '🔶',
+  Heart = '❤️',
+  Club = '♣️',
+}
+
+// Suitと変数名が一致するPrettySuitを、その変数名を登場させずに取得する
+export function getUnicodeSuit(suit: Suit): UnicodeSuit {
+  const prettySuitMap: { [key in Suit]: UnicodeSuit } = {
+    [Suit.Spade]: UnicodeSuit.Spade,
+    [Suit.Diamond]: UnicodeSuit.Diamond,
+    [Suit.Heart]: UnicodeSuit.Heart,
+    [Suit.Club]: UnicodeSuit.Club,
+  };
+
+  return prettySuitMap[suit];
+}
+
 export enum NumberSymbol {
   Ace = 'A',
   Two = '2',
@@ -65,6 +84,12 @@ export class PokerCard {
 
   public get cardValue(): CardValue {
     return this._cardValue;
+  }
+
+  public get prettyCardValue(): string {
+    const suit = getUnicodeSuit(this.suit);
+    const number = this.numberSymbol;
+    return `${number}${suit}`;
   }
 
   public get cardNumber(): number {
