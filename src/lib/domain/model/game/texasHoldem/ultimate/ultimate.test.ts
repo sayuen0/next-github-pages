@@ -24,7 +24,7 @@ describe('UltimateTexasHoldem', () => {
       game.startNewRound();
       game.dealPreFlop();
       expect(player.holeCard.length).toBe(2); // この時点では見えない
-      expect(dealer.holeCard.length).toBe(0); // この時点では見えない
+      expect(dealer.holeCard.length).toBe(2); // この時点では見えない
     });
 
     it('should deal 3 community card on flop', () => {

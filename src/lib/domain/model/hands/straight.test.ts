@@ -232,6 +232,13 @@ describe('Straight class', () => {
         expected: true,
       },
       {
+        name: "7 cards, contains pairs, but it's straight",
+        input: PokerCard.NewPokerCards('7S', '8H', '9S', '0H', '0D', 'JC', 'KC'),
+        startIndex: 0,
+        length: 5,
+        expected: true,
+      },
+      {
         name: '7 cards, all non-consecutive',
         input: PokerCard.NewPokerCards('2D', '4S', '6H', '8C', '0S', '0D', 'QC'),
         startIndex: 0,
@@ -274,6 +281,11 @@ describe('Straight class', () => {
         name: '7 cards, straight present',
         input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '8H', '9H'),
         expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
+      },
+      {
+        name: "7 cards, contains pairs, but it's straight",
+        input: PokerCard.NewPokerCards('7S', 'KC', 'JC', '8H', '9S', '0H', '0D'),
+        expected: PokerCard.NewPokerCards('7S', '8H', '9S', '0H', 'JC'),
       },
       {
         name: '5 cards 5 high straight present',

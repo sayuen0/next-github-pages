@@ -119,10 +119,26 @@ export class Straight extends PokerHand {
     startIndex: number,
     length: number,
   ): boolean {
-    for (let i = 0; i < length - 1; i++) {
-      if (cards[startIndex + i].cardNumber + 1 !== cards[startIndex + i + 1].cardNumber) {
+    // カード枚数が足りない場合はfalse
+    if (cards.length < length - startIndex) {
+      return false;
+    }
+
+    let lastCardNumber = cards[startIndex].cardNumber;
+    let consecutiveCount = 1;
+
+    for (let i = startIndex + 1; i < cards.length; i++) {
+      if (cards[i].cardNumber === lastCardNumber + 1) {
+        lastCardNumber = cards[i].cardNumber;
+        consecutiveCount++;
+        if (consecutiveCount === length) {
+          return true;
+        }
+      } else if (cards[i].cardNumber !== lastCardNumber) {
+        // カードが連続していない場合、連続カウントをリセット
         return false;
       }
+      // 同じ数字のカードが続く場合は無視してカウント続行
     }
     return true;
   }
@@ -134,14 +150,21 @@ export class Straight extends PokerHand {
   static find(cards: PokerCard[]): PokerCard[] {
     const sortedCards = CardsSorter.byNumber(cards);
 
-    for (let i = 0; i <= sortedCards.length - 5; i++) {
-      if (this.isConsecutive(sortedCards, i, 5)) {
-        return sortedCards.slice(i, i + 5);
+    // 重複を排除したカードのリストを作成
+    const uniqueCards = sortedCards.filter(
+      (card, index, self) =>
+        index === self.findIndex((t) => t.cardNumber === card.cardNumber),
+    );
+
+    // 通常のストレートを検出
+    for (let i = 0; i <= uniqueCards.length - 5; i++) {
+      if (this.isConsecutive(uniqueCards, i, 5)) {
+        return uniqueCards.slice(i, i + 5);
       }
     }
 
     // エースハイストレート（A-2-3-4-5）を検出
-    if (this.isAceToFiveStraight(sortedCards)) {
+    if (this.isAceToFiveStraight(uniqueCards)) {
       return sortedCards.filter((card) => [2, 3, 4, 5, 14].includes(card.cardNumber));
     }
 
