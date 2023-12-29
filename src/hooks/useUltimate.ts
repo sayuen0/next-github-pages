@@ -5,6 +5,7 @@ import {
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 import { Player } from '@/lib/domain/model/players/player';
 import { PokerCard } from '@/lib/domain/model/cards/card';
+import { loadScore } from '@/lib/storage/localStorage';
 
 export const useUltimate = () => {
   const [game, setGame] = useState<UltimateTexasHoldem | null>(null);
@@ -21,7 +22,8 @@ export const useUltimate = () => {
 
   useEffect(() => {
     // ゲームとプレイヤーの初期化
-    const newPlayer = new Player('Player1', 300);
+    const newScore = loadScore();
+    const newPlayer = new Player(newScore.name, newScore.stack);
     const dealer = new Player('Dealer', Number.MAX_SAFE_INTEGER);
     const newGame = new UltimateTexasHoldem(dealer, newPlayer);
     setPlayer(newPlayer);

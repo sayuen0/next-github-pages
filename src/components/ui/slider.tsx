@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import MaterialButton from '@/components/ui/materialButton';
+import SliderButton from '@/components/ui/sliderButton';
 
 interface SliderProps {
   disabled: boolean;
@@ -30,31 +30,29 @@ const Slider = ({ disabled, min, max, step, onChange }: SliderProps) => {
     onChange({ target: { value: String(newValue) } } as ChangeEvent<HTMLInputElement>);
   };
   return (
-    <>
-      <div>現在の値: {value}</div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <MaterialButton
-          disabled={disabled}
-          text={'-'}
-          onClick={handleDecrement}
-        ></MaterialButton>
-        <input
-          disabled={disabled}
-          type="range"
-          min={min}
-          max={max}
-          value={value}
-          onChange={handleChange}
-          step={step}
-          style={{ flex: 1 }}
-        />
-        <MaterialButton
-          disabled={disabled}
-          text={'+'}
-          onClick={handleIncrement}
-        ></MaterialButton>
-      </div>
-    </>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <SliderButton
+        disabled={disabled}
+        text={'-'}
+        // マイナスボタンなので寒色系の色を
+        onClick={handleDecrement}
+      ></SliderButton>
+      <input
+        disabled={disabled}
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        onChange={handleChange}
+        step={step}
+        style={{ width: '33%' }}
+      />
+      <SliderButton
+        disabled={disabled}
+        text={'+'}
+        onClick={handleIncrement}
+      ></SliderButton>
+    </div>
   );
 };
 

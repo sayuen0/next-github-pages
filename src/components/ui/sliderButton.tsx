@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
 interface Props {
+  style?: React.CSSProperties;
   disabled?: boolean;
   text: string;
   onClick: () => void;
 }
 
-const MaterialButton = ({ disabled, text, onClick }: Props) => {
+const SliderButton = ({ style, disabled, text, onClick }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -21,6 +22,7 @@ const MaterialButton = ({ disabled, text, onClick }: Props) => {
     cursor: 'pointer',
     outline: 'none',
     transition: 'box-shadow 0.2s',
+    ...style,
   };
 
   const hoverStyle = {
@@ -53,4 +55,4 @@ const MaterialButton = ({ disabled, text, onClick }: Props) => {
   );
 };
 
-export default MaterialButton;
+export default SliderButton;

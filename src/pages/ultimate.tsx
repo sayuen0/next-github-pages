@@ -11,6 +11,7 @@ import { prettyPrint } from '@/lib/domain/model/game/texasHoldem/ultimate/types'
 import { useState } from 'react';
 import ActionButton from '@/components/ui/actionButton';
 import CardBlock from '@/components/cardBlock/cardBlock';
+import { saveScore } from '@/lib/storage/localStorage';
 
 export default function Ultimate() {
   const {
@@ -145,6 +146,10 @@ export default function Ultimate() {
 
     // プレイヤーの配当を決める
     game.distributeWinnings(result);
+
+    // ローカルストレージに保存
+    saveScore({ name: player!.name, stack: player!.getStack() });
+
     // プレイヤーの現在のスタックを反映
     setPlayerStack(player!.getStack());
   };
@@ -176,16 +181,14 @@ export default function Ultimate() {
             <li>
               <span>合計: {blind * 2 + trips + bet}</span>
             </li>
+            {player && (
+              <li>
+                {player.name} <span> スタック: {playerStack}</span>
+              </li>
+            )}
           </ul>
         }
       ></Table>
-      {player && (
-        <div>
-          <p>
-            {player.name} <span> スタック: {playerStack}</span>
-          </p>
-        </div>
-      )}
       {player && (
         <Slider
           disabled={gameState !== GameState.Start}
