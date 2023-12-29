@@ -5,6 +5,7 @@ import Slider from '@/components/ui/slider';
 import CardBlock from '@/components/cardBlock/cardBlock';
 import {
   GameState,
+  getGameStateString,
   UltimateTexasHoldem,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 import { prettyPrint } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
@@ -180,12 +181,11 @@ export default function Ultimate() {
         <span>現在のTrips額: {trips}</span> | <span>ベット額: {bet}</span> |{' '}
         <span>テーブル合計: {blind * 2 + trips + bet}</span>
       </p>
-      <p>{resultMessage}</p>
       {player && game && dealer && (
         <div>
           {gameState === GameState.Start && (
             <ActionButton
-              style={{ width: '30%' }}
+              style={{ width: '30%', background: '#8bc34a', color: 'white' }}
               message="スタート"
               onClick={() => handleBet('start')}
             />
@@ -193,36 +193,37 @@ export default function Ultimate() {
           {gameState === GameState.PreFlop && (
             <>
               <ActionButton
-                style={{ width: '30%' }}
-                message="ベット*4"
-                onClick={() => handleBet('betPreFlop', 4)}
+                style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
+                message="チェック"
+                onClick={() => handleBet('checkPreFlop')}
               />
               <ActionButton
-                style={{ width: '30%' }}
+                style={{ width: '30%', background: '#ff5722', color: 'white' }}
                 message="ベット*3"
                 onClick={() => handleBet('betPreFlop', 3)}
               />
               <ActionButton
-                style={{ width: '30%' }}
-                message="チェック"
-                onClick={() => handleBet('checkPreFlop')}
+                style={{ width: '30%', background: '#c62828', color: 'white' }}
+                message="ベット*4"
+                onClick={() => handleBet('betPreFlop', 4)}
               />
             </>
           )}
           {gameState === GameState.Flop && (
             <>
+              <ActionButton
+                style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
+                message="チェック"
+                onClick={() => handleBet('checkFlop')}
+              />
+
               {bet === 0 && (
                 <ActionButton
-                  style={{ width: '30%' }}
+                  style={{ width: '30%', background: '#ff9800', color: 'white' }}
                   message="ベット*2"
                   onClick={() => handleBet('betFlop')}
                 />
               )}
-              <ActionButton
-                style={{ width: '30%' }}
-                message="チェック"
-                onClick={() => handleBet('checkFlop')}
-              />
             </>
           )}
           {gameState === GameState.TurnRiver && (
@@ -230,12 +231,12 @@ export default function Ultimate() {
               {bet === 0 ? (
                 <>
                   <ActionButton
-                    style={{ width: '30%' }}
+                    style={{ width: '30%', background: '#aed581' }}
                     message="ベット"
                     onClick={() => handleBet('betTurnRiver')}
                   />
                   <ActionButton
-                    style={{ width: '30%' }}
+                    style={{ width: '30%', background: 'gray' }}
                     message="フォールド"
                     onClick={() => handleBet('fold')}
                   />
@@ -243,7 +244,7 @@ export default function Ultimate() {
               ) : (
                 <>
                   <ActionButton
-                    style={{ width: '30%' }}
+                    style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
                     message="チェック"
                     onClick={() => handleBet('checkTurnRiver')}
                   />
@@ -254,7 +255,7 @@ export default function Ultimate() {
           {gameState === GameState.ShowDown && (
             <>
               <ActionButton
-                style={{ width: '30%' }}
+                style={{ width: '30%', background: '#8bc34a', color: 'white' }}
                 message="リスタート"
                 onClick={() => handleBet('restart')}
               />
@@ -262,6 +263,8 @@ export default function Ultimate() {
           )}
         </div>
       )}
+      <p>{getGameStateString(game?.gameState ?? GameState.Start)}</p>
+      <p>{resultMessage}</p>
     </div>
   );
 }

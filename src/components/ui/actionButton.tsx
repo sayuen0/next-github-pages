@@ -8,7 +8,7 @@ export default function ActionButton({ onClick, message, style }: Props) {
   // ボタンのスタイルを定義
   const buttonStyle = {
     backgroundColor: 'aquamarine',
-    color: 'white',
+    color: 'black',
     border: 'none',
     padding: '10px 20px',
     margin: '5px',

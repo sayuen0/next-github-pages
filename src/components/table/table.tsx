@@ -6,7 +6,7 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ children }) => {
   const tableStyle = {
-    backgroundColor: 'green',
+    background: 'linear-gradient(to right, #0d6321, #3c8d40)',
   };
   return <div style={tableStyle}>{children}</div>;
 };
