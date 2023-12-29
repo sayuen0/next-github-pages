@@ -2,9 +2,11 @@
 import Table from '@/components/table/table';
 import { useUltimate } from '@/hooks/useUltimate';
 import Slider from '@/components/ui/slider';
-import { useState } from 'react';
 import CardBlock from '@/components/cardBlock/cardBlock';
-import { GameState } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
+import {
+  GameState,
+  UltimateTexasHoldem,
+} from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 
 export default function Ultimate() {
   const {
@@ -25,13 +27,14 @@ export default function Ultimate() {
     setBlind,
     trips,
     setTrips,
+    bet,
+    setBet,
   } = useUltimate();
-
-  const [sliderDisabled, setSliderDisabled] = useState(false);
 
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const v = Number(event.target.value); // Update the state with the new slider value
     setBlind(v);
+    setTrips(v);
   };
 
   const handleBet = (betType: string, multiplier?: 3 | 4) => {
@@ -51,16 +54,12 @@ export default function Ultimate() {
         // ベット後、スタックを反映
         setPlayerStack(player.getStack());
 
+        // プリフロップを配る
         game.dealPreFlop();
         setPlayerCards(player.holeCard);
-        setGameState(game.gameState);
-
-        // disable slider
-        setSliderDisabled(true);
 
         break;
       case 'preFlop':
-        console.log('bet on preflop');
         game.betPreFlop(player, multiplier!);
         game.dealFlop();
         setCommunityCards(game.communityCards);
@@ -77,23 +76,44 @@ export default function Ultimate() {
       case 'checkFlop':
         console.log('check on flop');
         game.dealTurnRiver();
-        setCommunityCards([]);
         setCommunityCards(game.communityCards);
         break;
       case 'turnRiver':
         game.betTurnRiver(player);
+        // ショーダウン
         game.openDealerCard();
         setDealerCards(dealer.holeCard);
+
+        finishRound(game);
+
         break;
       case 'fold':
         game.fold(player);
+        // 一応ショーダウン
         game.openDealerCard();
         setDealerCards(dealer.holeCard);
+
+        finishRound(game);
         break;
       default:
         console.error('Invalid bet type.');
-        break;
+        return;
     }
+    setGameState(game.gameState);
+  };
+
+  const finishRound = (game: UltimateTexasHoldem) => {
+    const result = game.defineGameResult();
+    console.log(JSON.stringify(result, null, 2));
+
+    // プレイヤーの配当を決める
+    game.distributeWinnings(result);
+    // プレイヤーの現在のスタックを反映
+    setPlayerStack(player!.getStack());
+
+    // ブラインドとアンティとTripsをリセット
+    setBlind(0);
+    setTrips(0);
   };
 
   return (
@@ -111,7 +131,7 @@ export default function Ultimate() {
       )}
       {player && (
         <Slider
-          disabled={sliderDisabled}
+          disabled={gameState !== GameState.Start}
           min={10}
           max={playerStack / 6}
           step={10}
@@ -123,6 +143,7 @@ export default function Ultimate() {
         <span>現在のTrips額: {trips}</span>
       </p>
       <p>テーブル合計: {blind * 2 + trips}</p>
+      {gameState >= GameState.PreFlop && <p>ベット額: {bet}</p>}
       {player && game && dealer && (
         <div>
           {gameState === GameState.Start && (

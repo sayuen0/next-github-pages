@@ -51,18 +51,12 @@ export class UltimateTexasHoldem {
     return this._communityCards;
   }
 
-  // 自身のゲームステートを進め、次のゲームステートを返す
-  public proceedGameState(): GameState {
-    // ショーダウンだけスタートに戻す
-    if (this.state === GameState.ShowDown) {
-      this.state = GameState.Start;
-      return this.state;
-    }
-    this.state++;
-    return this.state;
-  }
-
   public startNewRound(): void {
+    // ステータスがStartでない場合はエラー
+    if (this.state !== GameState.Start) {
+      throw new Error('ゲームステートがStartではありません');
+    }
+
     this.allPlayers().forEach((p) => {
       p.resetHoleCard();
       p.fold = false;
@@ -89,6 +83,11 @@ export class UltimateTexasHoldem {
   }
 
   public dealFlop(): void {
+    // ステートがFlopでない場合はエラー
+    if (this.state !== GameState.Flop) {
+      throw new Error('ゲームステートがFlopではありません');
+    }
+
     for (let i = 0; i < 3; i++) {
       const card = this.deck.drawTop();
       if (card) {
@@ -96,6 +95,9 @@ export class UltimateTexasHoldem {
         this._communityCards.push(card);
       }
     }
+
+    // 配り終えたら自身のステートを進める
+    this.proceedGameState();
   }
 
   public fold(player: Player): void {
@@ -103,12 +105,20 @@ export class UltimateTexasHoldem {
   }
 
   public dealTurnRiver(): void {
+    // ステートがTurnRiverでない場合はエラー
+    if (this.state !== GameState.TurnRiver) {
+      throw new Error('ゲームステートがTurnRiverではありません');
+    }
+
     this.dealCommunityCard();
     this.dealCommunityCard();
+
+    this.proceedGameState();
   }
 
   public openDealerCard(): void {
     this.dealer.showDown();
+    this.proceedGameState();
   }
 
   /**
@@ -124,7 +134,12 @@ export class UltimateTexasHoldem {
   }
 
   // 勝者を決定する
-  public defineWinner(): GameResult {
+  public defineGameResult(): GameResult {
+    // 自身のステータスがShowDownでない場合はエラー
+    if (this.state !== GameState.ShowDown) {
+      throw new Error('ゲームステートがShowDownではありません');
+    }
+
     // ショーダウン
     this.allPlayers().forEach((p) => p.showDown());
 
@@ -171,24 +186,67 @@ export class UltimateTexasHoldem {
     };
   }
 
+  /**
+   * ゲームの配当を決定する
+   * @param gameResult
+   */
+  public distributeWinnings(gameResult: GameResult): void {
+    if (this.state !== GameState.ShowDown) {
+      throw new Error('ゲームステートがShowDownではありません');
+    }
+
+    return this._betTable.distributeWinnings(gameResult);
+  }
+
   public betBlindAndAnti(player: Player, blind: number): void {
+    // ステートがStartでない場合はエラー
+    if (this.state !== GameState.Start) {
+      throw new Error('ゲームステートがStartではありません');
+    }
     this._betTable.betBlindAndAnti(player, blind);
   }
 
   public betTrips(player: Player, trips: number): number {
+    // ステートがStartでない場合はエラー
+    if (this.state !== GameState.Start) {
+      throw new Error('ゲームステートがStartではありません');
+    }
     return this._betTable.betTrips(player, trips);
   }
 
-  public betPreFlop(player: Player, multiplier: 3 | 4): void {
-    this._betTable.betPreFlop(player, multiplier);
+  public betPreFlop(player: Player, multiplier: 3 | 4): number {
+    // ステートがPreFlopでない場合はエラー
+    if (this.state !== GameState.PreFlop) {
+      throw new Error('ゲームステートがPreFlopではありません');
+    }
+    return this._betTable.betPreFlop(player, multiplier);
   }
 
   public betFlop(player: Player): void {
+    // ステートがFlopでない場合はエラー
+    if (this.state !== GameState.Flop) {
+      throw new Error('ゲームステートがFlopではありません');
+    }
     this._betTable.betFlop(player);
   }
 
   public betTurnRiver(player: Player): void {
+    // ステートがTurnRiverでない場合はエラー
+    if (this.state !== GameState.TurnRiver) {
+      throw new Error('ゲームステートがTurnRiverではありません');
+    }
     this._betTable.betTurnRiver(player);
+  }
+
+  // 自身のゲームステートを進め、次のゲームステートを返す
+  private proceedGameState(): GameState {
+    // ショーダウンだけスタートに戻す
+    if (this.state === GameState.ShowDown) {
+      this.state = GameState.Start;
+      return this.state;
+    }
+    this.state++;
+    return this.state;
   }
 
   private allPlayers(): Player[] {

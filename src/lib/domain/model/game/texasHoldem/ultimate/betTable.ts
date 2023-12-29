@@ -81,22 +81,25 @@ export class BetTable {
     return trips;
   }
 
-  public betPreFlop(player: Player, betMultiplier: 3 | 4): void {
+  public betPreFlop(player: Player, betMultiplier: 3 | 4): number {
     const blindBet = this.getBlindBet(player);
     const betAmount = player.subtractFromStack(blindBet * betMultiplier);
     this.applyBet(player, betAmount);
+    return betAmount;
   }
 
-  public betFlop(player: Player): void {
+  public betFlop(player: Player): number {
     const blindBet = this.getBlindBet(player);
     const betAmount = player.subtractFromStack(blindBet * 2);
     this.applyBet(player, betAmount);
+    return betAmount;
   }
 
-  public betTurnRiver(player: Player): void {
+  public betTurnRiver(player: Player): number {
     const blindBet = this.getBlindBet(player);
     const betAmount = player.subtractFromStack(blindBet);
     this.applyBet(player, betAmount);
+    return betAmount;
   }
 
   public getBetRecord(player: Player): BetBlock {

@@ -56,7 +56,7 @@ describe('single game with bet', () => {
 
     game.openDealerCard();
 
-    const result = game.defineWinner();
+    const result = game.defineGameResult();
 
     assert(true, 'Single game test completed successfully');
   });

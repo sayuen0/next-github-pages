@@ -16,12 +16,13 @@ export const useUltimate = () => {
   const [playerCards, setPlayerCards] = useState<PokerCard[]>([]);
   const [communityCards, setCommunityCards] = useState<PokerCard[]>([]);
   const [blind, setBlind] = useState(10);
-  const [trips, setTrips] = useState(0);
+  const [trips, setTrips] = useState(10);
+  const [bet, setBet] = useState(0);
 
   useEffect(() => {
     // ゲームとプレイヤーの初期化
-    const newPlayer = new Player('Player1', 30000);
-    const dealer = new Player('Dealer', 1000000);
+    const newPlayer = new Player('Player1', 300);
+    const dealer = new Player('Dealer', Number.MAX_SAFE_INTEGER);
     const newGame = new UltimateTexasHoldem(dealer, newPlayer);
     setPlayer(newPlayer);
     setDealer(dealer);
@@ -49,5 +50,7 @@ export const useUltimate = () => {
     setBlind,
     trips,
     setTrips,
+    bet,
+    setBet,
   };
 };
