@@ -3,4 +3,10 @@
   max-width: 18%;
   max-height: 100%;
   margin: 1%;
+  aspect-ratio: 500 / 726; /* カードのアスペクト比 */
+  img {
+    width: 100%; /* コンテナの幅に合わせる */
+    height: auto; /* 高さを自動調整してアスペクト比を維持 */
+    object-fit: contain; /* コンテンツをアスペクト比を保ちつつ最大サイズで表示 */
+  }
 }
