@@ -220,14 +220,14 @@ export class UltimateTexasHoldem {
     return this._betTable.betPreFlop(player, multiplier);
   }
 
-  public betFlop(player: Player): void {
+  public betFlop(player: Player): number {
     this.checkGameState(GameState.Flop, 'betFlop');
-    this._betTable.betFlop(player);
+    return this._betTable.betFlop(player);
   }
 
-  public betTurnRiver(player: Player): void {
+  public betTurnRiver(player: Player): number {
     this.checkGameState(GameState.TurnRiver, 'betTurnRiver');
-    this._betTable.betTurnRiver(player);
+    return this._betTable.betTurnRiver(player);
   }
 
   // 自身のゲームステートを進め、次のゲームステートを返す

@@ -38,7 +38,19 @@ export default function Ultimate() {
     setTrips(v);
   };
 
-  const handleBet = (betType: string, multiplier?: 3 | 4) => {
+  const handleBet = (
+    betType:
+      | 'start'
+      | 'betPreFlop'
+      | 'checkPreFlop'
+      | 'betFlop'
+      | 'checkFlop'
+      | 'betTurnRiver'
+      | 'checkTurnRiver'
+      | 'fold'
+      | 'restart',
+    multiplier?: 3 | 4,
+  ) => {
     if (!game || !player || !dealer) {
       console.error('Game, player, or dealer is not initialized.');
       return;
@@ -59,8 +71,9 @@ export default function Ultimate() {
         game.dealPreFlop();
         setPlayerCards(player.holeCard);
         break;
-      case 'preFlop':
-        game.betPreFlop(player, multiplier!);
+      case 'betPreFlop':
+        // ベットしてテーブルに反映
+        setBet(game.betPreFlop(player, multiplier!));
         game.dealFlop();
         setCommunityCards(game.communityCards);
         break;
@@ -68,24 +81,30 @@ export default function Ultimate() {
         game.dealFlop();
         setCommunityCards(game.communityCards);
         break;
-      case 'flop':
-        game.betFlop(player);
+      case 'betFlop':
+        setBet(game.betFlop(player));
         game.dealTurnRiver();
         setCommunityCards(game.communityCards);
         break;
       case 'checkFlop':
-        console.log('check on flop');
         game.dealTurnRiver();
         setCommunityCards(game.communityCards);
         break;
-      case 'turnRiver':
-        game.betTurnRiver(player);
+      case 'betTurnRiver':
+        setBet(game.betTurnRiver(player));
         // ショーダウン
         game.showDown();
         setDealerCards(dealer.holeCard);
 
         finishRound(game);
 
+        break;
+      case 'checkTurnRiver':
+        // ショーダウン
+        game.showDown();
+        setDealerCards(dealer.holeCard);
+
+        finishRound(game);
         break;
       case 'fold':
         game.fold(player);
@@ -102,6 +121,7 @@ export default function Ultimate() {
         // ブラインドなどをリセット
         setBlind(10);
         setTrips(10);
+        setBet(0);
         break;
       default:
         console.error('Invalid bet type.');
@@ -149,12 +169,12 @@ export default function Ultimate() {
         />
       )}
       <p>
-        <span>現在のベット額: {blind}</span> | <span>現在のアンティ額: {blind}</span> |{' '}
+        <span>現在のblind額: {blind}</span> | <span>現在のアンティ額: {blind}</span> |{' '}
         <span>現在のTrips額: {trips}</span>
       </p>
-      <p>テーブル合計: {blind * 2 + trips}</p>
       {gameState >= GameState.PreFlop && <p>ベット額: {bet}</p>}
-      {getGameStateString(gameState)}
+      <p>テーブル合計: {blind * 2 + trips + bet}</p>
+      <p>{getGameStateString(gameState)}</p>
       {player && game && dealer && (
         <div>
           {gameState === GameState.Start && (
@@ -162,21 +182,31 @@ export default function Ultimate() {
           )}
           {gameState === GameState.PreFlop && (
             <>
-              <button onClick={() => handleBet('preFlop', 3)}>ベット*3</button>
-              <button onClick={() => handleBet('preFlop', 4)}>ベット*4</button>
+              <button onClick={() => handleBet('betPreFlop', 3)}>ベット*3</button>
+              <button onClick={() => handleBet('betPreFlop', 4)}>ベット*4</button>
               <button onClick={() => handleBet('checkPreFlop')}>チェック</button>
             </>
           )}
           {gameState === GameState.Flop && (
             <>
-              <button onClick={() => handleBet('flop')}>ベット*2</button>
+              {bet === 0 && (
+                <button onClick={() => handleBet('betFlop')}>ベット*2</button>
+              )}
               <button onClick={() => handleBet('checkFlop')}>チェック</button>
             </>
           )}
           {gameState === GameState.TurnRiver && (
             <>
-              <button onClick={() => handleBet('turnRiver')}>ベット</button>
-              <button onClick={() => handleBet('fold')}>フォールド</button>
+              {bet === 0 ? (
+                <>
+                  <button onClick={() => handleBet('betTurnRiver')}>ベット</button>
+                  <button onClick={() => handleBet('fold')}>フォールド</button>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => handleBet('checkTurnRiver')}>チェック</button>
+                </>
+              )}
             </>
           )}
           {gameState === GameState.ShowDown && (

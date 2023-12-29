@@ -9,7 +9,6 @@ export default function Card({ card }: CardProps) {
   const cardStyle = {
     width: '18%', // 画面幅の18%に設定
     height: 'auto', // アスペクト比を維持
-    maxHeight: '100px', // 画面の高さいっぱいに設定
     margin: '1%', // カード間のマージンを設定
   };
 
