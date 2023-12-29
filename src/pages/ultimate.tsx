@@ -8,6 +8,7 @@ import {
   getGameStateString,
   UltimateTexasHoldem,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
+import { prettyPrint } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 
 export default function Ultimate() {
   const {
@@ -122,9 +123,7 @@ export default function Ultimate() {
         // カードをリセット
         setPlayerCards([]), setCommunityCards([]), setDealerCards([]);
         // ブラインドなどをリセット
-        setBlind(10);
-        setTrips(10);
-        setBet(0);
+        setBlind(10), setTrips(10), setBet(0);
         break;
       default:
         console.error('Invalid bet type.');
@@ -132,12 +131,11 @@ export default function Ultimate() {
     }
     const newGameState = game.gameState;
     setGameState(newGameState);
-    console.log(game.gameState, gameState); // 2 1 とずれている
   };
 
   const finishRound = (game: UltimateTexasHoldem) => {
     const result = game.defineGameResult();
-    console.log(JSON.stringify(result, null, 2));
+    console.log(prettyPrint(result));
 
     // プレイヤーの配当を決める
     game.distributeWinnings(result);
@@ -158,7 +156,7 @@ export default function Ultimate() {
       </Table>
       {player && (
         <div>
-          <h2>{player.getName()}</h2>
+          <h2>{player.name}</h2>
           <p>スタック: {playerStack}</p>
         </div>
       )}

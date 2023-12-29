@@ -4,14 +4,19 @@ import { v4 as uuidv4 } from 'uuid';
 export class Player {
   public readonly id: string;
   private folded: boolean = false;
-  private name: string;
   private stack: number;
 
   constructor(name: string, initialStack: number) {
     this.id = uuidv4();
-    this.name = name;
+    this._name = name;
     this.stack = initialStack;
     this._holeCard = [];
+  }
+
+  private _name: string;
+
+  public get name(): string {
+    return this._name;
   }
 
   private _holeCard: PokerCard[];
@@ -39,10 +44,6 @@ export class Player {
 
   public resetHoleCard(): void {
     this._holeCard = [];
-  }
-
-  public getName(): string {
-    return this.name;
   }
 
   public getStack(): number {
