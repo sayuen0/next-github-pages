@@ -140,7 +140,7 @@ export default function Ultimate() {
 
   const finishRound = (game: UltimateTexasHoldem) => {
     const result = game.defineGameResult();
-    console.log(prettyPrint(result));
+    setResultMessage(prettyPrint(result));
 
     // プレイヤーの配当を決める
     game.distributeWinnings(result);
@@ -181,6 +181,7 @@ export default function Ultimate() {
       <p>ベット額: {bet}</p>
       <p>テーブル合計: {blind * 2 + trips + bet}</p>
       <p>{getGameStateString(gameState)}</p>
+      <p>{resultMessage}</p>
       {player && game && dealer && (
         <div>
           {gameState === GameState.Start && (
@@ -188,8 +189,8 @@ export default function Ultimate() {
           )}
           {gameState === GameState.PreFlop && (
             <>
-              <button onClick={() => handleBet('betPreFlop', 3)}>ベット*3</button>
               <button onClick={() => handleBet('betPreFlop', 4)}>ベット*4</button>
+              <button onClick={() => handleBet('betPreFlop', 3)}>ベット*3</button>
               <button onClick={() => handleBet('checkPreFlop')}>チェック</button>
             </>
           )}

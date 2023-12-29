@@ -16,7 +16,13 @@ export default function Card({ card }: CardProps) {
 
   return (
     <div className={styles.cardContainer}>
-      <Image src={imagePath} alt={card.visible ? card.cardValue : ''} />
+      <Image
+        src={imagePath}
+        alt={card.visible ? card.cardValue : ''}
+        layout="responsive"
+        width={500} // アスペクト比に基づく任意の値
+        height={726} // アスペクト比に基づく任意の値
+      />
     </div>
   );
 }
