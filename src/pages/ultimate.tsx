@@ -9,6 +9,7 @@ import {
   UltimateTexasHoldem,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 import { prettyPrint } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
+import { useState } from 'react';
 
 export default function Ultimate() {
   const {
@@ -38,6 +39,8 @@ export default function Ultimate() {
     setBlind(v);
     setTrips(v);
   };
+
+  const [resultMessage, setResultMessage] = useState('');
 
   const handleBet = (
     betType:
@@ -124,6 +127,8 @@ export default function Ultimate() {
         setPlayerCards([]), setCommunityCards([]), setDealerCards([]);
         // ブラインドなどをリセット
         setBlind(10), setTrips(10), setBet(0);
+
+        setResultMessage('');
         break;
       default:
         console.error('Invalid bet type.');
@@ -173,7 +178,7 @@ export default function Ultimate() {
         <span>現在のblind額: {blind}</span> | <span>現在のアンティ額: {blind}</span> |{' '}
         <span>現在のTrips額: {trips}</span>
       </p>
-      {gameState >= GameState.PreFlop && <p>ベット額: {bet}</p>}
+      <p>ベット額: {bet}</p>
       <p>テーブル合計: {blind * 2 + trips + bet}</p>
       <p>{getGameStateString(gameState)}</p>
       {player && game && dealer && (

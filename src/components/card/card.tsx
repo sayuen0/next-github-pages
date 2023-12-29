@@ -16,12 +16,7 @@ export default function Card({ card }: CardProps) {
 
   return (
     <div className={styles.cardContainer}>
-      <Image
-        src={imagePath}
-        alt={card.visible ? card.cardValue : ''}
-        layout="fill"
-        objectFit="contain"
-      />
+      <Image src={imagePath} alt={card.visible ? card.cardValue : ''} />
     </div>
   );
 }
