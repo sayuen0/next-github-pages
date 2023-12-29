@@ -1,14 +1,42 @@
 import React, { ReactNode } from 'react';
 
 interface TableProps {
-  children: ReactNode; // childrenに型を明示的に指定
+  cardBlocks: ReactNode;
+  betTable: ReactNode;
 }
 
-const Table: React.FC<TableProps> = ({ children }) => {
+const Table: React.FC<TableProps> = ({ cardBlocks, betTable }) => {
   const tableStyle = {
+    display: 'flex',
+    height: '50vh',
     background: 'linear-gradient(to right, #0d6321, #3c8d40)',
   };
-  return <div style={tableStyle}>{children}</div>;
+  const flexColumnStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  };
+  return (
+    <div style={tableStyle}>
+      <div
+        style={{
+          ...{ flexColumnStyle },
+          width: '70%',
+        }}
+      >
+        {cardBlocks}
+      </div>
+      <div
+        style={{
+          width: '30%',
+          ...{ flexColumnStyle },
+          flexGrow: 1,
+        }}
+      >
+        <div style={{ flexGrow: 1 }}>{betTable}</div>
+      </div>
+    </div>
+  );
 };
 
 export default Table;

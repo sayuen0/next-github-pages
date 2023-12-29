@@ -8,10 +8,11 @@ interface props {
 
 export default function CardBlock({ cards, style }: props) {
   const cardsContainerStyle = {
-    width: '70%',
-    minHeight: '77px',
+    width: '100%',
+    height: '33%',
     display: 'flex', // フレックスボックスを適用
     justifyContent: 'center', // 中央揃え
+    alignItems: 'center',
     FlexWrap: 'wrap', // 必要に応じて折り返し
     border: '1px solid white',
     ...style,

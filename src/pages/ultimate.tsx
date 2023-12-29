@@ -2,7 +2,6 @@
 import Table from '@/components/table/table';
 import { useUltimate } from '@/hooks/useUltimate';
 import Slider from '@/components/ui/slider';
-import CardBlock from '@/components/cardBlock/cardBlock';
 import {
   GameState,
   getGameStateString,
@@ -11,6 +10,7 @@ import {
 import { prettyPrint } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 import { useState } from 'react';
 import ActionButton from '@/components/ui/actionButton';
+import CardBlock from '@/components/cardBlock/cardBlock';
 
 export default function Ultimate() {
   const {
@@ -126,8 +126,8 @@ export default function Ultimate() {
         game.startNewRound();
         // カードをリセット
         setPlayerCards([]), setCommunityCards([]), setDealerCards([]);
-        // ブラインドなどをリセット
-        setBlind(10), setTrips(10), setBet(0);
+        // プレイだけリセット(選択があった場合blindなどは前回の値に戻す)
+        setBet(0);
 
         setResultMessage('');
         break;
@@ -147,19 +147,38 @@ export default function Ultimate() {
     game.distributeWinnings(result);
     // プレイヤーの現在のスタックを反映
     setPlayerStack(player!.getStack());
-
-    // ブラインドとアンティとTripsをリセット
-    setBlind(0);
-    setTrips(0);
   };
 
   return (
     <div>
-      <Table>
-        <CardBlock cards={dealerCards} />
-        <CardBlock cards={communityCards} style={{ justifyContent: 'flex-start' }} />
-        <CardBlock cards={playerCards} />
-      </Table>
+      <Table
+        cardBlocks={
+          <>
+            <CardBlock cards={dealerCards} />
+            <CardBlock cards={communityCards} style={{ justifyContent: 'flex-start' }} />
+            <CardBlock cards={playerCards} />
+          </>
+        }
+        betTable={
+          <ul style={{ color: 'white', listStyle: 'none', paddingLeft: '5px' }}>
+            <li>
+              <span>Blind: {blind}</span>
+            </li>
+            <li>
+              <span>Anti: {blind}</span>
+            </li>
+            <li>
+              <span>Trips: {trips}</span>
+            </li>
+            <li>
+              <span>Bet: {bet}</span>
+            </li>
+            <li>
+              <span>合計: {blind * 2 + trips + bet}</span>
+            </li>
+          </ul>
+        }
+      ></Table>
       {player && (
         <div>
           <p>
@@ -171,16 +190,12 @@ export default function Ultimate() {
         <Slider
           disabled={gameState !== GameState.Start}
           min={10}
-          max={Math.ceil(playerStack / 6)}
+          // maxはスタックの6分の1の10の倍数で切り捨て
+          max={Math.floor(playerStack / 60) * 10}
           step={10}
           onChange={handleSliderChange}
         />
       )}
-      <p>
-        <span>現在のblind額: {blind}</span> | <span>現在のアンティ額: {blind}</span> |{' '}
-        <span>現在のTrips額: {trips}</span> | <span>ベット額: {bet}</span> |{' '}
-        <span>テーブル合計: {blind * 2 + trips + bet}</span>
-      </p>
       {player && game && dealer && (
         <div>
           {gameState === GameState.Start && (
