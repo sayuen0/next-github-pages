@@ -5,6 +5,7 @@ import Slider from '@/components/ui/slider';
 import CardBlock from '@/components/cardBlock/cardBlock';
 import {
   GameState,
+  getGameStateString,
   UltimateTexasHoldem,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 
@@ -57,7 +58,6 @@ export default function Ultimate() {
         // プリフロップを配る
         game.dealPreFlop();
         setPlayerCards(player.holeCard);
-
         break;
       case 'preFlop':
         game.betPreFlop(player, multiplier!);
@@ -81,7 +81,7 @@ export default function Ultimate() {
       case 'turnRiver':
         game.betTurnRiver(player);
         // ショーダウン
-        game.openDealerCard();
+        game.showDown();
         setDealerCards(dealer.holeCard);
 
         finishRound(game);
@@ -90,16 +90,26 @@ export default function Ultimate() {
       case 'fold':
         game.fold(player);
         // 一応ショーダウン
-        game.openDealerCard();
+        game.showDown();
         setDealerCards(dealer.holeCard);
 
         finishRound(game);
+        break;
+      case 'restart':
+        game.startNewRound();
+        // カードをリセット
+        setPlayerCards([]), setCommunityCards([]), setDealerCards([]);
+        // ブラインドなどをリセット
+        setBlind(10);
+        setTrips(10);
         break;
       default:
         console.error('Invalid bet type.');
         return;
     }
-    setGameState(game.gameState);
+    const newGameState = game.gameState;
+    setGameState(newGameState);
+    console.log(game.gameState, gameState); // 2 1 とずれている
   };
 
   const finishRound = (game: UltimateTexasHoldem) => {
@@ -144,6 +154,7 @@ export default function Ultimate() {
       </p>
       <p>テーブル合計: {blind * 2 + trips}</p>
       {gameState >= GameState.PreFlop && <p>ベット額: {bet}</p>}
+      {getGameStateString(gameState)}
       {player && game && dealer && (
         <div>
           {gameState === GameState.Start && (
@@ -170,7 +181,7 @@ export default function Ultimate() {
           )}
           {gameState === GameState.ShowDown && (
             <>
-              <button onClick={() => handleBet('start')}>リスタート</button>
+              <button onClick={() => handleBet('restart')}>リスタート</button>
             </>
           )}
         </div>

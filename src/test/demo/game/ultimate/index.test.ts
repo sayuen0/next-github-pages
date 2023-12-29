@@ -54,7 +54,7 @@ describe('single game with bet', () => {
     // 4がフォールド
     game.fold(p4);
 
-    game.openDealerCard();
+    game.showDown();
 
     const result = game.defineGameResult();
 
