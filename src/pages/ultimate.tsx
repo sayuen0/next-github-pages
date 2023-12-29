@@ -165,28 +165,30 @@ export default function Ultimate() {
           </>
         }
         betTable={
-          <ul style={{ color: 'white', listStyle: 'none', paddingLeft: '5px' }}>
-            <li>
-              <span>Blind: {blind}</span>
-            </li>
-            <li>
-              <span>Anti: {blind}</span>
-            </li>
-            <li>
-              <span>Trips: {trips}</span>
-            </li>
-            <li>
-              <span>Bet: {bet}</span>
-            </li>
-            <li>
-              <span>合計: {blind * 2 + trips + bet}</span>
-            </li>
-            {player && (
+          <>
+            <ul style={{ color: 'white', listStyle: 'none', paddingLeft: '5px' }}>
               <li>
-                {player.name} <span> スタック: {playerStack}</span>
+                <span>Blind: {blind}</span>
               </li>
-            )}
-          </ul>
+              <li>
+                <span>Anti: {blind}</span>
+              </li>
+              <li>
+                <span>Trips: {trips}</span>
+              </li>
+              <li>
+                <span>Bet: {bet}</span>
+              </li>
+              <li>
+                <span>合計: {blind * 2 + trips + bet}</span>
+              </li>
+              {player && (
+                <li>
+                  {player.name} <span> スタック: {playerStack}</span>
+                </li>
+              )}
+            </ul>
+          </>
         }
       ></Table>
       {player && (
@@ -283,6 +285,19 @@ export default function Ultimate() {
       )}
       <p>{getGameStateString(game?.gameState ?? GameState.Start)}</p>
       <p>{resultMessage}</p>
+      {player && (
+        <ActionButton
+          onClick={() => {
+            if (window.confirm('リバイしますか？\n※進行中のゲームの状態は失われます')) {
+              handleBet('restart');
+              player.addToStack(300);
+              saveScore({ name: player.name, stack: player.getStack() });
+              setPlayerStack(player.getStack());
+            }
+          }}
+          message="リバイ"
+        ></ActionButton>
+      )}
     </div>
   );
 }
