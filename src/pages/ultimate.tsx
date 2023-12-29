@@ -74,6 +74,7 @@ export default function Ultimate() {
       case 'betPreFlop':
         // ベットしてテーブルに反映
         setBet(game.betPreFlop(player, multiplier!));
+        setPlayerStack(player.getStack());
         game.dealFlop();
         setCommunityCards(game.communityCards);
         break;
@@ -83,6 +84,7 @@ export default function Ultimate() {
         break;
       case 'betFlop':
         setBet(game.betFlop(player));
+        setPlayerStack(player.getStack());
         game.dealTurnRiver();
         setCommunityCards(game.communityCards);
         break;
@@ -92,6 +94,7 @@ export default function Ultimate() {
         break;
       case 'betTurnRiver':
         setBet(game.betTurnRiver(player));
+        setPlayerStack(player.getStack());
         // ショーダウン
         game.showDown();
         setDealerCards(dealer.holeCard);
@@ -150,7 +153,7 @@ export default function Ultimate() {
     <div>
       <Table>
         <CardBlock cards={dealerCards} />
-        <CardBlock cards={communityCards} />
+        <CardBlock cards={communityCards} style={{ justifyContent: 'flex-start' }} />
         <CardBlock cards={playerCards} />
       </Table>
       {player && (

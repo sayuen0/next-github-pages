@@ -63,7 +63,7 @@ export abstract class PokerHand {
     return pairs; // Always return a Set (can be empty if no pairs are found)
   }
 
-  // Helper method to group cards by their number
+  // Helper method to group card by their number
   protected static groupByNumber(cards: PokerCard[]): { [key: number]: PokerCard[] } {
     return cards.reduce((groups: { [key: number]: PokerCard[] }, card: PokerCard) => {
       if (!groups[card.cardNumber]) {
@@ -74,7 +74,7 @@ export abstract class PokerHand {
     }, {});
   }
 
-  // Checks if all the poker cards have the same suit
+  // Checks if all the poker card have the same suit
   protected static areSameSuit(cards: PokerCard[]): boolean {
     const cardSuits = new Set(cards.map((card) => card.suit));
     return cardSuits.size === 1;

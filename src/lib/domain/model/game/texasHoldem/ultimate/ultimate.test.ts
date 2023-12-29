@@ -13,21 +13,21 @@ describe('UltimateTexasHoldem', () => {
       game = new UltimateTexasHoldem(dealer, player);
     });
 
-    it('should reset hole cards and shuffle the deck on new round', () => {
+    it('should reset hole card and shuffle the deck on new round', () => {
       game.startNewRound();
       expect(game['deck']['cards'].length).toBeLessThanOrEqual(52); // デッキが52枚以下であること（一部配られている可能性）
       expect(player.holeCard.length).toBe(0); // プレイヤーのホールカードが0枚であること
       expect(dealer.holeCard.length).toBe(0); // ディーラーのホールカードが0枚であること
     });
 
-    it('should deal 2 cards to each player on pre-flop', () => {
+    it('should deal 2 card to each player on pre-flop', () => {
       game.startNewRound();
       game.dealPreFlop();
       expect(player.holeCard.length).toBe(2); // この時点では見えない
       expect(dealer.holeCard.length).toBe(0); // この時点では見えない
     });
 
-    it('should deal 3 community cards on flop', () => {
+    it('should deal 3 community card on flop', () => {
       game.startNewRound();
       game.dealPreFlop();
       game.dealFlop();

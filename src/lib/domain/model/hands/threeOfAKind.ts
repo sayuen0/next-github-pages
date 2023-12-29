@@ -55,7 +55,7 @@ export class ThreeOfAKind extends PokerHand {
         sortedCards[i].cardNumber === sortedCards[i + 2].cardNumber
       ) {
         sets.add(sortedCards[i].cardNumber);
-        i += 2; // Skip the next two cards that are part of the current set
+        i += 2; // Skip the next two card that are part of the current set
       }
     }
 

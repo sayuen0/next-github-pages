@@ -27,7 +27,7 @@ export class Straight extends PokerHand {
       return true;
     }
 
-    // Check all possible 5 consecutive cards
+    // Check all possible 5 consecutive card
     for (let i = 0; i <= sortedCards.length - 5; i++) {
       if (this.isConsecutive(sortedCards, i, 5)) {
         return true;

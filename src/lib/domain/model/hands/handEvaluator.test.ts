@@ -62,7 +62,7 @@ describe('HandEvaluator class', () => {
           const result = HandEvaluator.evaluateHand(input);
           const className = result.hand.constructor.name;
           expect(className).toEqual(expectedHand);
-          // オプション: さらに、result.cards が期待されるカードセットを含んでいることを検証
+          // オプション: さらに、result.card が期待されるカードセットを含んでいることを検証
         });
       });
     });
@@ -135,7 +135,7 @@ describe('HandEvaluator class', () => {
           const result = HandEvaluator.evaluateHand(input);
           const className = result.hand.constructor.name;
           expect(className).toEqual(expectedHand);
-          // オプション: さらに、result.cards が期待されるカードセットを含んでいることを検証
+          // オプション: さらに、result.card が期待されるカードセットを含んでいることを検証
         });
       });
     });
