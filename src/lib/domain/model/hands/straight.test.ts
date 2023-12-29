@@ -283,6 +283,11 @@ describe('Straight class', () => {
         expected: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H'),
       },
       {
+        name: '7cards, includes low straight and high straight, must find high straight',
+        input: PokerCard.NewPokerCards('2H', '3H', '4H', '5H', '6H', '7H', '8H'),
+        expected: PokerCard.NewPokerCards('4H', '5H', '6H', '7H', '8H'),
+      },
+      {
         name: "7 cards, contains pairs, but it's straight",
         input: PokerCard.NewPokerCards('7S', 'KC', 'JC', '8H', '9S', '0H', '0D'),
         expected: PokerCard.NewPokerCards('7S', '8H', '9S', '0H', 'JC'),

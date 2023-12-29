@@ -14,27 +14,7 @@ export class Straight extends PokerHand {
    * @param cards
    */
   static isHand(cards: PokerCard[]): boolean {
-    // 4枚以下の場合はストレートではない
-    if (cards.length < 5) {
-      return false;
-    }
-
-    // まずカードを数字順にソート
-    const sortedCards = CardsSorter.byNumber(cards);
-
-    // エースの特別な扱い：A-2-3-4-5 の場合もストレートとして扱う
-    if (this.isAceToFiveStraight(sortedCards)) {
-      return true;
-    }
-
-    // Check all possible 5 consecutive card
-    for (let i = 0; i <= sortedCards.length - 5; i++) {
-      if (this.isConsecutive(sortedCards, i, 5)) {
-        return true;
-      }
-    }
-
-    return false;
+    return Straight.find(cards).length > 0;
   }
 
   /**
@@ -156,11 +136,24 @@ export class Straight extends PokerHand {
         index === self.findIndex((t) => t.cardNumber === card.cardNumber),
     );
 
+    let highestStraight: PokerCard[] = [];
+
     // 通常のストレートを検出
     for (let i = 0; i <= uniqueCards.length - 5; i++) {
       if (this.isConsecutive(uniqueCards, i, 5)) {
-        return uniqueCards.slice(i, i + 5);
+        const currentStraight = uniqueCards.slice(i, i + 5);
+        if (
+          highestStraight.length === 0 ||
+          currentStraight[4].cardNumber > highestStraight[4].cardNumber
+        ) {
+          highestStraight = currentStraight;
+        }
       }
+    }
+
+    // 最も高いストレートを返す
+    if (highestStraight.length > 0) {
+      return highestStraight;
     }
 
     // エースハイストレート（A-2-3-4-5）を検出

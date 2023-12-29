@@ -171,7 +171,7 @@ export default function Ultimate() {
         <Slider
           disabled={gameState !== GameState.Start}
           min={10}
-          max={playerStack / 6}
+          max={Math.ceil(playerStack / 6)}
           step={10}
           onChange={handleSliderChange}
         />
