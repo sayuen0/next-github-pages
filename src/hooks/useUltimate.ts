@@ -21,7 +21,7 @@ export const useUltimate = () => {
 
   useEffect(() => {
     // ゲームとプレイヤーの初期化
-    const newPlayer = new Player('Player1', 63);
+    const newPlayer = new Player('Player1', 300);
     const dealer = new Player('Dealer', Number.MAX_SAFE_INTEGER);
     const newGame = new UltimateTexasHoldem(dealer, newPlayer);
     setPlayer(newPlayer);
