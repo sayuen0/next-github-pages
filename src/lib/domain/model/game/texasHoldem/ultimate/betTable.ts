@@ -74,10 +74,11 @@ export class BetTable {
     });
   }
 
-  public betTrips(player: Player, betAmount: number): void {
+  public betTrips(player: Player, betAmount: number): number {
     const trips = player.subtractFromStack(betAmount);
     const betRecord = this.getBetRecord(player);
     this.setBetRecord(player.id, { ...betRecord, trips });
+    return trips;
   }
 
   public betPreFlop(player: Player, betMultiplier: 3 | 4): void {

@@ -10,10 +10,20 @@ import {
   WinLoseTie,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 
+// ゲームの進行状態を示すenum
+export enum GameState {
+  Start = 1,
+  PreFlop,
+  Flop,
+  TurnRiver,
+  ShowDown,
+}
+
 /**
  * 多人数のアルティメットポーカーを想定
  */
 export class UltimateTexasHoldem {
+  private state: GameState;
   private players: Player[];
   private dealer: Player;
   private deck: Deck;
@@ -28,12 +38,28 @@ export class UltimateTexasHoldem {
     this.players = players;
     this._communityCards = [];
     this.deck = new Deck();
+    this.state = GameState.Start;
+  }
+
+  public get gameState(): GameState {
+    return this.state;
   }
 
   private _communityCards: PokerCard[];
 
   public get communityCards(): PokerCard[] {
     return this._communityCards;
+  }
+
+  // 自身のゲームステートを進め、次のゲームステートを返す
+  public proceedGameState(): GameState {
+    // ショーダウンだけスタートに戻す
+    if (this.state === GameState.ShowDown) {
+      this.state = GameState.Start;
+      return this.state;
+    }
+    this.state++;
+    return this.state;
   }
 
   public startNewRound(): void {
@@ -57,6 +83,9 @@ export class UltimateTexasHoldem {
         }
       });
     }
+
+    // 配り終えたら自身のステートを進める
+    this.proceedGameState();
   }
 
   public dealFlop(): void {
@@ -146,8 +175,8 @@ export class UltimateTexasHoldem {
     this._betTable.betBlindAndAnti(player, blind);
   }
 
-  public betTrips(player: Player, trips: number): void {
-    this._betTable.betTrips(player, trips);
+  public betTrips(player: Player, trips: number): number {
+    return this._betTable.betTrips(player, trips);
   }
 
   public betPreFlop(player: Player, multiplier: 3 | 4): void {
