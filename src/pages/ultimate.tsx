@@ -14,12 +14,6 @@ import {
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimateContext';
 
 export default function Ultimate() {
-  // const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const v = Number(event.target.value); // Update the state with the new slider value
-  //   setBlind(v);
-  //   setTrips(v);
-  // };
-
   const { state, dispatch } = useContext(GameContext);
   const {
     game,
@@ -81,16 +75,6 @@ export default function Ultimate() {
           </>
         }
       ></Table>
-      {/*{player && (*/}
-      {/*  <Slider*/}
-      {/*    disabled={gameState !== GamePhase.Start}*/}
-      {/*    min={10}*/}
-      {/*    // maxはスタックの6分の1の10の倍数で切り捨て*/}
-      {/*    max={Math.floor(playerStack / 60) * 10}*/}
-      {/*    step={10}*/}
-      {/*    onChange={handleSliderChange}*/}
-      {/*  />*/}
-      {/*)}*/}
       {player && game && dealer && (
         <div>
           {gamePhase === GamePhase.Start && (

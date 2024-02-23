@@ -52,3 +52,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - [ ] Resultに勝利額の内訳を表示する
 - [ ] ツーペアハイキッカーあたりの揃った役の順序がおかしいので直す
 - [ ] チップが不足している場合にアクションを取れないように修正する
+- [ ] プリフロップでの勝率を表示できるようにする
+- [x] Provider使ってリファクタできないか確認する
