@@ -25,20 +25,20 @@ enum BlindRate {
   FullHouse = 4,
   FourOfAKind = 11,
   StraightFlush = 51,
-  RoyalStraightFlush = 501,
+  RoyalStraightFlush = 500,
 }
 
 enum TripsRate {
-  HighCard = 1,
-  OnePair = 1,
-  TwoPair = 1,
-  ThreeOfAKind = 4,
-  Straight = 5,
-  Flush = 8,
-  FullHouse = 9,
-  FourOfAKind = 31,
-  StraightFlush = 41,
-  RoyalStraightFlush = 51,
+  HighCard = 0,
+  OnePair = 0,
+  TwoPair = 0,
+  ThreeOfAKind = 3,
+  Straight = 4,
+  Flush = 7,
+  FullHouse = 8,
+  FourOfAKind = 30,
+  StraightFlush = 40,
+  RoyalStraightFlush = 50,
 }
 
 /**
