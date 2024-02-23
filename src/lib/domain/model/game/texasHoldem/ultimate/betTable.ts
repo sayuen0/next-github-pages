@@ -25,7 +25,7 @@ enum BlindRate {
   FullHouse = 4,
   FourOfAKind = 11,
   StraightFlush = 51,
-  RoyalStraightFlush = 500,
+  RoyalStraightFlush = 501,
 }
 
 enum TripsRate {
