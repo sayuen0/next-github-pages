@@ -78,6 +78,7 @@ export class StraightFlush extends PokerHand {
     const straightFlushCards = StraightFlush.find(cards);
     const sortedCards = straightFlushCards.sort((a, b) => b.cardNumber - a.cardNumber);
     const isAceToFiveStraightFlush = Straight.isAceToFiveStraight(straightFlushCards);
+    // FIXME: テストがたまに落ちる
     const highestCardNumber = isAceToFiveStraightFlush ? 5 : sortedCards[0].cardNumber;
     return StraightFlush.score * HAND_RANK_SCALE + highestCardNumber;
   }

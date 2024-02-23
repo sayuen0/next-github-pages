@@ -20,7 +20,7 @@ export enum UnicodeSuit {
   Spade = '♠️',
   Diamond = '🔶',
   Heart = '❤️',
-  Club = '♣️',
+  Club = '☘️',
 }
 
 // Suitと変数名が一致するPrettySuitを、その変数名を登場させずに取得する
