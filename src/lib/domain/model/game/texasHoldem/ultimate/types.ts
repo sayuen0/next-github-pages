@@ -18,3 +18,11 @@ export interface PlayerResult {
   hand: HandResult;
   result: WinLoseTie;
 }
+
+export interface DistributionResult {
+  playerName: string;
+  blind: number;
+  anti: number;
+  trips: number;
+  play: number;
+}

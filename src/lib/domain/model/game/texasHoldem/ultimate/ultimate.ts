@@ -6,6 +6,7 @@ import { OnePair } from '@/lib/domain/model/hands/onePair';
 import { HandEvaluator } from '@/lib/domain/model/hands/handEvaluator';
 import { BetTable } from '@/lib/domain/model/game/texasHoldem/ultimate/betTable';
 import {
+  DistributionResult,
   GameResult,
   WinLoseTie,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
@@ -25,11 +26,8 @@ export function getGamePhaseString(state: GamePhase): GamePhaseString {
   return GamePhase[state] as GamePhaseString;
 }
 
-/**
- * 多人数のアルティメットポーカーを想定
- */
 export class UltimateTexasHoldem {
-  private state: GamePhase;
+  private phase: GamePhase;
   private players: Player[];
   private dealer: Player;
   private deck: Deck;
@@ -44,11 +42,11 @@ export class UltimateTexasHoldem {
     this.players = players;
     this._communityCards = [];
     this.deck = new Deck();
-    this.state = GamePhase.Start;
+    this.phase = GamePhase.Start;
   }
 
-  public get gameState(): GamePhase {
-    return this.state;
+  public get gamePhase(): GamePhase {
+    return this.phase;
   }
 
   private _communityCards: PokerCard[];
@@ -72,7 +70,7 @@ export class UltimateTexasHoldem {
     this._communityCards = [];
     this.deck = new Deck();
     this.deck.shuffle();
-    this.state = GamePhase.Start;
+    this.phase = GamePhase.Start;
   }
 
   // プレイヤーに"順に"2枚のカードを配る
@@ -198,7 +196,8 @@ export class UltimateTexasHoldem {
    * ゲームの配当を決定する
    * @param gameResult
    */
-  public distributeWinnings(gameResult: GameResult): void {
+  // TODO: 内訳を返す
+  public distributeWinnings(gameResult: GameResult): DistributionResult[] {
     this.checkGameState(GamePhase.ShowDown, 'distributeWinnings');
 
     return this._betTable.distributeWinnings(gameResult);
@@ -233,12 +232,12 @@ export class UltimateTexasHoldem {
   // 自身のゲームステートを進め、次のゲームステートを返す
   private proceedGameState(): GamePhase {
     // ショーダウンだけスタートに戻す
-    if (this.state === GamePhase.ShowDown) {
-      this.state = GamePhase.Start;
-      return this.state;
+    if (this.phase === GamePhase.ShowDown) {
+      this.phase = GamePhase.Start;
+      return this.phase;
     }
-    this.state++;
-    return this.state;
+    this.phase++;
+    return this.phase;
   }
 
   private allPlayers(): Player[] {
@@ -266,7 +265,7 @@ export class UltimateTexasHoldem {
   }
 
   private checkGameState(expectedState: GamePhase, action: string): void {
-    if (this.state !== expectedState) {
+    if (this.phase !== expectedState) {
       throw new Error(
         `ゲームステートが${expectedState}ではありません。${action}は実行できません。`,
       );

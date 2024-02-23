@@ -1,5 +1,6 @@
 import { Player } from '@/lib/domain/model/players/player';
 import {
+  DistributionResult,
   GameResult,
   PlayerResult,
   WinLoseTie,
@@ -126,8 +127,8 @@ export class BetTable {
    * Blind, Anti, Trips, Playの配当を計算し、プレイヤーのスタックに加算する
    * @param gameResult
    */
-  public distributeWinnings(gameResult: GameResult): void {
-    gameResult.playerResults.forEach((playerResult: PlayerResult) => {
+  public distributeWinnings(gameResult: GameResult): DistributionResult[] {
+    return gameResult.playerResults.map((playerResult: PlayerResult) => {
       const betRecord = this.getBetRecord(playerResult.player);
 
       const blindDistribution = this.calculateBlindDistribution(
@@ -161,6 +162,14 @@ export class BetTable {
         play: 0,
         trips: 0,
       });
+
+      return {
+        playerName: playerResult.player.name,
+        blind: blindDistribution,
+        anti: antiDistribution,
+        trips: tripsDistribution,
+        play: playDistribution,
+      };
     });
   }
 

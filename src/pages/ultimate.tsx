@@ -4,11 +4,9 @@ import {
   GamePhase,
   getGamePhaseString,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
-import { GameResult } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import ActionButton from '@/components/ui/actionButton';
 import CardBlock from '@/components/cardBlock/cardBlock';
-import { saveScore } from '@/lib/storage/localStorage';
 import ResultBoard from '@/components/resultBoard';
 import {
   BetActionType,
@@ -25,7 +23,7 @@ export default function Ultimate() {
   const { state, dispatch } = useContext(GameContext);
   const {
     game,
-    gameState,
+    gamePhase,
     player,
     playerStack,
     dealer,
@@ -35,9 +33,9 @@ export default function Ultimate() {
     blind,
     trips,
     bet,
+    result,
+    distributionResults,
   } = state;
-
-  const [result, setResult] = useState<GameResult | null>(null);
 
   const handleBet = (betType: BetActionType, multiplier?: 3 | 4) => {
     dispatch({
@@ -95,14 +93,14 @@ export default function Ultimate() {
       {/*)}*/}
       {player && game && dealer && (
         <div>
-          {gameState === GamePhase.Start && (
+          {gamePhase === GamePhase.Start && (
             <ActionButton
               style={{ width: '30%', background: '#8bc34a', color: 'white' }}
               message="スタート"
               onClick={() => handleBet('START')}
             />
           )}
-          {gameState === GamePhase.PreFlop && (
+          {gamePhase === GamePhase.PreFlop && (
             <>
               <ActionButton
                 style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
@@ -121,7 +119,7 @@ export default function Ultimate() {
               />
             </>
           )}
-          {gameState === GamePhase.Flop && (
+          {gamePhase === GamePhase.Flop && (
             <>
               <ActionButton
                 style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
@@ -138,7 +136,7 @@ export default function Ultimate() {
               )}
             </>
           )}
-          {gameState === GamePhase.TurnRiver && (
+          {gamePhase === GamePhase.TurnRiver && (
             <>
               {bet === 0 ? (
                 <>
@@ -164,7 +162,7 @@ export default function Ultimate() {
               )}
             </>
           )}
-          {gameState === GamePhase.ShowDown && (
+          {gamePhase === GamePhase.ShowDown && (
             <>
               <ActionButton
                 style={{ width: '30%', background: '#8bc34a', color: 'white' }}
@@ -175,15 +173,15 @@ export default function Ultimate() {
           )}
         </div>
       )}
-      <p>{getGamePhaseString(game?.gameState ?? GamePhase.Start)}</p>
+      <p>{getGamePhaseString(game?.gamePhase ?? GamePhase.Start)}</p>
       {result && <ResultBoard result={result} />}
+      {distributionResults && <p>{JSON.stringify(distributionResults[0])}</p>}
       {player && (
         <ActionButton
           onClick={() => {
             if (window.confirm('リバイしますか？\n※進行中のゲームの状態は失われます')) {
               handleBet('RESTART');
               player.addToStack(300);
-              saveScore({ name: player.name, stack: player.getStack() });
             }
           }}
           message="リバイ"
