@@ -11,7 +11,7 @@ import {
 } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
 
 // ゲームの進行状態を示すenum
-export enum GameState {
+export enum GamePhase {
   Start = 1,
   PreFlop,
   Flop,
@@ -19,17 +19,17 @@ export enum GameState {
   ShowDown,
 }
 
-export type GameStateString = keyof typeof GameState;
+export type GamePhaseString = keyof typeof GamePhase;
 
-export function getGameStateString(state: GameState): GameStateString {
-  return GameState[state] as GameStateString;
+export function getGamePhaseString(state: GamePhase): GamePhaseString {
+  return GamePhase[state] as GamePhaseString;
 }
 
 /**
  * 多人数のアルティメットポーカーを想定
  */
 export class UltimateTexasHoldem {
-  private state: GameState;
+  private state: GamePhase;
   private players: Player[];
   private dealer: Player;
   private deck: Deck;
@@ -44,10 +44,10 @@ export class UltimateTexasHoldem {
     this.players = players;
     this._communityCards = [];
     this.deck = new Deck();
-    this.state = GameState.Start;
+    this.state = GamePhase.Start;
   }
 
-  public get gameState(): GameState {
+  public get gameState(): GamePhase {
     return this.state;
   }
 
@@ -72,13 +72,13 @@ export class UltimateTexasHoldem {
     this._communityCards = [];
     this.deck = new Deck();
     this.deck.shuffle();
-    this.state = GameState.Start;
+    this.state = GamePhase.Start;
   }
 
   // プレイヤーに"順に"2枚のカードを配る
   public dealPreFlop(): void {
     // ステータスがStartでない場合はエラー
-    this.checkGameState(GameState.Start, 'dealPreFlop');
+    this.checkGameState(GamePhase.Start, 'dealPreFlop');
 
     for (let i = 0; i < 2; i++) {
       this.allPlayers().forEach((p) => {
@@ -96,7 +96,7 @@ export class UltimateTexasHoldem {
 
   public dealFlop(): void {
     // ステートがPreFlopでない場合はエラー
-    this.checkGameState(GameState.PreFlop, 'dealFlop');
+    this.checkGameState(GamePhase.PreFlop, 'dealFlop');
 
     for (let i = 0; i < 3; i++) {
       const card = this.deck.drawTop();
@@ -115,7 +115,7 @@ export class UltimateTexasHoldem {
   }
 
   public dealTurnRiver(): void {
-    this.checkGameState(GameState.Flop, 'dealTurnRiver');
+    this.checkGameState(GamePhase.Flop, 'dealTurnRiver');
 
     this.dealCommunityCard();
     this.dealCommunityCard();
@@ -124,7 +124,7 @@ export class UltimateTexasHoldem {
   }
 
   public showDown(): void {
-    this.checkGameState(GameState.TurnRiver, 'showDown');
+    this.checkGameState(GamePhase.TurnRiver, 'showDown');
 
     this.dealer.showDown();
     this.proceedGameState();
@@ -135,7 +135,7 @@ export class UltimateTexasHoldem {
    * @param p
    */
   public evaluatePlayerHand(p: Player): HandResult {
-    this.checkGameState(GameState.ShowDown, 'evaluatePlayerHand');
+    this.checkGameState(GamePhase.ShowDown, 'evaluatePlayerHand');
     return HandEvaluator.evaluateHand([...p.holeCard, ...this._communityCards]);
   }
 
@@ -146,7 +146,7 @@ export class UltimateTexasHoldem {
   // 勝者を決定する
   public defineGameResult(): GameResult {
     // 自身のステータスがShowDownでない場合はエラー
-    this.checkGameState(GameState.ShowDown, 'defineGameResult');
+    this.checkGameState(GamePhase.ShowDown, 'defineGameResult');
 
     // ショーダウン
     this.allPlayers().forEach((p) => p.showDown());
@@ -199,42 +199,42 @@ export class UltimateTexasHoldem {
    * @param gameResult
    */
   public distributeWinnings(gameResult: GameResult): void {
-    this.checkGameState(GameState.ShowDown, 'distributeWinnings');
+    this.checkGameState(GamePhase.ShowDown, 'distributeWinnings');
 
     return this._betTable.distributeWinnings(gameResult);
   }
 
   public betBlindAndAnti(player: Player, blind: number): void {
-    this.checkGameState(GameState.Start, 'betBlindAndAnti');
+    this.checkGameState(GamePhase.Start, 'betBlindAndAnti');
 
     this._betTable.betBlindAndAnti(player, blind);
   }
 
   public betTrips(player: Player, trips: number): number {
-    this.checkGameState(GameState.Start, 'betTrips');
+    this.checkGameState(GamePhase.Start, 'betTrips');
     return this._betTable.betTrips(player, trips);
   }
 
   public betPreFlop(player: Player, multiplier: 3 | 4): number {
-    this.checkGameState(GameState.PreFlop, 'betPreFlop');
+    this.checkGameState(GamePhase.PreFlop, 'betPreFlop');
     return this._betTable.betPreFlop(player, multiplier);
   }
 
   public betFlop(player: Player): number {
-    this.checkGameState(GameState.Flop, 'betFlop');
+    this.checkGameState(GamePhase.Flop, 'betFlop');
     return this._betTable.betFlop(player);
   }
 
   public betTurnRiver(player: Player): number {
-    this.checkGameState(GameState.TurnRiver, 'betTurnRiver');
+    this.checkGameState(GamePhase.TurnRiver, 'betTurnRiver');
     return this._betTable.betTurnRiver(player);
   }
 
   // 自身のゲームステートを進め、次のゲームステートを返す
-  private proceedGameState(): GameState {
+  private proceedGameState(): GamePhase {
     // ショーダウンだけスタートに戻す
-    if (this.state === GameState.ShowDown) {
-      this.state = GameState.Start;
+    if (this.state === GamePhase.ShowDown) {
+      this.state = GamePhase.Start;
       return this.state;
     }
     this.state++;
@@ -265,7 +265,7 @@ export class UltimateTexasHoldem {
     this._communityCards = newArr;
   }
 
-  private checkGameState(expectedState: GameState, action: string): void {
+  private checkGameState(expectedState: GamePhase, action: string): void {
     if (this.state !== expectedState) {
       throw new Error(
         `ゲームステートが${expectedState}ではありません。${action}は実行できません。`,

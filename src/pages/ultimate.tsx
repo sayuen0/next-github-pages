@@ -1,158 +1,49 @@
 // Ultimate コンポーネント
 import Table from '@/components/table/table';
-import { useUltimate } from '@/hooks/useUltimate';
-import Slider from '@/components/ui/slider';
 import {
-  GameState,
-  getGameStateString,
-  UltimateTexasHoldem,
+  GamePhase,
+  getGamePhaseString,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 import { GameResult } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ActionButton from '@/components/ui/actionButton';
 import CardBlock from '@/components/cardBlock/cardBlock';
 import { saveScore } from '@/lib/storage/localStorage';
 import ResultBoard from '@/components/resultBoard';
+import {
+  BetActionType,
+  GameContext,
+} from '@/lib/domain/model/game/texasHoldem/ultimate/ultimateContext';
 
 export default function Ultimate() {
+  // const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const v = Number(event.target.value); // Update the state with the new slider value
+  //   setBlind(v);
+  //   setTrips(v);
+  // };
+
+  const { state, dispatch } = useContext(GameContext);
   const {
     game,
     gameState,
-    setGameState,
     player,
     playerStack,
-    setPlayerStack,
     dealer,
     dealerCards,
-    setDealerCards,
     playerCards,
-    setPlayerCards,
     communityCards,
-    setCommunityCards,
     blind,
-    setBlind,
     trips,
-    setTrips,
     bet,
-    setBet,
-  } = useUltimate();
-
-  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const v = Number(event.target.value); // Update the state with the new slider value
-    setBlind(v);
-    setTrips(v);
-  };
+  } = state;
 
   const [result, setResult] = useState<GameResult | null>(null);
 
-  const handleBet = (
-    betType:
-      | 'start'
-      | 'betPreFlop'
-      | 'checkPreFlop'
-      | 'betFlop'
-      | 'checkFlop'
-      | 'betTurnRiver'
-      | 'checkTurnRiver'
-      | 'fold'
-      | 'restart',
-    multiplier?: 3 | 4,
-  ) => {
-    if (!game || !player || !dealer) {
-      console.error('Game, player, or dealer is not initialized.');
-      return;
-    }
-
-    switch (betType) {
-      case 'start':
-        console.log('no more bet');
-        game.betBlindAndAnti(player, blind);
-        setBlind(blind);
-        // トリップスは一旦ブラインドと同額
-        setTrips(game.betTrips(player, blind));
-        game.startNewRound();
-        // ベット後、スタックを反映
-        setPlayerStack(player.getStack());
-
-        // プリフロップを配る
-        game.dealPreFlop();
-        setPlayerCards(player.holeCard);
-        break;
-      case 'betPreFlop':
-        // ベットしてテーブルに反映
-        setBet(game.betPreFlop(player, multiplier!));
-        setPlayerStack(player.getStack());
-        game.dealFlop();
-        setCommunityCards(game.communityCards);
-        break;
-      case 'checkPreFlop':
-        game.dealFlop();
-        setCommunityCards(game.communityCards);
-        break;
-      case 'betFlop':
-        setBet(game.betFlop(player));
-        setPlayerStack(player.getStack());
-        game.dealTurnRiver();
-        setCommunityCards(game.communityCards);
-        break;
-      case 'checkFlop':
-        game.dealTurnRiver();
-        setCommunityCards(game.communityCards);
-        break;
-      case 'betTurnRiver':
-        setBet(game.betTurnRiver(player));
-        setPlayerStack(player.getStack());
-        // ショーダウン
-        game.showDown();
-        setDealerCards(dealer.holeCard);
-
-        finishRound(game);
-
-        break;
-      case 'checkTurnRiver':
-        // ショーダウン
-        game.showDown();
-        setDealerCards(dealer.holeCard);
-
-        finishRound(game);
-        break;
-      case 'fold':
-        game.fold(player);
-        // 一応ショーダウン
-        game.showDown();
-        setDealerCards(dealer.holeCard);
-
-        finishRound(game);
-        break;
-      case 'restart':
-        game.startNewRound();
-        // カードをリセット
-        setPlayerCards([]), setCommunityCards([]), setDealerCards([]);
-        // プレイだけリセット(選択があった場合blindなどは前回の値に戻す)
-        setBet(0);
-
-        setResult(null);
-        break;
-      default:
-        console.error('Invalid bet type.');
-        return;
-    }
-    const newGameState = game.gameState;
-    setGameState(newGameState);
-  };
-
-  const finishRound = (game: UltimateTexasHoldem) => {
-    const result = game.defineGameResult();
-    setResult(result);
-
-    // プレイヤーの配当を決める
-    game.distributeWinnings(result);
-
-    // ローカルストレージに保存
-    saveScore({ name: player!.name, stack: player!.getStack() });
-
-    // プレイヤーの現在のスタックを反映
-    setPlayerStack(player!.getStack());
+  const handleBet = (betType: BetActionType, multiplier?: 3 | 4) => {
+    dispatch({
+      type: betType,
+      payload: { multiplier },
+    });
   };
 
   return (
@@ -192,74 +83,74 @@ export default function Ultimate() {
           </>
         }
       ></Table>
-      {player && (
-        <Slider
-          disabled={gameState !== GameState.Start}
-          min={10}
-          // maxはスタックの6分の1の10の倍数で切り捨て
-          max={Math.floor(playerStack / 60) * 10}
-          step={10}
-          onChange={handleSliderChange}
-        />
-      )}
+      {/*{player && (*/}
+      {/*  <Slider*/}
+      {/*    disabled={gameState !== GamePhase.Start}*/}
+      {/*    min={10}*/}
+      {/*    // maxはスタックの6分の1の10の倍数で切り捨て*/}
+      {/*    max={Math.floor(playerStack / 60) * 10}*/}
+      {/*    step={10}*/}
+      {/*    onChange={handleSliderChange}*/}
+      {/*  />*/}
+      {/*)}*/}
       {player && game && dealer && (
         <div>
-          {gameState === GameState.Start && (
+          {gameState === GamePhase.Start && (
             <ActionButton
               style={{ width: '30%', background: '#8bc34a', color: 'white' }}
               message="スタート"
-              onClick={() => handleBet('start')}
+              onClick={() => handleBet('START')}
             />
           )}
-          {gameState === GameState.PreFlop && (
+          {gameState === GamePhase.PreFlop && (
             <>
               <ActionButton
                 style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
                 message="チェック"
-                onClick={() => handleBet('checkPreFlop')}
+                onClick={() => handleBet('CHECK_PREFLOP')}
               />
               <ActionButton
                 style={{ width: '30%', background: '#ff5722', color: 'white' }}
                 message="ベット*3"
-                onClick={() => handleBet('betPreFlop', 3)}
+                onClick={() => handleBet('BET_PREFLOP', 3)}
               />
               <ActionButton
                 style={{ width: '30%', background: '#c62828', color: 'white' }}
                 message="ベット*4"
-                onClick={() => handleBet('betPreFlop', 4)}
+                onClick={() => handleBet('BET_PREFLOP', 4)}
               />
             </>
           )}
-          {gameState === GameState.Flop && (
+          {gameState === GamePhase.Flop && (
             <>
               <ActionButton
                 style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
                 message="チェック"
-                onClick={() => handleBet('checkFlop')}
+                onClick={() => handleBet('CHECK_FLOP')}
               />
 
               {bet === 0 && (
                 <ActionButton
                   style={{ width: '30%', background: '#ff9800', color: 'white' }}
                   message="ベット*2"
-                  onClick={() => handleBet('betFlop')}
+                  onClick={() => handleBet('BET_FLOP')}
                 />
               )}
             </>
           )}
-          {gameState === GameState.TurnRiver && (
+          {gameState === GamePhase.TurnRiver && (
             <>
               {bet === 0 ? (
                 <>
                   <ActionButton
                     style={{ width: '30%', background: '#aed581' }}
                     message="ベット"
-                    onClick={() => handleBet('betTurnRiver')}
+                    onClick={() => handleBet('BET_TURN_RIVER')}
                   />
                   <ActionButton
                     style={{ width: '30%', background: 'gray' }}
                     message="フォールド"
-                    onClick={() => handleBet('fold')}
+                    onClick={() => handleBet('FOLD')}
                   />
                 </>
               ) : (
@@ -267,33 +158,32 @@ export default function Ultimate() {
                   <ActionButton
                     style={{ width: '30%', background: '#4fc3f7', color: 'white' }}
                     message="チェック"
-                    onClick={() => handleBet('checkTurnRiver')}
+                    onClick={() => handleBet('CHECK_TURN_RIVER')}
                   />
                 </>
               )}
             </>
           )}
-          {gameState === GameState.ShowDown && (
+          {gameState === GamePhase.ShowDown && (
             <>
               <ActionButton
                 style={{ width: '30%', background: '#8bc34a', color: 'white' }}
                 message="リスタート"
-                onClick={() => handleBet('restart')}
+                onClick={() => handleBet('RESTART')}
               />
             </>
           )}
         </div>
       )}
-      <p>{getGameStateString(game?.gameState ?? GameState.Start)}</p>
+      <p>{getGamePhaseString(game?.gameState ?? GamePhase.Start)}</p>
       {result && <ResultBoard result={result} />}
       {player && (
         <ActionButton
           onClick={() => {
             if (window.confirm('リバイしますか？\n※進行中のゲームの状態は失われます')) {
-              handleBet('restart');
+              handleBet('RESTART');
               player.addToStack(300);
               saveScore({ name: player.name, stack: player.getStack() });
-              setPlayerStack(player.getStack());
             }
           }}
           message="リバイ"

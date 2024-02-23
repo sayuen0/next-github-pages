@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  GameState,
+  GamePhase,
   UltimateTexasHoldem,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/ultimate';
 import { Player } from '@/lib/domain/model/players/player';
@@ -9,7 +9,7 @@ import { loadScore } from '@/lib/storage/localStorage';
 
 export const useUltimate = () => {
   const [game, setGame] = useState<UltimateTexasHoldem | null>(null);
-  const [gameState, setGameState] = useState<GameState>(GameState.Start);
+  const [gameState, setGameState] = useState<GamePhase>(GamePhase.Start);
   const [player, setPlayer] = useState<Player | null>(null);
   const [playerStack, setPlayerStack] = useState(0);
   const [dealer, setDealer] = useState<Player | null>(null);
