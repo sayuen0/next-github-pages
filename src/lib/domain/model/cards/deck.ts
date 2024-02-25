@@ -16,8 +16,12 @@ class Deck {
     }
   }
 
-  public drawTop(): PokerCard | undefined {
-    return this.cards.shift();
+  public drawTop(): PokerCard {
+    const card = this.cards.shift();
+    if (card) {
+      return card;
+    }
+    throw new Error('No more cards left in the deck');
   }
 
   /**

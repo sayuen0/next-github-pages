@@ -11,6 +11,11 @@ describe('StraightFlush class', () => {
         expected: true,
       },
       {
+        name: 'Not Straight Flush, but Flush',
+        input: PokerCard.NewPokerCards('AS', '3S', '4S', '5S', '7S'),
+        expected: false,
+      },
+      {
         name: 'Not Straight',
         input: PokerCard.NewPokerCards('2S', '3S', '4S', '6S', '7S'),
         expected: false,
@@ -104,6 +109,11 @@ describe('StraightFlush class', () => {
         name: '7 cards, only one suit present but not in sequence',
         input: PokerCard.NewPokerCards('2H', '4H', '6H', '8H', '0H', 'QH', 'KH'),
         expected: [],
+      },
+      {
+        name: '7枚カード、 ある構成要素と数値が同じでスーツの異なるカードが落ちる',
+        input: PokerCard.NewPokerCards('AH', 'AD', '0D', 'JD', 'QD', 'KD', 'JH'),
+        expected: PokerCard.NewPokerCards('0D', 'JD', 'QD', 'KD', 'AD'),
       },
       {
         name: '5 cards, A-2-3-4-5 straight flush present',

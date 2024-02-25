@@ -1,6 +1,5 @@
 import assert from 'node:assert';
 import Deck from '@/lib/domain/model/cards/deck';
-import { StartingHand } from '@/lib/domain/model/cards/holeCards';
 import { HandEvaluator } from '@/lib/domain/model/hands/handEvaluator';
 import { PokerCard } from '@/lib/domain/model/cards/card';
 import * as fs from 'fs';
@@ -14,17 +13,17 @@ interface MatchResult {
   opponentCards: string[];
 }
 
+const N = 1000000;
+
 const matchResults: MatchResult[] = [];
 
 describe('スターティングハンド', () => {
   test('任意のプリフロップハンドでの勝率を計算する', () => {
-    const startingHand = 'AA' as StartingHand;
-
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < N; i++) {
       const deck = new Deck();
       deck.shuffle();
 
-      const [card1, card2] = deck.drawStartingHand(startingHand);
+      const [card1, card2] = [deck.drawTop(), deck.drawTop()] as [PokerCard, PokerCard];
 
       // 相手のハンドを決定する(普通に上から2枚引く)
       const [opponentCard1, opponentCard2] = [deck.drawTop(), deck.drawTop()] as [
@@ -69,7 +68,8 @@ describe('スターティングハンド', () => {
       });
     }
 
-    let csvContent = 'Result,Player Hand,Player Cards,Opponent Hand,Opponent Cards\n';
+    let csvContent =
+      'Result,Player Hand,Player Cards1,Player Cards2,Player Cards3,Player Cards4,Player Cards5,Opponent Hand,Opponent Cards1,Opponent Cards2,Opponent Cards3,Opponent Cards4,Opponent Cards5\n';
     matchResults.forEach((match) => {
       const playerCards = match.playerCards.join(',');
       const opponentCards = match.opponentCards.join(',');
