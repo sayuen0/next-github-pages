@@ -25,6 +25,20 @@ class Deck {
   }
 
   /**
+   * デッキの上からn枚を引く
+   * 全部引くことも想定する
+   * @param n
+   */
+  public drawTopN(n: number): PokerCard[] {
+    if (n > this.cards.length) {
+      throw new Error('No more cards left in the deck');
+    }
+    const drawnCards = this.cards.slice(0, n);
+    this.cards = this.cards.slice(n);
+    return drawnCards;
+  }
+
+  /**
    * スターティングハンドに従い、その組み合わせに該当するハンドをランダムに2枚引く
    * @param startingHand
    */
