@@ -2,6 +2,14 @@ import { PokerCard } from '@/lib/domain/model/cards/card';
 import { Player } from '@/lib/domain/model/players/player';
 import Deck from '@/lib/domain/model/cards/deck';
 
+export enum GamePhase {
+  Start = 1,
+  Deal,
+  PlayerTurn,
+  DealerTurn,
+  End,
+}
+
 /**
  * ブラックジャックのゲームを行うクラス
  */
@@ -19,20 +27,25 @@ export class Blackjack {
   /**
    * プレイヤー(複数参加可能)
    */
-  private players: {
-    id: string;
-    player: Player;
-    doubled: boolean;
-  }[] = [];
+  private players: Map<
+    string,
+    {
+      player: Player;
+      doubled: boolean;
+    }
+  >;
 
   constructor(dealer: Player, players: Player[]) {
     this.decks = this.createDecks();
     this.dealer = dealer;
-    this.players = players.map((p) => ({ id: p.id, player: p, doubled: false }));
+    this.players = new Map();
+    players.forEach((p) => {
+      this.players.set(p.id, { player: p, doubled: false });
+    });
   }
 
   public get player(): Player[] {
-    return this.players.map((p) => p.player);
+    return Array.from(this.players.values()).map((p) => p.player);
   }
 
   /**
@@ -47,20 +60,20 @@ export class Blackjack {
     // プレイヤーA,プレイヤーB、ディーラーの順番で1枚ずつカードを配る
     this.players.forEach((player) => {
       const p = player.player;
-      const c = this.decks.shift()!;
-      c.visible = true;
-      p.addHoleCard(c);
+      this.drawCard(p);
     });
-    const c = this.decks.shift()!;
-    c.visible = true;
-    this.dealer.addHoleCard(c);
+    this.drawCard(this.dealer);
     // 2枚目も同様に配る
     this.players.forEach((player) => {
       const p = player.player;
-      const c = this.decks.shift()!;
-      c.visible = true;
-      p.addHoleCard(c);
+      this.drawCard(p);
     });
+  }
+
+  public drawCard(player: Player): void {
+    const card = this.decks.shift()!;
+    card.visible = true;
+    player.addHoleCard(card);
   }
 
   public isBlackjack(player: Player): boolean {
@@ -72,9 +85,7 @@ export class Blackjack {
   }
 
   public hit(player: Player): void {
-    const card = this.decks.shift()!;
-    card.visible = true;
-    player.addHoleCard(card);
+    this.drawCard(player);
   }
 
   public stand(player: Player): void {
@@ -82,11 +93,9 @@ export class Blackjack {
   }
 
   public doubleDown(player: Player): void {
-    const card = this.decks.shift()!;
-    card.visible = true;
-    player.addHoleCard(card);
-
+    this.drawCard(player);
     // このプレイヤーはもうカードを引けない
+    this.players.get(player.id)!.doubled = true;
   }
 
   /**

@@ -17,5 +17,13 @@ describe('ゲーム進行', () => {
     });
   });
 
+  it('should deal 1 card to each player', () => {
+    // プレイヤーA, Bはもう一枚引く（ヒットする)
+    game.hit(p1);
+    game.hit(p2);
+    assert.strictEqual(p1.holeCard.length, 3);
+    assert.strictEqual(p2.holeCard.length, 3);
+  });
+
   assert(true);
 });
