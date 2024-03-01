@@ -196,7 +196,6 @@ export class UltimateTexasHoldem {
    * ゲームの配当を決定する
    * @param gameResult
    */
-  // TODO: 内訳を返す
   public distributeWinnings(gameResult: GameResult): DistributionResult[] {
     this.checkGameState(GamePhase.ShowDown, 'distributeWinnings');
 

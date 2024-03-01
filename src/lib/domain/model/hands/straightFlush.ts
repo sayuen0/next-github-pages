@@ -123,7 +123,6 @@ export class StraightFlush extends PokerHand {
       ただし、A-2-3-4-5 のストレートフラッシュの場合は、5を最も高いカードとして扱う
      */
     const straightFlushCards = StraightFlush.find(cards);
-    // FIXME: findがたまにundefinedを返すので、そのチェックをする
     if (straightFlushCards.length === 0) {
       console.error('StraightFlush.find returned empty array');
       return 0;

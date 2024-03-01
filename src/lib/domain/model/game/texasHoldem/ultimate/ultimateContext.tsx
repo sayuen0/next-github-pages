@@ -62,7 +62,7 @@ const gameReducer = (state: GameState, action: BetAction): GameState => {
   switch (action.type) {
     case 'TRIPS':
       const trips = game.betTrips(player, state.blind);
-      return { ...state, trips: trips };
+      return { ...state, trips: trips, playerStack: player.getStack() };
     case 'START':
       if (!game || !player || !dealer) {
         console.error('Game, player, or dealer is not initialized.');
@@ -72,8 +72,6 @@ const gameReducer = (state: GameState, action: BetAction): GameState => {
       // ブラインドとアンティをベット
       const newBlind = state.blind;
       game.betBlindAndAnti(player, newBlind);
-      // トリップスをベット
-      const newTrips = game.betTrips(player, newBlind);
 
       // ラウンドを開始(シャッフルする)
       game.startNewRound();
@@ -87,7 +85,6 @@ const gameReducer = (state: GameState, action: BetAction): GameState => {
         ...state,
         gamePhase: game.gamePhase,
         blind: newBlind,
-        trips: newTrips,
         playerStack: newPlayerStack,
         playerCards: newPlayerCards,
       };

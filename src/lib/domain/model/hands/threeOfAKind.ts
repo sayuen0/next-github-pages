@@ -46,7 +46,7 @@ export class ThreeOfAKind extends PokerHand {
   }
 
   static findSet(cards: PokerCard[]): Set<number> {
-    const sortedCards = CardsSorter.byNumber(cards);
+    const sortedCards = CardsSorter.byNumber(cards, 'desc');
     let sets = new Set<number>();
 
     for (let i = 0; i <= sortedCards.length - 3; i++) {

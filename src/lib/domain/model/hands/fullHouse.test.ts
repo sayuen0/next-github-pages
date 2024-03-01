@@ -101,7 +101,11 @@ describe('FullHouse class', () => {
         input: PokerCard.NewPokerCards('AH', 'AD', 'AS', 'KH', 'KD'),
         expected: PokerCard.NewPokerCards('AH', 'AD', 'AS', 'KH', 'KD'),
       },
-      // 他のテストケースを追加
+      {
+        name: 'Full house with 6 cards (higher cards must be used as trips)',
+        input: PokerCard.NewPokerCards('AH', 'AD', 'AS', '2C', '2D', '2H'),
+        expected: PokerCard.NewPokerCards('AH', 'AD', 'AS', '2C', '2D'),
+      },
     ];
 
     testCases.forEach(({ name, input, expected }) => {
