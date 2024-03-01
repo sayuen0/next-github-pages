@@ -46,13 +46,12 @@ function initializeGameState(): GameState {
     playerCards: [],
     communityCards: [],
     blind: 10,
-    trips: 10,
+    trips: 0,
     bet: 0,
     result: null,
   };
 }
 
-// レデューサー関数
 const gameReducer = (state: GameState, action: BetAction): GameState => {
   const { game, player, dealer } = state;
   if (!game || !player || !dealer) {
@@ -61,6 +60,9 @@ const gameReducer = (state: GameState, action: BetAction): GameState => {
   }
 
   switch (action.type) {
+    case 'TRIPS':
+      const trips = game.betTrips(player, state.blind);
+      return { ...state, trips: trips };
     case 'START':
       if (!game || !player || !dealer) {
         console.error('Game, player, or dealer is not initialized.');
@@ -217,6 +219,7 @@ const finishRound = (
 };
 
 export type BetActionType =
+  | 'TRIPS'
   | 'START'
   | 'BET_PREFLOP'
   | 'CHECK_PREFLOP'

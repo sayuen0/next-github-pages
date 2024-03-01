@@ -1,4 +1,4 @@
-import { HoleCards } from '@/lib/domain/model/cards/holeCards';
+import { HoleCards } from '@/lib/domain/model/game/texasHoldem/holeCards';
 import { CardValue, PokerCard } from '@/lib/domain/model/cards/card';
 
 describe('HoleCards', () => {

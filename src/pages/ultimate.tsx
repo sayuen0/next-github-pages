@@ -78,11 +78,20 @@ export default function Ultimate() {
       {player && game && dealer && (
         <div>
           {gamePhase === GamePhase.Start && (
-            <ActionButton
-              style={{ width: '30%', background: '#8bc34a', color: 'white' }}
-              message="スタート"
-              onClick={() => handleBet('START')}
-            />
+            <>
+              <ActionButton
+                style={{ width: '30%', background: '#8bc34a', color: 'white' }}
+                message="スタート"
+                onClick={() => handleBet('START')}
+              />
+              {trips === 0 && (
+                <ActionButton
+                  style={{ width: '30%', background: 'orange', color: 'black' }}
+                  message="Trips"
+                  onClick={() => handleBet('TRIPS')}
+                />
+              )}
+            </>
           )}
           {gamePhase === GamePhase.PreFlop && (
             <>

@@ -1,5 +1,5 @@
 import { NumberSymbol, PokerCard, Suit } from '@/lib/domain/model/cards/card';
-import { StartingHand } from '@/lib/domain/model/cards/holeCards';
+import { StartingHand } from '@/lib/domain/model/game/texasHoldem/holeCards';
 
 class Deck {
   private cards: PokerCard[];
