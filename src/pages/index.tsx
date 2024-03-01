@@ -7,6 +7,7 @@ export default function HomePage() {
   return (
     <div>
       <Link href="/ultimate">アルティメット</Link>
+      <Link href="/blackjack">ブラックジャック</Link>
     </div>
   );
 }
