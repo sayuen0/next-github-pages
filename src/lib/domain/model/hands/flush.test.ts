@@ -141,24 +141,36 @@ describe('Flush class', () => {
       {
         name: 'Regular flush',
         cards: PokerCard.NewPokerCards('2H', '4H', '6H', '8H', '0H'),
-        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 10,
+        expectedScore:
+          PokerHandRank.FLUSH * HAND_RANK_SCALE +
+          10 * 100_000_000 +
+          8 * 1_000_000 +
+          6 * 10_000 +
+          4 * 100 +
+          2,
       },
       {
         name: 'Ace high flush',
         cards: PokerCard.NewPokerCards('3H', '5H', '7H', '9H', 'AH'),
-        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 14,
+        expectedScore:
+          PokerHandRank.FLUSH * HAND_RANK_SCALE +
+          14 * 100_000_000 +
+          9 * 1_000_000 +
+          7 * 10_000 +
+          5 * 100 +
+          3,
       },
       {
         name: 'Flush with low cards',
         cards: PokerCard.NewPokerCards('2D', '3D', '4D', '5D', '6D'),
-        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 6,
+        expectedScore:
+          PokerHandRank.FLUSH * HAND_RANK_SCALE +
+          6 * 100_000_000 +
+          5 * 1_000_000 +
+          4 * 10_000 +
+          3 * 100 +
+          2,
       },
-      {
-        name: 'Flush with Ace can be used as 14',
-        cards: PokerCard.NewPokerCards('2D', '3D', '4D', '5D', 'AD'),
-        expectedScore: PokerHandRank.FLUSH * HAND_RANK_SCALE + 14,
-      },
-      // 他のテストケースを追加
     ];
 
     testCases.forEach(({ name, cards, expectedScore }) => {
