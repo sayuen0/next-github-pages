@@ -168,7 +168,11 @@ export default function Ultimate() {
       )}
       <p>{getGamePhaseString(game?.gamePhase ?? GamePhase.Start)}</p>
       {result && <ResultBoard result={result} />}
-      {distributionResults && <p>{JSON.stringify(distributionResults[0])}</p>}
+      {distributionResults && (
+        <p>
+          {JSON.stringify((({ playerName, ...rest }) => rest)(distributionResults[0]))}
+        </p>
+      )}
       {player && (
         <ActionButton
           onClick={() => {
