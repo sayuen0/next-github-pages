@@ -132,13 +132,13 @@ export class BetTable {
       const betRecord = this.getBetRecord(playerResult.player);
 
       const blindDistribution = this.calculateBlindDistribution(
-        playerResult,
         betRecord.blind,
-      );
-      const antiDistribution = this.calculateAntiDistribution(
-        betRecord.anti,
         gameResult.dealerQualified,
         playerResult.result,
+      );
+      const antiDistribution = this.calculateAntiDistribution(
+        playerResult,
+        betRecord.anti,
       );
       const playDistribution = this.calculatePlayDistribution(
         playerResult,
@@ -174,14 +174,14 @@ export class BetTable {
   }
 
   /**
-   *  以下に従いプレイヤーのアンティ配当を決定する
+   *  以下に従いプレイヤーのブラインド配当を決定する
    * - ディーラーがクオリファイしていない: 勝敗に関わらず等倍
    * - ディーラーがクオリファイしている:
    *   - プレイヤーが勝利: 2倍
    *   - チョップ: 等倍
    *   - プレイヤーが敗北: 0倍
    */
-  public calculateAntiDistribution(
+  public calculateBlindDistribution(
     anti: number,
     isDealerQualified: boolean,
     result: WinLoseTie,
@@ -203,12 +203,12 @@ export class BetTable {
   }
 
   /**
-   * 以下に従いプレイヤーのブラインド配当を決定する
-   *  - プレイヤーが勝利: ブラインドレートの倍数分
+   * 以下に従いプレイヤーのアンティ配当を決定する
+   *  - プレイヤーが勝利: アンティレートの倍数分
    *  - チョップ: 等倍
    *  - プレイヤーが敗北: 0
    */
-  public calculateBlindDistribution(playerResult: PlayerResult, blind: number): number {
+  public calculateAntiDistribution(playerResult: PlayerResult, blind: number): number {
     if (playerResult.result == 'lose') {
       return 0;
     }

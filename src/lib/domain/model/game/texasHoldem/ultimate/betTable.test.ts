@@ -146,7 +146,7 @@ describe('BetTable', () => {
     });
   });
 
-  describe('.calculateAntiDistribution', () => {
+  describe('.calculateBlindDistribution', () => {
     let betTable: BetTable;
 
     beforeEach(() => {
@@ -154,18 +154,18 @@ describe('BetTable', () => {
     });
 
     const testCases = [
-      { anti: 100, isDealerQualified: false, win: 'win', expected: 100 },
-      { anti: 100, isDealerQualified: false, win: 'lose', expected: 100 },
-      { anti: 100, isDealerQualified: true, win: 'win', expected: 200 },
-      { anti: 100, isDealerQualified: true, win: 'lose', expected: 0 },
-      { anti: 100, isDealerQualified: true, win: 'tie', expected: 100 },
-      { anti: 100, isDealerQualified: false, win: 'tie', expected: 100 },
+      { blind: 100, isDealerQualified: false, win: 'win', expected: 100 },
+      { blind: 100, isDealerQualified: false, win: 'lose', expected: 100 },
+      { blind: 100, isDealerQualified: true, win: 'win', expected: 200 },
+      { blind: 100, isDealerQualified: true, win: 'lose', expected: 0 },
+      { blind: 100, isDealerQualified: true, win: 'tie', expected: 100 },
+      { blind: 100, isDealerQualified: false, win: 'tie', expected: 100 },
     ];
 
-    testCases.forEach(({ anti, isDealerQualified, win, expected }) => {
-      it(`should calculate correct distribution for anti=${anti}, dealerQualified=${isDealerQualified}, win=${win}`, () => {
-        const result = betTable.calculateAntiDistribution(
-          anti,
+    testCases.forEach(({ blind, isDealerQualified, win, expected }) => {
+      it(`should calculate correct distribution for blind=${blind}, dealerQualified=${isDealerQualified}, win=${win}`, () => {
+        const result = betTable.calculateBlindDistribution(
+          blind,
           isDealerQualified,
           win as WinLoseTie,
         );
