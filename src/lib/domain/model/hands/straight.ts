@@ -19,6 +19,7 @@ export class Straight extends PokerHand {
 
   /**
    * 5枚以上のカードが引数として渡された場合、ストレートドローかどうかを判定する
+   * NOTE: ストレートドローにはオープンエンドとガットショットがあるが、本関数はオープンエンドのみ判定している
    * @param cards
    */
   public static isDraw(cards: PokerCard[]): boolean {

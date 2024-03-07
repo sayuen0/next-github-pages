@@ -1,5 +1,5 @@
 import { NumberSymbol, PokerCard, Suit } from '@/lib/domain/model/cards/card';
-import { StartingHand } from '@/lib/domain/model/game/texasHoldem/holeCards';
+import { HandRange } from '@/lib/domain/model/game/texasHoldem/holeCards';
 
 class Deck {
   private cards: PokerCard[];
@@ -42,7 +42,7 @@ class Deck {
    * スターティングハンドに従い、その組み合わせに該当するハンドをランダムに2枚引く
    * @param startingHand
    */
-  public drawStartingHand(startingHand: StartingHand): [PokerCard, PokerCard] {
+  public drawStartingHand(startingHand: HandRange): [PokerCard, PokerCard] {
     try {
       // startingHandは、AAなどのポケットペア、AKsなどのスーテッド、AKoなどのオフスーテッドとなる
       const rank1 = startingHand[0];

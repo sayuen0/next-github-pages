@@ -324,15 +324,15 @@ export default function Ultimate() {
                 message="チェック"
                 onClick={() => handleBet('CHECK_PREFLOP')}
               />
-              {/*<ActionButton*/}
-              {/*  style={{ width: '30%', background: '#ff5722', color: 'white' }}*/}
-              {/*  message="ベット*3"*/}
-              {/*  onClick={() => handleBet('BET_PREFLOP', 3)}*/}
-              {/*/>*/}
               <ActionButton
                 style={{ width: '30%', background: '#c62828', color: 'white' }}
                 message="ベット*4"
                 onClick={() => handleBet('BET_PREFLOP', 4)}
+                recommended={
+                  game &&
+                  playerCards.length == 2 &&
+                  game.should4Bet(playerCards[0], playerCards[1])
+                }
               />
             </>
           )}
@@ -349,6 +349,10 @@ export default function Ultimate() {
                   style={{ width: '30%', background: '#ff9800', color: 'white' }}
                   message="ベット*2"
                   onClick={() => handleBet('BET_FLOP')}
+                  recommended={
+                    game &&
+                    game.shouldBetFlop(playerCards[0], playerCards[1], communityCards)
+                  }
                 />
               )}
             </>
@@ -361,6 +365,14 @@ export default function Ultimate() {
                     style={{ width: '30%', background: '#aed581' }}
                     message="ベット"
                     onClick={() => handleBet('BET_TURN_RIVER')}
+                    recommended={
+                      game &&
+                      game.shouldBetTurnRiver(
+                        playerCards[0],
+                        playerCards[1],
+                        communityCards,
+                      )
+                    }
                   />
                   <ActionButton
                     style={{ width: '30%', background: 'gray' }}

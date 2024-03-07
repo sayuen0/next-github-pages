@@ -10,6 +10,12 @@ import {
   GameResult,
   WinLoseTie,
 } from '@/lib/domain/model/game/texasHoldem/ultimate/types';
+import {
+  HoleCards,
+  should4BetRangeSet,
+} from '@/lib/domain/model/game/texasHoldem/holeCards';
+import { Flush } from '@/lib/domain/model/hands/flush';
+import { Straight } from '@/lib/domain/model/hands/straight';
 
 // ゲームの進行状態を示すenum
 export enum GamePhase {
@@ -55,6 +61,56 @@ export class UltimateTexasHoldem {
     return this._communityCards;
   }
 
+  public should4Bet(card1: PokerCard, card2: PokerCard): boolean {
+    this.checkGamePhase(GamePhase.PreFlop, 'should4Bet');
+    const handRange = HoleCards.handRangeFrom(card1, card2);
+    return should4BetRangeSet.has(handRange);
+  }
+
+  public shouldBetFlop(
+    card1: PokerCard,
+    card2: PokerCard,
+    communityCards: PokerCard[],
+  ): boolean {
+    this.checkGamePhase(GamePhase.Flop, 'shouldBetFlop');
+    // ボード以外で何か役ができていたらすべき
+    const boardHand = HandEvaluator.evaluateHand([...communityCards]);
+    const hand = HandEvaluator.evaluateHand([card1, card2, ...this._communityCards]);
+    if (hand.hand.name !== 'HighCard' && hand.hand.name !== boardHand.hand.name) {
+      return true;
+    }
+
+    // フラッシュドローならすべき
+    if (Flush.isDraw([card1, card2, ...communityCards])) {
+      return true;
+    }
+
+    // ストレートドローならすべき
+    if (Straight.isDraw([card1, card2, ...communityCards])) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public shouldBetTurnRiver(
+    card1: PokerCard,
+    card2: PokerCard,
+    communityCards: PokerCard[],
+  ): boolean {
+    // ボード以外で何か役ができていたらすべき
+    this.checkGamePhase(GamePhase.TurnRiver, 'shouldBetTurnRiver');
+    const boardHand = HandEvaluator.evaluateHand([...communityCards]);
+    const hand = HandEvaluator.evaluateHand([card1, card2, ...this._communityCards]);
+    if (hand.hand.name !== 'HighCard' && hand.hand.name !== boardHand.hand.name) {
+      return true;
+    }
+
+    // TODO: ハイカードを下から数えて、7番目以上ならすべき
+
+    return false;
+  }
+
   /*
    * 新しいラウンドを開始する
    * - プレイヤーの手札をリセットする
@@ -76,7 +132,7 @@ export class UltimateTexasHoldem {
   // プレイヤーに"順に"2枚のカードを配る
   public dealPreFlop(): void {
     // ステータスがStartでない場合はエラー
-    this.checkGameState(GamePhase.Start, 'dealPreFlop');
+    this.checkGamePhase(GamePhase.Start, 'dealPreFlop');
 
     for (let i = 0; i < 2; i++) {
       this.allPlayers().forEach((p) => {
@@ -94,7 +150,7 @@ export class UltimateTexasHoldem {
 
   public dealFlop(): void {
     // ステートがPreFlopでない場合はエラー
-    this.checkGameState(GamePhase.PreFlop, 'dealFlop');
+    this.checkGamePhase(GamePhase.PreFlop, 'dealFlop');
 
     for (let i = 0; i < 3; i++) {
       const card = this.deck.drawTop();
@@ -113,7 +169,7 @@ export class UltimateTexasHoldem {
   }
 
   public dealTurnRiver(): void {
-    this.checkGameState(GamePhase.Flop, 'dealTurnRiver');
+    this.checkGamePhase(GamePhase.Flop, 'dealTurnRiver');
 
     this.dealCommunityCard();
     this.dealCommunityCard();
@@ -122,7 +178,7 @@ export class UltimateTexasHoldem {
   }
 
   public showDown(): void {
-    this.checkGameState(GamePhase.TurnRiver, 'showDown');
+    this.checkGamePhase(GamePhase.TurnRiver, 'showDown');
 
     this.dealer.showDown();
     this.proceedGameState();
@@ -133,7 +189,7 @@ export class UltimateTexasHoldem {
    * @param p
    */
   public evaluatePlayerHand(p: Player): HandResult {
-    this.checkGameState(GamePhase.ShowDown, 'evaluatePlayerHand');
+    this.checkGamePhase(GamePhase.ShowDown, 'evaluatePlayerHand');
     return HandEvaluator.evaluateHand([...p.holeCard, ...this._communityCards]);
   }
 
@@ -144,7 +200,7 @@ export class UltimateTexasHoldem {
   // 勝者を決定する
   public defineGameResult(): GameResult {
     // 自身のステータスがShowDownでない場合はエラー
-    this.checkGameState(GamePhase.ShowDown, 'defineGameResult');
+    this.checkGamePhase(GamePhase.ShowDown, 'defineGameResult');
 
     // ショーダウン
     this.allPlayers().forEach((p) => p.showDown());
@@ -197,34 +253,34 @@ export class UltimateTexasHoldem {
    * @param gameResult
    */
   public distributeWinnings(gameResult: GameResult): DistributionResult[] {
-    this.checkGameState(GamePhase.ShowDown, 'distributeWinnings');
+    this.checkGamePhase(GamePhase.ShowDown, 'distributeWinnings');
 
     return this._betTable.distributeWinnings(gameResult);
   }
 
   public betBlindAndAnti(player: Player, blind: number): void {
-    this.checkGameState(GamePhase.Start, 'betBlindAndAnti');
+    this.checkGamePhase(GamePhase.Start, 'betBlindAndAnti');
 
     this._betTable.betBlindAndAnti(player, blind);
   }
 
   public betTrips(player: Player, trips: number): number {
-    this.checkGameState(GamePhase.Start, 'betTrips');
+    this.checkGamePhase(GamePhase.Start, 'betTrips');
     return this._betTable.betTrips(player, trips);
   }
 
   public betPreFlop(player: Player, multiplier: 3 | 4): number {
-    this.checkGameState(GamePhase.PreFlop, 'betPreFlop');
+    this.checkGamePhase(GamePhase.PreFlop, 'betPreFlop');
     return this._betTable.betPreFlop(player, multiplier);
   }
 
   public betFlop(player: Player): number {
-    this.checkGameState(GamePhase.Flop, 'betFlop');
+    this.checkGamePhase(GamePhase.Flop, 'betFlop');
     return this._betTable.betFlop(player);
   }
 
   public betTurnRiver(player: Player): number {
-    this.checkGameState(GamePhase.TurnRiver, 'betTurnRiver');
+    this.checkGamePhase(GamePhase.TurnRiver, 'betTurnRiver');
     return this._betTable.betTurnRiver(player);
   }
 
@@ -263,10 +319,10 @@ export class UltimateTexasHoldem {
     this._communityCards = newArr;
   }
 
-  private checkGameState(expectedState: GamePhase, action: string): void {
-    if (this.phase !== expectedState) {
+  private checkGamePhase(expectedPhase: GamePhase, action: string): void {
+    if (this.phase !== expectedPhase) {
       throw new Error(
-        `ゲームステートが${expectedState}ではありません。${action}は実行できません。`,
+        `ゲームフェーズが${expectedPhase}ではありません。${action}は実行できません。`,
       );
     }
   }
